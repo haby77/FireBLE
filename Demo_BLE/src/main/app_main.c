@@ -203,48 +203,48 @@ int main(void)
              && (ble_sleep_st != PM_ACTIVE))
             {
                 // Debug
-                led_set(5, LED_OFF);
-                led_set(4, LED_ON);  // led4 is on when enter into gating mode
+//                led_set(5, LED_OFF);
+//                led_set(4, LED_ON);  // led4 is on when enter into gating mode
 
                 enter_sleep(SLEEP_CPU_CLK_OFF,
                             WAKEUP_BY_ALL_IRQ_SOURCE,
                             NULL);
 
                 // Debug
-                led_set(4, LED_OFF);
-                led_set(5, LED_ON);  // led5 is on when enter into active mode
+//                led_set(4, LED_OFF);
+//                led_set(5, LED_ON);  // led5 is on when enter into active mode
             }
 
             // Check if the processor can be power down
             else if((ble_sleep_st == PM_SLEEP) && (usr_sleep_st == PM_SLEEP))
             {
                 // Debug
-                led_set(5, LED_OFF);
-                led_set(3, LED_ON);  // led3 is on when enter into sleep mode
+//                led_set(5, LED_OFF);
+//                led_set(3, LED_ON);  // led3 is on when enter into sleep mode
 
                 enter_sleep(SLEEP_NORMAL,
                             (WAKEUP_BY_OSC_EN | WAKEUP_BY_GPIO),
                             sleep_cb);
 
                 // Debug
-                led_set(3, LED_OFF);
-                led_set(5, LED_ON);  // led5 is on when enter into active mode
+//                led_set(3, LED_OFF);
+//                led_set(5, LED_ON);  // led5 is on when enter into active mode
             }
 
             // Check if the system can be deep sleep
             else if((ble_sleep_st == PM_SLEEP) && (usr_sleep_st == PM_DEEP_SLEEP))
             {
                 // Debug
-                led_set(5, LED_OFF);
-                led_set(2, LED_ON);  // led2 is on when enter into deep sleep mode
+//                led_set(5, LED_OFF);
+//                led_set(2, LED_ON);  // led2 is on when enter into deep sleep mode
 
                 enter_sleep(SLEEP_DEEP,
                             WAKEUP_BY_GPIO,
                             sleep_cb);
 
                 // Debug
-                led_set(2, LED_OFF);
-                led_set(5, LED_ON);  // led5 is on when enter into active mode
+//                led_set(2, LED_OFF);
+//                led_set(5, LED_ON);  // led5 is on when enter into active mode
             }
         }
 

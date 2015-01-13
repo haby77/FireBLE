@@ -36,6 +36,7 @@
  */
 #include "ke_task.h"
 #include "ke_msg.h"
+#include "app_config.h"
 
 /*
  * DEFINES
@@ -75,6 +76,10 @@ enum
 
     APP_SYS_BUTTON_1_TIMER,
     APP_SYS_BUTTON_2_TIMER,
+#if	(FB_JOYSTICKS)
+		APP_KEY_PROCESS_TIMER,
+		APP_KEY_SCAN_TIMER,
+#endif
 
     APP_HTPT_PERIOD_MEAS_TIMER,
     APP_HTPT_IDLE_CONNECTION_TIMEOUT_TIMER,

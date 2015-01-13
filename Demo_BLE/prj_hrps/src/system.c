@@ -43,8 +43,13 @@ static void SystemIOCfg(void)
                              | P03_GPIO_3_PIN_CTRL
                              | P04_GPIO_4_PIN_CTRL
                              | P05_GPIO_5_PIN_CTRL
+#if	!(FB_SWD)
+														 | P06_GPIO_6_PIN_CTRL
+														 | P07_GPIO_7_PIN_CTRL
+#else
                              | P06_SW_DAT_PIN_CTRL
                              | P07_SW_CLK_PIN_CTRL
+#endif
 
                              | P10_GPIO_8_PIN_CTRL
                              | P11_GPIO_9_PIN_CTRL
@@ -64,7 +69,11 @@ static void SystemIOCfg(void)
                              | P26_GPIO_22_PIN_CTRL
                              | P27_GPIO_23_PIN_CTRL
 
+#if	!defined(CFG_JOYSTICK)
                              | P30_GPIO_24_PIN_CTRL
+#else
+														 | P30_AIN0_PIN_CTRL
+#endif
                              | P31_GPIO_25_PIN_CTRL
 #if (defined(CFG_HCI_SPI))                             
                              | P32_SPI0_DIN_PIN_CTRL        //P3.2 spi1 data in
@@ -87,7 +96,11 @@ static void SystemIOCfg(void)
     syscon_SetPDCR(QN_SYSCON, 0x0); // 0 : low driver, 1 : high driver
 
     // pin pull ( 00 : High-Z,  01 : Pull-down,  10 : Pull-up,  11 : Reserved )
-    syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
+#if		(FB_SWD)
+		syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
+#else
+		syscon_SetPPCR0(QN_SYSCON, 0xAAAAAAAA);
+#endif
     syscon_SetPPCR1(QN_SYSCON, 0x2AAAAAAA);
 }
 

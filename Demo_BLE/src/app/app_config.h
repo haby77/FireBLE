@@ -52,6 +52,22 @@
     #define QN_9021_MINIDK
 #endif
 
+/// FireBLE Board Indication
+#if	(defined(CFG_FireBLE))
+		#define	FireBLE_platform
+#if	(defined(CFG_SWD))		
+		#define	FB_SWD									1
+#else
+		#define	FB_SWD									0
+#endif
+#if	(defined(CFG_JOYSTICKS))
+		#define	FB_JOYSTICKS						1
+#else
+		#define	FB_JOYSTICKS						0
+#endif
+#endif
+
+
 /// Work Mode
 #define WORK_MODE_SOC               0
 #define WORK_MODE_NP                1
@@ -83,7 +99,7 @@
 #if (defined(CFG_LOCAL_NAME))
     #define QN_LOCAL_NAME           CFG_LOCAL_NAME
 #else
-    #define QN_LOCAL_NAME           "Quintic BLE"
+    #define QN_LOCAL_NAME           "FireBLE"
 #endif
 
 /// DC-DC enable

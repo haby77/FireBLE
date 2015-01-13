@@ -36,6 +36,9 @@
 #include "wdt.h"
 #endif
 #include "sleep.h"
+#if		(FB_JOYSTICKS)
+  #include "joysticks.h"
+#endif
 
 /*
  * MACRO DEFINITIONS
@@ -55,6 +58,13 @@
 #define APP_HRPS_ENERGY_EXPENDED_STEP     50
 
 #define EVENT_BUTTON1_PRESS_ID            0
+
+///IOS Connection Parameter
+#define IOS_CONN_INTV_MAX                              0x0010
+#define IOS_CONN_INTV_MIN                              0x0008
+#define IOS_SLAVE_LATENCY                              0x0000
+#define IOS_STO_MULT                                   0x012c
+
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -181,20 +191,19 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
 #if (defined(QN_ADV_WDT))
                     usr_env.adv_wdt_enable = false;
 #endif
-
                     // Update cnx parameters
                     if (((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.con_interval < GAP_PPCP_CONN_INTV_MIN)
                     {
                         // Update connection parameters here
                         struct gap_conn_param_update conn_par;
                         /// Connection interval minimum
-                        conn_par.intv_min = GAP_PPCP_CONN_INTV_MIN;
+                        conn_par.intv_min = IOS_CONN_INTV_MIN;
                         /// Connection interval maximum
-                        conn_par.intv_max = GAP_PPCP_CONN_INTV_MAX;
+                        conn_par.intv_max = IOS_CONN_INTV_MAX;
                         /// Latency
-                        conn_par.latency = GAP_PPCP_SLAVE_LATENCY;
+                        conn_par.latency = IOS_SLAVE_LATENCY;
                         /// Supervision timeout, Time = N * 10 msec
-                        conn_par.time_out = GAP_PPCP_STO_MULT;
+                        conn_par.time_out = IOS_STO_MULT;
                         app_gap_param_update_req(((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl, &conn_par);
                     }
                 }
@@ -426,7 +435,11 @@ void app_event_button1_press_handler(void)
 #endif
 
     // delay 20ms to debounce
+#if (FB_JOYSTICKS)
+    ke_timer_set(APP_KEY_SCAN_TIMER,TASK_APP,2);
+#else
     ke_timer_set(APP_SYS_BUTTON_1_TIMER, TASK_APP, 2);
+#endif
     ke_evt_clear(1UL << EVENT_BUTTON1_PRESS_ID);
 }
 
@@ -460,7 +473,10 @@ void usr_button1_cb(void)
 // #endif
     }
 
-    // key debounce:
+ #if (FB_JOYSTICKS)
+    usr_button_env.button_st = button_press;
+#endif
+   // key debounce:
     // We can set a soft timer to debounce.
     // After wakeup BLE, the timer is not calibrated immediately and it is not precise.
     // So We set a event, in the event handle, set the soft timer.
@@ -507,6 +523,13 @@ void usr_init(void)
     {
         ASSERT_ERR(0);
     }
+#if 	(FB_JOYSTICKS)
+		if(KE_EVENT_OK != ke_evt_callback_set(EVENT_ADC_KEY_SAMPLE_CMP_ID,
+                                            app_event_adc_key_sample_cmp_handler))
+    {
+        ASSERT_ERR(0);
+    }
+#endif
 }
 
 /// @} USR

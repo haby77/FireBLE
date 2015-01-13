@@ -37,7 +37,18 @@
 // The local name defined by this macro is only used when the device name tag 
 // is not availiable in the NVDS. Generally the local name in the advertising
 // packet is obtained from device name in the NVDS.
-#define CFG_LOCAL_NAME   "Quintic BASS"
+#define CFG_LOCAL_NAME   "FireBLE HIDS"
+
+/// Evaluation board indication
+ // The GPIOs used for FireBLE's LED and button are different from FireBLE.
+ // If the FireBLE is used, the following macro shall be defined.
+ #define CFG_FireBLE
+ 
+///defined it when used SWD Debug,and LED2/LED3 will do not work.
+//#define  CFG_SWD
+ 
+///define it when used Joysticks
+#define CFG_JOYSTICKS
 
 /// DC-DC enable
 #define CFG_DC_DC
@@ -209,8 +220,8 @@
 // #define CFG_TASK_BASC   TASK_PRF1
 
 ///Battery Service Server Role
-#define CFG_PRF_BASS
-#define CFG_TASK_BASS   TASK_PRF2
+// #define CFG_PRF_BASS
+// #define CFG_TASK_BASS   TASK_PRF2
 
 ///Running Speed and Cadence Sensor Role
 // #define CFG_PRF_RSCPS

@@ -37,6 +37,7 @@
 #endif
 #include "sleep.h"
 #include "ke_mem.h"
+#include "joysticks.h"
 
 /*
  * MACRO DEFINITIONS
@@ -379,10 +380,13 @@ void app_event_button1_press_handler(void)
         wakeup_32k_xtal_start_timer();
     }
 #endif
-
     // delay 20ms to debounce
-    ke_timer_set(APP_SYS_BUTTON_1_TIMER, TASK_APP, 2);
-    ke_evt_clear(1UL << EVENT_BUTTON1_PRESS_ID);
+#if (FB_JOYSTICKS)
+   ke_timer_set(APP_KEY_SCAN_TIMER,TASK_APP,2);
+#else
+   ke_timer_set(APP_SYS_BUTTON_1_TIMER, TASK_APP, 2);
+#endif
+   ke_evt_clear(1UL << EVENT_BUTTON1_PRESS_ID);
 }
 
 /**
@@ -414,7 +418,9 @@ void usr_button1_cb(void)
 //         }
 // #endif
     }
-
+ #if defined(FB_JOYSTICKS)
+     usr_button_env.button_st = button_press;
+ #endif
     // key debounce:
     // We can set a soft timer to debounce.
     // After wakeup BLE, the timer is not calibrated immediately and it is not precise.
@@ -462,6 +468,13 @@ void usr_init(void)
     {
         ASSERT_ERR(0);
     }
+#if		(FB_JOYSTICKS)
+		 if(KE_EVENT_OK != ke_evt_callback_set(EVENT_ADC_KEY_SAMPLE_CMP_ID,
+                                           app_event_adc_key_sample_cmp_handler))
+		{
+				ASSERT_ERR(0);
+		}
+#endif
 }
 
 /// @} USR

@@ -37,7 +37,18 @@
 // The local name defined by this macro is only used when the device name tag 
 // is not availiable in the NVDS. Generally the local name in the advertising
 // packet is obtained from device name in the NVDS.
-#define CFG_LOCAL_NAME   "Quintic SCPPS"
+#define CFG_LOCAL_NAME   "FireBLE SCPPS"
+
+/// Evaluation board indication
+ // The GPIOs used for FireBLE's LED and button are different from FireBLE.
+ // If the FireBLE is used, the following macro shall be defined.
+ #define CFG_FireBLE
+ 
+///defined it when used SWD Debug,and LED2/LED3 will do not work.
+//#define  CFG_SWD
+ 
+///define it when used Joysticks
+#define CFG_JOYSTICKS
 
 /// DC-DC enable
 #define CFG_DC_DC

@@ -41,6 +41,10 @@
 #endif
 #include "sleep.h"
 
+#if	 (FB_JOYSTICKS)
+#include "joysticks.h"
+#endif
+
 /*
  * MACRO DEFINITIONS
  ****************************************************************************************
@@ -140,7 +144,7 @@ static void usr_led1_process(void)
         ke_timer_set(APP_SYS_LED_1_TIMER, TASK_APP, usr_env.led1_on_dur);
     }
 }
-
+#if	(BLE_BATT_SERVER)
 /**
  ****************************************************************************************
  * @brief ADC sample complete handler
@@ -201,6 +205,7 @@ void adc_sample_complete_callback(void)
 {
     ke_evt_set(1UL << EVENT_ADC_SAMPLE_CMP_ID);
 }
+#endif
 
 /**
  ****************************************************************************************
@@ -272,12 +277,14 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
                         app_gap_param_update_req(((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl, &conn_par);
                     }
                 }
-
+#if	(BLE_BATT_SERVER)
                 //Force immediately update the battery voltage
                 app_bass_batt_level_timer_handler(APP_BASS_BATT_LEVEL_TIMER, NULL, TASK_APP, TASK_APP);
+#endif
             }
             break;
 
+#if	(BLE_BATT_SERVER)						
         case BASS_DISABLE_IND:
             ke_timer_clear(APP_BASS_BATT_LEVEL_TIMER, TASK_APP);
             break;
@@ -294,7 +301,8 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
                 ke_timer_clear(APP_BASS_BATT_LEVEL_TIMER, TASK_APP);
             }
             break;
-
+#endif
+						
         default:
             break;
     }
@@ -355,6 +363,7 @@ int app_gap_adv_intv_update_timer_handler(ke_msg_id_t const msgid, void const *p
     return (KE_MSG_CONSUMED);
 }
 
+#if	(BLE_BATT_SERVER)
 /**
  ****************************************************************************************
  * @brief Handles the battery level timer.
@@ -396,6 +405,7 @@ int app_bass_batt_level_timer_handler(ke_msg_id_t const msgid,
 
     return (KE_MSG_CONSUMED);
 }
+#endif
 
 /**
  ****************************************************************************************
@@ -441,7 +451,7 @@ int app_button_timer_handler(ke_msg_id_t const msgid, void const *param,
             {
                 if(APP_IDLE == ke_state_get(TASK_APP))
                 {
-                    if(!app_bass_env->enabled)
+                    if(!app_hogpd_env->enabled)
                     {
                         // start adv
                         app_gap_adv_start_req(GAP_GEN_DISCOVERABLE|GAP_UND_CONNECTABLE,
@@ -494,7 +504,11 @@ void app_event_button1_press_handler(void)
 #endif
 
     // delay 20ms to debounce
-    ke_timer_set(APP_SYS_BUTTON_1_TIMER, TASK_APP, 2);
+#if (FB_JOYSTICKS)
+   ke_timer_set(APP_KEY_SCAN_TIMER,TASK_APP,2);
+#else
+   ke_timer_set(APP_SYS_BUTTON_1_TIMER, TASK_APP, 2);
+#endif
     ke_evt_clear(1UL << EVENT_BUTTON1_PRESS_ID);
 }
 
@@ -519,6 +533,9 @@ void usr_button1_cb(void)
 
         sw_wakeup_ble_hw();
 
+#if (FB_JOYSTICKS)
+     usr_button_env.button_st = button_press;
+#endif
 // #if (QN_DEEP_SLEEP_EN)
 //         // prevent deep sleep
 //         if(sleep_get_pm() == PM_DEEP_SLEEP)
@@ -576,13 +593,21 @@ void usr_init(void)
     {
         ASSERT_ERR(0);
     }
-
+#if	(BLE_BATT_SERVER)
     // Register button ADC sample event callback
     if(KE_EVENT_OK != ke_evt_callback_set(EVENT_ADC_SAMPLE_CMP_ID,
                                             app_event_adc_sample_cmp_handler))
     {
         ASSERT_ERR(0);
     }
+#endif
+#if		(FB_JOYSTICKS)
+		 if(KE_EVENT_OK != ke_evt_callback_set(EVENT_ADC_KEY_SAMPLE_CMP_ID,
+                                           app_event_adc_key_sample_cmp_handler))
+		{
+				ASSERT_ERR(0);
+		}
+#endif
 }
 
 /// @} USR

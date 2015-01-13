@@ -30,6 +30,12 @@
 // If the QN9021 miniDK is used, the following macro shall be defined.
 // #define CFG_9021_MINIDK
 
+/// Evaluation board indication
+// The GPIOs used for FireBlue's LED and button are different from FireBlue.
+// If the FireBlue is used, the following macro shall be defined.
+#define CFG_FireBLE
+
+
 /// Work mode: CFG_WM_SOC, CFG_WM_NP, CFG_WM_HCI
 #define CFG_WM_SOC
 
@@ -47,10 +53,16 @@
 // The local name defined by this macro is only used when the device name tag 
 // is not availiable in the NVDS. Generally the local name in the advertising
 // packet is obtained from device name in the NVDS.
-#define CFG_LOCAL_NAME   "Quintic PROXR"
+#define CFG_LOCAL_NAME   "FireBlue PROXR"
 
 /// DC-DC enable
 #define CFG_DC_DC
+
+///defined it when used SWD Debug,and LED2/LED3 will do not work.
+//#define  CFG_SWD
+
+///FireBlue Joystick button
+#define	CFG_JOYSTICKS
 
 /// 32k RCO
 // #define CFG_32K_RCO
