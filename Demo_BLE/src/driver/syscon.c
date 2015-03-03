@@ -13,7 +13,7 @@
  */
 
 #include "syscon.h"
-#if CONFIG_ENABLE_DRIVER_SYSCON==TRUE && CONFIG_ENABLE_ROM_DRIVER_SYSCON==FALSE
+#if CONFIG_ENABLE_DRIVER_SYSCON==TRUE
 #ifdef BLE_PRJ
 #include "lib.h"
 #endif

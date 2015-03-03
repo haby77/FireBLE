@@ -24,8 +24,7 @@
  ****************************************************************************************
  */
 #include "pwm.h"
-#if ((CONFIG_ENABLE_DRIVER_PWM0==TRUE || CONFIG_ENABLE_DRIVER_PWM1==TRUE) \
-    && CONFIG_ENABLE_ROM_DRIVER_PWM==FALSE)
+#if ((CONFIG_ENABLE_DRIVER_PWM0==TRUE || CONFIG_ENABLE_DRIVER_PWM1==TRUE))
 
 
 /*

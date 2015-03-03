@@ -20,32 +20,13 @@
 /*
  * Excample switch
  */
-#define TIMER_INTERRUPT_EXAMPLE            TRUE  // timer interrupt example;
-#define TIMER_PWM_EXAMPLE                  FALSE // timer pwm output example;
+#define TIMER_INTERRUPT_EXAMPLE            FALSE  // timer interrupt example;
+#define TIMER_PWM_EXAMPLE                  TRUE // timer pwm output example;
 #define TIMER_CAPTURE_TIMER_MOD_EXAMPLE    FALSE // timer capture timer mode example;
 #define TIMER_CAPTURE_COUNTER_MOD_EXAMPLE  FALSE // timer capture counter mode example;
 #define TIMER_CAPTURE_EVENT_MOD_EXAMPLE    FALSE // timer capture event mode example.
 
 #define LED_PINS         (GPIO_P32|GPIO_P31|GPIO_P05|GPIO_P04)
-
-void timer_io_config(void)
-{
-    // pin mux
-    syscon_SetPMCR0(QN_SYSCON, P07_SW_CLK_PIN_CTRL       
-                             | P06_SW_DAT_PIN_CTRL
-                             | P00_UART0_TXD_PIN_CTRL      
-                             | P17_UART0_RXD_PIN_CTRL    
-                             | P11_TIMER1_ICP0_PIN_CTRL //P1.1 timer1, used for pwm and caputure
-                             );
-    syscon_SetPMCR1(QN_SYSCON, P35_TIMER0_ICP0_PIN_CTRL //P3.5 timer0, used for pwm and caputure    
-                             | P26_TIMER2_ICP0_PIN_CTRL //P2.6 timer2, used for pwm and caputure         
-                             | P23_TIMER3_ICP0_PIN_CTRL //P2.3 timer3, used for pwm and caputure      
-                             );
-
-    // pin pull ( 00 : High-Z,  01 : Pull-down,  10 : Pull-up,  11 : Reserved )
-    syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
-    syscon_SetPPCR1(QN_SYSCON, 0x2AAAAAAA);
-}
 
 void led0_link(void)
 {
@@ -81,9 +62,6 @@ int main (void)
     gpio_write_pin_field(LED_PINS, (uint32_t)GPIO_HIGH);
     
     
-    // Timer io configurate
-    timer_io_config();
-    
 #if TIMER_INTERRUPT_EXAMPLE
     timer_init(QN_TIMER0, led0_link);
     timer_config(QN_TIMER0, TIMER_PSCAL_DIV, TIMER_COUNT_US(1000, TIMER_PSCAL_DIV));
@@ -103,7 +81,7 @@ int main (void)
 #endif
 
 #if TIMER_PWM_EXAMPLE
-    //P3.6 will output pwm wave with period for 1000us and pulse for 500us 
+    //P3.5 will output pwm wave with period for 1000us and pulse for 500us 
     timer_init(QN_TIMER0, NULL);
     timer_pwm_config(QN_TIMER0, TIMER_PSCAL_DIV, TIMER_COUNT_US(1000, TIMER_PSCAL_DIV), TIMER_COUNT_US(500, TIMER_PSCAL_DIV));
     timer_enable(QN_TIMER0, MASK_ENABLE);
@@ -130,7 +108,7 @@ int main (void)
      *
      * Make sure the macro TIMER0_CAP_MODE is INCAP_TIMER_MOD. 
      *
-     * Timer0 will capture the P3.6 rising edge, and each rising edge will trigger 
+     * Timer0 will capture the P3.5 rising edge, and each rising edge will trigger 
      * the callback function, as the same time the counter value will transmit to 
      * timer0_env.count.
      * 
@@ -148,7 +126,7 @@ int main (void)
      *
      * Make sure the macro TIMER0_CAP_MODE is INCAP_COUNTER_MOD. 
      *
-     * Timer0 will count the time during 5 times rising edge of P3.6. After that, the 
+     * Timer0 will count the time during 5 times rising edge of P3.5. After that, the 
      * callback function will be called, as the same time the time value will transmit to 
      * timer0_env.count.
      * 
@@ -165,7 +143,7 @@ int main (void)
      * 
      * Make sure the macro TIMER0_CAP_MODE is INCAP_EVENT_MOD. 
      *
-     * Timer0 will count the numbers of rising edge during 1000ms with P3.6, and each rising 
+     * Timer0 will count the numbers of rising edge during 1000ms with P3.5, and each rising 
      * edge will trigger the callback function, as the same time the counter value will transmit 
      * to timer0_env.count.
      * 

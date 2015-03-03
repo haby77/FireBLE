@@ -192,6 +192,10 @@ enum
     GAP_READY_EVT = KE_FIRST_MSG(TASK_GAP) + 70,
     /// Device name changed event
     GAP_DEV_NAME_CHG_EVT = KE_FIRST_MSG(TASK_GAP) + 73,
+    /// NP baud rate change request
+    GAP_NP_BAUD_CHG_REQ = KE_FIRST_MSG(TASK_GAP) + 74,
+    /// NP baud rate change complete event
+    GAP_NP_BAUD_CHG_REQ_CMP_EVT = KE_FIRST_MSG(TASK_GAP) + 75,
 };
 /// @endcond
 
@@ -785,6 +789,12 @@ struct gap_dev_name_chg_evt
     uint8_t length;
     /// Device name
     uint8_t dev_name[1];
+};
+
+// NP baudrate change request
+struct gap_baudrate_change_req
+{
+    int baudrate;
 };
 
 /// @endcond

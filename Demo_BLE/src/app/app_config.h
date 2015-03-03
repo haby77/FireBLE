@@ -34,15 +34,16 @@
 #include "usr_config.h"
 
 /// Application Version Number
-#define QN_APP_VER                  "1.3.3"
+#define QN_APP_VER                  "1.3.5a"
+
+/// Software Version
+#if (defined(CFG_SW_RELEASE))
+    #define QN_SW_RELEASE
+#endif
 
 /// QN9020 Chip Version Number
 #if (defined(CFG_9020_B2))
     #define QN_9020_B2
-#elif (defined(CFG_9020_B1))
-    #define QN_9020_B1
-#elif (defined(CFG_9020_B0))
-    #define QN_9020_B0
 #else
     #error "No correct chip version is defined!"
 #endif
@@ -50,6 +51,11 @@
 /// Evaluation Board Indication
 #if (defined(CFG_9021_MINIDK))
     #define QN_9021_MINIDK
+#endif
+
+/// External flash
+#if (defined(CFG_EXT_FLASH))
+    #define QN_EXT_FLASH
 #endif
 
 /// Work Mode
@@ -121,11 +127,6 @@
     #define QN_TEST_CTRL_PIN CFG_TEST_CTRL_PIN
 #endif
 
-/// ADV watchdog timer
-#if (defined(CFG_ADV_WDT))
-#define QN_ADV_WDT
-#endif
-
 /// Memory retention
 #if (defined(CFG_MEM_RETENTION))
     #define QN_MEM_RETENTION        CFG_MEM_RETENTION
@@ -158,15 +159,7 @@
     #define QN_BLE_MAX_SLEEP_DUR    0x320 // 625us * 0x320 = 0.5s
 #endif
 
-#if (defined(CFG_9020_B2))
 #define QN_PMU_VOLTAGE              0
-#elif (defined(CFG_9020_B0))
-/// PMU voltage (temp for qn9020 b0)
-#define QN_PMU_VOLTAGE              1
-#elif (defined(CFG_9020_B1))
-/// Patch
-#define QN_PMU_VOLTAGE              1
-#endif
 
 /// EACI external wakeup source
 #if QN_EACI
@@ -647,6 +640,9 @@
         #define BLE_OTA_SERVER      1
         #define TASK_OTAS           CFG_TASK_OTAS
         #define OTAS_DB_SIZE        1200
+        //#define ENAB_OTAS_APP_CTRL
+        //#define ENAB_OTAS_SEND_DATA
+        //#define ENAB_OTAS_SET_UUID
     #else
         #define BLE_OTA_SERVER      0
         #define OTAS_DB_SIZE        0

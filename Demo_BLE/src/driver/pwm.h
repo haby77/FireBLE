@@ -154,16 +154,6 @@ __STATIC_INLINE void pwm_clock_off(void)
  ****************************************************************************************
  */
 
-#if CONFIG_ENABLE_ROM_DRIVER_PWM==TRUE
-
-typedef void (*p_pwm_init)(enum PWM_CH pwmch);
-typedef uint8_t (*p_pwm_config)(enum PWM_CH pwmch, uint16_t pscal, uint8_t periodcount, uint8_t pulsecount);
-
-#define pwm_init            ((p_pwm_init)   _pwm_init)
-#define pwm_config          ((p_pwm_config) _pwm_config)
-
-#else
-
 #if (CONFIG_ENABLE_DRIVER_PWM0==TRUE && CONFIG_PWM0_DEFAULT_IRQHANDLER==TRUE)
 void PWM0_IRQHandler(void);
 #endif
@@ -173,7 +163,7 @@ void PWM1_IRQHandler(void);
 
 extern void pwm_init(enum PWM_CH pwmch);
 extern uint8_t pwm_config(enum PWM_CH pwmch, uint16_t pscal, uint8_t periodcount, uint8_t pulsecount);
-#endif
+
 
 /// @} PWM
 #endif /* CONFIG_ENABLE_DRIVER_PWM==TRUE */

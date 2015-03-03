@@ -86,15 +86,13 @@
 #define CONFIG_GPIO_ENABLE_INTERRUPT                    TRUE        /*!< Enable/Disable GPIO Interrupt */
 
 #define CONFIG_ENABLE_DRIVER_SPI0                       TRUE        /*!< Enable/Disable SPI Driver */
-#define CONFIG_SPI0_TX_DEFAULT_IRQHANDLER               FALSE        /*!< Enable/Disable SPI0 TX Default IRQ Handler */
-#define CONFIG_SPI0_RX_DEFAULT_IRQHANDLER               TRUE        /*!< Enable/Disable SPI0 RX Default IRQ Handler */
-#define CONFIG_SPI0_TX_ENABLE_INTERRUPT                 FALSE        /*!< Enable/Disable(Polling) SPI0 TX Interrupt */
+#define CONFIG_SPI0_DEFAULT_IRQHANDLER                  TRUE        /*!< Enable/Disable SPI0 Default IRQ Handler */
+#define CONFIG_SPI0_TX_ENABLE_INTERRUPT                 TRUE        /*!< Enable/Disable(Polling) SPI0 TX Interrupt */
 #define CONFIG_SPI0_RX_ENABLE_INTERRUPT                 TRUE        /*!< Enable/Disable(Polling) SPI0 RX Interrupt */
 #define CONFIG_ENABLE_DRIVER_SPI1                       TRUE        /*!< Enable/Disable SPI Driver */
-#define CONFIG_SPI1_TX_DEFAULT_IRQHANDLER               FALSE       /*!< Enable/Disable SPI1 TX Default IRQ Handler */
-#define CONFIG_SPI1_RX_DEFAULT_IRQHANDLER               TRUE       /*!< Enable/Disable SPI1 RX Default IRQ Handler */
+#define CONFIG_SPI1_DEFAULT_IRQHANDLER                  FALSE       /*!< Enable/Disable SPI1 Default IRQ Handler */
 #define CONFIG_SPI1_TX_ENABLE_INTERRUPT                 FALSE       /*!< Enable/Disable(Polling) SPI1 TX Interrupt */
-#define CONFIG_SPI1_RX_ENABLE_INTERRUPT                 TRUE       /*!< Enable/Disable(Polling) SPI1 RX Interrupt */
+#define CONFIG_SPI1_RX_ENABLE_INTERRUPT                 FALSE       /*!< Enable/Disable(Polling) SPI1 RX Interrupt */
 
 #define CONFIG_ENABLE_DRIVER_UART0                      TRUE        /*!< Enable/Disable UART Driver */
 #define CONFIG_UART0_TX_DEFAULT_IRQHANDLER              TRUE        /*!< Enable/Disable UART0 TX Default IRQ Handler */
@@ -110,7 +108,7 @@
 #define CONFIG_ENABLE_DRIVER_SERIAL_FLASH               TRUE        /*!< Enable/Disable Serial Flash Driver */
 
 #define CONFIG_ENABLE_DRIVER_I2C                        TRUE        /*!< Enable/Disable I2C Driver */
-#define CONFIG_I2C_DEFAULT_IRQHANDLER                   TRUE        /*!< Enable/Disable I2C Default IRQ Handler */
+#define CONFIG_I2C_DEFAULT_IRQHANDLER                   FALSE       /*!< Enable/Disable I2C Default IRQ Handler */
 #define CONFIG_I2C_ENABLE_INTERRUPT                     FALSE       /*!< Enable/Disable(Polling) I2C Interrupt */
 
 #define CONFIG_ENABLE_DRIVER_TIMER0                     TRUE        /*!< Enable/Disable TIMER Driver */
@@ -127,8 +125,8 @@
 #define CONFIG_TIMER3_ENABLE_INTERRUPT                  TRUE        /*!< Enable/Disable TIMER3 Interrupt */
 
 #define CONFIG_ENABLE_DRIVER_PWM0                       TRUE        /*!< Enable/Disable PWM Driver */
-#define CONFIG_PWM0_DEFAULT_IRQHANDLER                  TRUE        /*!< Enable/Disable PWM0 Default IRQ Handler */
-#define CONFIG_PWM0_ENABLE_INTERRUPT                    TRUE        /*!< Enable/Disable PWM0 Default IRQ Handler */
+#define CONFIG_PWM0_DEFAULT_IRQHANDLER                  FALSE       /*!< Enable/Disable PWM0 Default IRQ Handler */
+#define CONFIG_PWM0_ENABLE_INTERRUPT                    FALSE       /*!< Enable/Disable PWM0 Default IRQ Handler */
 #define CONFIG_ENABLE_DRIVER_PWM1                       TRUE        /*!< Enable/Disable PWM Driver */
 #define CONFIG_PWM1_DEFAULT_IRQHANDLER                  FALSE       /*!< Enable/Disable PWM0 Interrupt */
 #define CONFIG_PWM1_ENABLE_INTERRUPT                    FALSE       /*!< Enable/Disable PWM1 Default IRQ Handler */
@@ -152,11 +150,11 @@
 #define CONFIG_ENABLE_DRIVER_BLE_DP                     TRUE        /*!< Enable/Disable BLE datapath Driver */
 
 #define CONFIG_ENABLE_DRIVER_CALIB                      TRUE        /*!< Enable/Disable Calibration Driver */
-#define CONFIG_CALIB_DEFAULT_IRQHANDLER                 FALSE        /*!< Enable/Disable Calibration Default IRQ Handler */
+#define CONFIG_CALIB_DEFAULT_IRQHANDLER                 FALSE       /*!< Enable/Disable Calibration Default IRQ Handler */
 #define CONFIG_CALIB_ENABLE_INTERRUPT                   FALSE       /*!< Enable/Disable Calibration Interrupt */
 
 #define CONFIG_ENABLE_DRIVER_ADC                        TRUE        /*!< Enable/Disable ADC Driver */
-#define CONFIG_ADC_DEFAULT_IRQHANDLER                   TRUE        /*!< Enable/Disable ADC Default IRQ Handler */
+#define CONFIG_ADC_DEFAULT_IRQHANDLER                   FALSE       /*!< Enable/Disable ADC Default IRQ Handler */
 #define CONFIG_ADC_ENABLE_INTERRUPT                     FALSE       /*!< Enable/Disable ADC Interrupt */
 
 #define CONFIG_ENABLE_DRIVER_ANALOG                     TRUE        /*!< Enable/Disable Analog Driver */
@@ -171,22 +169,7 @@
 #define CONFIG_ENABLE_DRIVER_SLEEP                      TRUE        /*!< Enable/Disable Sleep Driver */
 #define CONFIG_ENABLE_DRIVER_SYSCON                     TRUE        /*!< Enable/Disable System Controller Driver */
 
-#define CONFIG_ENABLE_ROM_DRIVER_GPIO                   FALSE       /*!< Enable/Disable GPIO ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_UART                   FALSE       /*!< Enable/Disable UART ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_SPI                    FALSE       /*!< Enable/Disable SPI ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_I2C                    FALSE       /*!< Enable/Disable I2C ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_TIMER                  FALSE       /*!< Enable/Disable TIMER ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_PWM                    FALSE       /*!< Enable/Disable PWM ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_WDT                    FALSE       /*!< Enable/Disable WDT ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_RTC                    FALSE       /*!< Enable/Disable RTC ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_DMA                    FALSE       /*!< Enable/Disable DMA ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_ADC                    FALSE       /*!< Enable/Disable ADC ROM Driver */
 #define CONFIG_ENABLE_ROM_DRIVER_CALIB                  TRUE        /*!< Enable/Disable Calibration ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_ANALOG                 FALSE       /*!< Enable/Disable Analog ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_SERIAL_FLASH           FALSE       /*!< Enable/Disable Serial Flash ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_QNRF                   FALSE       /*!< Enable/Disable RF ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_SLEEP                  FALSE       /*!< Enable/Disable Sleep ROM Driver */
-#define CONFIG_ENABLE_ROM_DRIVER_SYSCON                 FALSE       /*!< Enable/Disable System Controller ROM Driver */
 
 /// target configuration
 #define GPIO_CALLBACK_EN                                TRUE        /*!< Enable/Disable GPIO Driver Callback */
@@ -230,14 +213,12 @@
 
 #define CALIB_CALLBACK_EN                               FALSE       /*!< Enable/Disable Calibration Driver Callback */
 
-#define QNRF_FREQ_TAB_ROM                               TRUE        /*!< Enable/Disable RF Driver Callback */
-
 #define SLEEP_CALLBACK_EN                               TRUE        /*!< Enable/Disable Sleep Wakeup Callback */
 #define SLEEP_CONFIG_EN                                 TRUE        /*!< Enable/Disable User Config Before Enter Sleep */
 #define ACMP_WAKEUP_EN                                  FALSE       /*!< Enable/Disable Analog comparator wakeup MCU */
 #define GPIO_WAKEUP_EN                                  TRUE        /*!< Enable/Disable GPIO wakeup MCU */
 #define SLEEP_TIMER_WAKEUP_EN                           TRUE        /*!< Enable/Disable Sleep timer wakeup MCU */
-#define QN_LOW_POWER_MODE_EN                            FALSE        /*!< Enable/Disable Low power mode */
+#define QN_LOW_POWER_MODE_EN                            FALSE       /*!< Enable/Disable Low power mode */
 
 #if (QN_32K_RCO)
 #define CLOCK_32K_CORRECTION_EN                         TRUE        /*!< Enable/Disable 32K clock correction */

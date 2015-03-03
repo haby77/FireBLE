@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 #include "dma.h"
-#if CONFIG_ENABLE_DRIVER_DMA==TRUE && CONFIG_ENABLE_ROM_DRIVER_DMA==FALSE
+#if CONFIG_ENABLE_DRIVER_DMA==TRUE
 #include "uart.h"
 
 ///DMA environment parameters

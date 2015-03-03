@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5520 $
  *
  ****************************************************************************************
  */
@@ -198,36 +198,7 @@ __STATIC_INLINE void syscon_set_xtal_src(int flag, int src)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_SYSCON==TRUE
 
-#define g_SystemClock  (*(uint32_t *) _g_SystemClock)
-#define g_AhbClock     (*(uint32_t *) _g_AhbClock)
-//#define g_ApbClock     (*(uint32_t *) _g_ApbClock)
-
-typedef void (*p_syscon_set_sysclk_src)(enum CLK_MUX clk_src, int flag);
-typedef void (*p_syscon_set_clk)(int clk);
-typedef void (*p_syscon_set_usart_clk)(uint32_t usart, int clk);
-typedef enum RESET_CAUSE (*p_syscon_get_reset_cause)(void);
-typedef void (*p_syscon_enable_transceiver)(uint32_t able);
-typedef void (*p_callback)(void (*callback)(void));
-typedef void (*p_void)(void);
-
-#define syscon_set_sysclk_src       ((p_syscon_set_sysclk_src)        _syscon_set_sysclk_src)
-#define syscon_set_ahb_clk          ((p_syscon_set_clk)               _syscon_set_ahb_clk)
-#define syscon_set_apb_clk          ((p_syscon_set_clk)               _syscon_set_apb_clk)
-#define syscon_set_timer_clk        ((p_syscon_set_clk)               _syscon_set_timer_clk)
-#define syscon_set_ble_clk          ((p_syscon_set_clk)               _syscon_set_ble_clk)
-#define syscon_set_usart_clk        ((p_syscon_set_usart_clk)         _syscon_set_usart_clk) 
-#define syscon_get_reset_cause      ((p_syscon_get_reset_cause)       _syscon_get_reset_cause)
-#define syscon_enable_transceiver   ((p_syscon_enable_transceiver)    _syscon_enable_transceiver)
-#if CLOCK_32K_CORRECTION_EN==TRUE
-#define clock_32k_correction_init   ((p_void)                         _clock_32k_correction_init)
-#define clock_32k_correction_enable ((p_callback)                     _clock_32k_correction_enable)
-#define clock_32k_correction_cb     ((p_void)                         _clock_32k_correction_cb)
-#endif
-
-#else
-    
 extern uint32_t g_SystemClock;
 extern uint32_t g_AhbClock;
 extern uint32_t g_ApbClock;
@@ -246,7 +217,6 @@ extern void clock_32k_correction_enable(void (*callback)(void));
 extern void clock_32k_correction_cb(void);
 #endif
 
-#endif
 
 /// @} SYSTEM_CONTROLLER
 #endif /* CONFIG_ENABLE_DRIVER_SYSCON */

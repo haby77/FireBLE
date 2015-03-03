@@ -17,7 +17,12 @@
 
 // User configuration
 
-/// Chip version: CFG_9020_B2, CFG_9020_B1, CFG_9020_B0
+/// Software verion: CFG_SW_DEBUG, CFG_SW_RELEASE
+// In the debug version the program will be in the infinite loop if the hardfault exception is triggered.
+// In the release version the program will execute a system reboot if the hardfault exception is triggered.
+#define CFG_SW_DEBUG
+
+/// Chip version: CFG_9020_B2
 #define CFG_9020_B2
 
 /// Work mode: CFG_WM_SOC, CFG_WM_NP, CFG_WM_HCI

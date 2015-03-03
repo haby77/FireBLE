@@ -638,4 +638,3 @@ void task_app_desc_register(void)
     task_desc_register(TASK_APP, task_app_desc);
 }
 #endif
-

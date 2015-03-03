@@ -110,21 +110,32 @@ __STATIC_INLINE void wdt_reset(void)
     syscon_SetCRSC(QN_SYSCON, SYSCON_MASK_WDOG_RST);
 }
 
+/**
+ ****************************************************************************************
+ * @brief Unlock watchdog timer access
+ *
+ ****************************************************************************************
+ */
+__STATIC_INLINE void wdt_unlock(void)
+{
+    wdt_wdt_SetLKR(QN_WDT, 0x1ACCE551); 
+}
+
+/**
+ ****************************************************************************************
+ * @brief Lock watchdog timer access
+ *
+ ****************************************************************************************
+ */
+__STATIC_INLINE void wdt_lock(void)
+{
+    wdt_wdt_SetLKR(QN_WDT, 0); 
+}
 
 /*
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-
-#if CONFIG_ENABLE_ROM_DRIVER_WDT==TRUE
-typedef void (*p_wdt_init)(unsigned int cycle, enum WDT_MODE mode);
-typedef void (*p_wdt_set)(unsigned int cycle);
-
-#define wdt_init          ((p_wdt_init) _wdt_init)
-#define wdt_set           ((p_wdt_set)  _wdt_set)
-
-
-#else
 
 #if CONFIG_WDT_DEFAULT_IRQHANDLER==TRUE
 void WDT_IRQHandler(void);
@@ -132,7 +143,7 @@ void WDT_IRQHandler(void);
 
 extern void wdt_init(unsigned int cycle, enum WDT_MODE mode);
 extern void wdt_set(unsigned int cycle);
-#endif
+
 
 /// @} WDT
 #endif /* CONFIG_ENABLE_DRIVER_WDT==TRUE */

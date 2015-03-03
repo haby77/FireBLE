@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.1 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -25,7 +25,7 @@
  */
 
 #include "adc.h"
-#if CONFIG_ENABLE_DRIVER_ADC==TRUE && CONFIG_ENABLE_ROM_DRIVER_ADC==FALSE
+#if CONFIG_ENABLE_DRIVER_ADC==TRUE
 #include "nvds.h"
 #if ADC_DMA_EN==TRUE
 #include "dma.h"
@@ -129,8 +129,8 @@ void ADC_IRQHandler(void)
                 }
                 else {
 
-                    // burst mode enable, software trigger
-                    if ((adc_env.trig_src == ADC_TRIG_SOFT) && ((adc_env.mode == BURST_SCAN_MOD)||(adc_env.mode == BURST_MOD))) {
+                    // single mode enable, software trigger
+                    if ((adc_env.trig_src == ADC_TRIG_SOFT) && ((adc_env.mode == SINGLE_SCAN_MOD)||(adc_env.mode == SINGLE_MOD))) {
 
                         scan_ch_num--;
                         if (scan_ch_num == 0) {
@@ -140,7 +140,7 @@ void ADC_IRQHandler(void)
                             adc_adc_SetADC0WithMask(QN_ADC, ADC_MASK_SFT_START, MASK_ENABLE);
 
                             // restore scan_ch_num
-                            if (adc_env.mode == BURST_SCAN_MOD) {
+                            if (adc_env.mode == SINGLE_SCAN_MOD) {
                                 scan_ch_num = adc_env.end_ch - adc_env.start_ch + 1;
                             }
                             else {
@@ -211,7 +211,7 @@ void adc_clean_fifo(void)
 void adc_init(enum ADC_IN_MOD in_mod, enum ADC_WORK_CLK work_clk, enum ADC_REF ref_vol, enum ADC_RESOLUTION resolution)
 {
 #if CONFIG_ADC_DEFAULT_IRQHANDLER==TRUE
-    adc_env.mode = BURST_MOD;
+    adc_env.mode = SINGLE_MOD;
     adc_env.samples = 0;
     adc_env.bufptr = NULL;
 #if ADC_CALLBACK_EN==TRUE
@@ -296,7 +296,7 @@ void adc_read(const adc_read_configuration *S, int16_t *buf, uint32_t samples, v
     
 
     // Busrt scan mode, need read all of the channel after once trigger
-    if (S->mode == BURST_SCAN_MOD) {
+    if (S->mode == SINGLE_SCAN_MOD) {
         scan_ch_num = S->end_ch - S->start_ch + 1;
     }
     else {
@@ -322,16 +322,16 @@ void adc_read(const adc_read_configuration *S, int16_t *buf, uint32_t samples, v
 
     reg = (S->start_ch << ADC_POS_SCAN_CH_START)    // set adc channel, or set scan start channel
         | (S->end_ch << ADC_POS_SCAN_CH_END)        // set scan end channel
-        | (0x03 << ADC_POS_SCAN_INTV)               // should not be set to 0 at burst mode
+        | (0x03 << ADC_POS_SCAN_INTV)               // should not be set to 0 at single mode
         | (S->trig_src << ADC_POS_START_SEL)        // select ADC trigger source
-        | (0x09 << ADC_POS_POW_UP_DLY)              // power up delay
-        | ADC_MASK_POW_DN_CTRL                      // enable power down control by hardware, only work in burst mode
+        | (0x3F << ADC_POS_POW_UP_DLY)              // power up delay
+        | ADC_MASK_POW_DN_CTRL                      // enable power down control by hardware, only work in single mode
         | ADC_MASK_ADC_EN;                          // enable ADC
 
-    if ((S->mode == BURST_SCAN_MOD) || (S->mode == BURST_MOD)) {    // default is continue
-        reg |= ADC_MASK_SINGLE_EN;                                  // burst mode enable
+    if ((S->mode == SINGLE_SCAN_MOD) || (S->mode == SINGLE_MOD)) {  // default is continue
+        reg |= ADC_MASK_SINGLE_EN;                                  // single mode enable
     }
-    if ((S->mode == BURST_SCAN_MOD) || (S->mode == CONTINUE_SCAN_MOD)) {    // default is not scan
+    if ((S->mode == SINGLE_SCAN_MOD) || (S->mode == CONTINUE_SCAN_MOD)) {   // default is not scan
         reg |= ADC_MASK_SCAN_EN;                                            // scan mode enable
     }
 
@@ -348,14 +348,14 @@ void adc_read(const adc_read_configuration *S, int16_t *buf, uint32_t samples, v
     // polling
     while(samples > 0)
     {
-        for (int i = 0; i < scan_ch_num; i++) {
+        for (int i = 0; ((i < scan_ch_num)&&(samples)); i++) {
             while(!(adc_adc_GetSR(QN_ADC) & ADC_MASK_DAT_RDY_IF));
             *buf++ = adc_adc_GetDATA(QN_ADC);
             samples--;
         }
 
-        // Burst mode enable, software trigger
-        if ( (samples) && (adc_env.trig_src == ADC_TRIG_SOFT) && ((S->mode == BURST_SCAN_MOD)||(S->mode == BURST_MOD))) {
+        // Single mode enable, software trigger
+        if ( (samples) && (adc_env.trig_src == ADC_TRIG_SOFT) && ((S->mode == SINGLE_SCAN_MOD)||(S->mode == SINGLE_MOD))) {
             // SFT_START 0->1 trigger ADC conversion
             adc_adc_SetADC0WithMask(QN_ADC, ADC_MASK_SFT_START, MASK_DISABLE);
             adc_adc_SetADC0WithMask(QN_ADC, ADC_MASK_SFT_START, MASK_ENABLE);
@@ -494,7 +494,7 @@ static void __adc_offset_get(void)
     adc_offset_get_done = 0;
     adc_read_configuration read_cfg;
     read_cfg.trig_src = ADC_TRIG_SOFT;
-    read_cfg.mode = BURST_MOD;
+    read_cfg.mode = SINGLE_MOD;
     read_cfg.start_ch = AIN01;
     read_cfg.end_ch = AIN01;    
     adc_read(&read_cfg, &ADC_OFFSET, 1, adc_offset_get_cb);

@@ -17,7 +17,12 @@
 
 // User configuration
 
-/// Chip version: CFG_9020_B2, CFG_9020_B1, CFG_9020_B0
+/// Software verion: CFG_SW_DEBUG, CFG_SW_RELEASE
+// In the debug version the program will be in the infinite loop if the hardfault exception is triggered.
+// In the release version the program will execute a system reboot if the hardfault exception is triggered.
+#define CFG_SW_DEBUG
+
+/// Chip version: CFG_9020_B2
 #define CFG_9020_B2
 
 /// Work mode: CFG_WM_SOC, CFG_WM_NP, CFG_WM_HCI
@@ -47,11 +52,6 @@
 
 /// Test mode controll pin
 //#define CFG_TEST_CTRL_PIN GPIO_P31
-
-/// ADV watchdog timer
-#if (defined(CFG_FW_V18))
-#define CFG_ADV_WDT
-#endif
 
 /// Memory retention
 #define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK3 | MEM_BLOCK4 | MEM_BLOCK6 | MEM_BLOCK7)
@@ -119,6 +119,7 @@
 
 ///Quintic private profile Role
 #define CFG_PRF_QPPS
+#define QPPS_NOTIFY_NUM     5
 //#define CFG_TASK_QPPS     TASK_PRF1
 
 ///Health Thermometer Profile Collector Role

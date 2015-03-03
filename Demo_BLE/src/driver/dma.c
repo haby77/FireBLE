@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 #include "dma.h"
-#if CONFIG_ENABLE_DRIVER_DMA==TRUE && CONFIG_ENABLE_ROM_DRIVER_DMA==FALSE
+#if CONFIG_ENABLE_DRIVER_DMA==TRUE
 #include "uart.h"
 
 ///DMA environment parameters

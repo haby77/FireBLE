@@ -22,43 +22,6 @@
 #define GPIO_INPUT_EXAMPLE          FALSE
 #define GPIO_OUTPUT_EXAMPLE         TRUE
 
-void gpio_io_config(void)
-{
-    // pin mux
-    syscon_SetPMCR0(QN_SYSCON, P00_GPIO_0_PIN_CTRL
-                             | P01_GPIO_1_PIN_CTRL
-                             | P02_GPIO_2_PIN_CTRL
-                             | P03_GPIO_3_PIN_CTRL
-                             | P04_GPIO_4_PIN_CTRL
-                             | P05_GPIO_5_PIN_CTRL
-                             | P06_SW_DAT_PIN_CTRL
-                             | P07_SW_CLK_PIN_CTRL
-                             | P10_GPIO_8_PIN_CTRL
-                             | P11_GPIO_9_PIN_CTRL
-                             | P12_GPIO_10_PIN_CTRL
-                             | P13_GPIO_11_PIN_CTRL
-                             | P14_GPIO_12_PIN_CTRL
-                             | P15_GPIO_13_PIN_CTRL
-                             | P16_GPIO_14_PIN_CTRL
-                             | P17_GPIO_15_PIN_CTRL
-                             );
-    syscon_SetPMCR1(QN_SYSCON, P20_GPIO_16_PIN_CTRL
-                             | P21_GPIO_17_PIN_CTRL
-                             | P22_GPIO_18_PIN_CTRL
-                             | P23_GPIO_19_PIN_CTRL
-                             | P24_GPIO_20_PIN_CTRL
-                             | P25_GPIO_21_PIN_CTRL
-                             | P26_GPIO_22_PIN_CTRL
-                             | P27_GPIO_23_PIN_CTRL
-                             | P30_GPIO_24_PIN_CTRL
-                             | P31_GPIO_25_PIN_CTRL
-                             | P32_GPIO_26_PIN_CTRL
-                             | P33_GPIO_27_PIN_CTRL
-                             | P34_GPIO_28_PIN_CTRL
-                             | P35_GPIO_29_PIN_CTRL
-                             | P36_GPIO_30_PIN_CTRL
-                             );
-}
 
 void cb_gpio_p14(void)
 {
@@ -89,7 +52,6 @@ int main (void)
 {   
 
     SystemInit();
-    gpio_io_config();
     
     /* Initialize GPIO */
     gpio_init(cb_gpio);

@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 #include "rtc.h"
-#if CONFIG_ENABLE_DRIVER_RTC==TRUE && CONFIG_ENABLE_ROM_DRIVER_RTC==FALSE
+#if CONFIG_ENABLE_DRIVER_RTC==TRUE
 
 #ifdef USE_STD_C_LIB_TIME
 #include <time.h>

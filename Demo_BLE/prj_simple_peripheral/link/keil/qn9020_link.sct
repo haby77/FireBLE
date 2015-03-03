@@ -4,23 +4,62 @@
 
 LR_ROM1 0x10000000 0xF294
 {
-    APP_CODE 0x10000000 0x3000
+    APP_CODE 0x10000000 0x2000
     {
         *.o (RESET, +First)
         startup.o (+RO)
         *(InRoot$$Sections)
+        math.o (+RO +RW +ZI)
         .ANY (+RO)
         .ANY (+RW +ZI)
     }
 
     APP_CODE_BANK6 0x1000c000 0xDB4
     {
-        app_gap.o app_gap_task.o app_main.o app_task.o app_util.o prf_utils.o sleep.o system.o (+RO +RW +ZI)
+        app_main.o (+RO +RW +ZI)
+        usr_design.o (+RO +RW +ZI)
+        app_gap_task.o (+RO +RW +ZI)
+        prf_utils.o (+RO +RW +ZI)
+        sleep.o (+RO +RW +ZI)
     }
 
     APP_CODE_BANK7_PERIPHERAL_ONLY 0x1000D2E4 0x230
     {
-         button.o gpio.o led.o (+RO +RW +ZI)
+        button.o (+RO +RW +ZI)
+        gpio.o (+RO +RW +ZI)
+        led.o (+RO +RW +ZI)
+    }
+
+    APP_CODE_BANK7_PERIPHERAL_ONLY_1 0x1000E580 0x1BC
+    {
+        system.o (+RO +RW +ZI)
+    }
+    
+    APP_CODE_BANK7_PERIPHERAL_ONLY_2 0x1000E764 0x1BC
+    {
+        app_env.o (+RO +RW +ZI)
+        app_smp_task.o (+RO +RW +ZI)
+    }
+
+    APP_CODE_BANK7_PERIPHERAL_ONLY_3 0x1000E948 0x1BC
+    {
+        app_task.o (+RO +RW +ZI)
+        ;memcmp.o (+RO +RW +ZI)
+        ;memcpya.o (+RO +RW +ZI)
+        ;memseta.o (+RO +RW +ZI)
+        ;rand.o (+RO +RW +ZI)
+        ;strcpy.o (+RO +RW +ZI)
+        ;uidiv.o (+RO +RW +ZI)
+    }
+
+    APP_CODE_BANK7_PERIPHERAL_ONLY_4 0x1000EB2C 0x1BC
+    {
+        app_gap.o (+RO +RW +ZI)
+    }
+
+    APP_CODE_BANK7_PERIPHERAL_ONLY_5 0x1000ED10 0x1BC
+    {
+        app_util.o (+RO +RW +ZI)
     }
 }
 

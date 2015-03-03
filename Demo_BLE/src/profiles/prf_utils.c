@@ -1511,12 +1511,16 @@ void prf_init(void)
     // Enable app the ability to control ota start or not.
     // PROFILE_CONTROL :  default parameter, nothing need to do , even you can diable following part.
     // APP_CONTROL : need response ota to start ota or not ,when recevie the ota start indication
-    struct otas_ctrl_info ctrl_info = {PROFILE_CONTROL, 0};    
-    
+    #ifdef ENAB_OTAS_APP_CTRL
+    struct otas_ctrl_info ctrl_info = {APP_CONTROL, 0};
+
     if(ctrl_info.ctrl_flag == APP_CONTROL)
     {
         otas_control(&ctrl_info);
     }
+    #endif
+
+
     #endif // (BLE_OTA_SERVER)
 }
 

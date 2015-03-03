@@ -156,25 +156,6 @@ __STATIC_INLINE void dma_reset(void)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
- 
-#if CONFIG_ENABLE_ROM_DRIVER_DMA==TRUE
-
-typedef void (*p_dma_void)(void);
-typedef int (*p_dma_check_status)(void);
-typedef void (*p_dma_memory_copy)(uint32_t src, uint32_t dst, uint32_t size, void (*callback)(void));
-typedef void (*p_dma_tx)(enum DMA_TRANS_MODE mode, uint32_t src, enum DMA_PERIPHERAL_TX dst, uint32_t size, void (*tx_callback)(void));
-typedef void (*p_dma_rx)(enum DMA_TRANS_MODE mode, enum DMA_PERIPHERAL_RX src, uint32_t dst, uint32_t size, void (*rx_callback)(void));
-typedef void (*p_dma_transfer)(enum DMA_PERIPHERAL_RX src_index, enum DMA_PERIPHERAL_TX dst_index, uint32_t size, void (*trans_callback)(void));
-
-#define dma_init               ((p_dma_void)        _dma_init)
-#define dma_check_status       ((p_dma_check_status)_dma_check_status)
-#define dma_abort              ((p_dma_void)        _dma_abort)
-#define dma_memory_copy        ((p_dma_memory_copy) _dma_memory_copy)
-#define dma_tx                 ((p_dma_tx)          _dma_tx)
-#define dma_rx                 ((p_dma_rx)          _dma_rx)
-#define dma_transfer           ((p_dma_transfer)    _dma_transfer)
-
-#else
 
 #if CONFIG_DMA_DEFAULT_IRQHANDLER==TRUE
 void DMA_IRQHandler(void);
@@ -186,7 +167,7 @@ extern void dma_memory_copy (uint32_t src, uint32_t dst, uint32_t size, void (*c
 extern void dma_tx(enum DMA_TRANS_MODE mode, uint32_t src, enum DMA_PERIPHERAL_TX dst, uint32_t size, void (*tx_callback)(void));
 extern void dma_rx(enum DMA_TRANS_MODE mode, enum DMA_PERIPHERAL_RX src, uint32_t dst, uint32_t size, void (*rx_callback)(void));
 extern void dma_transfer(enum DMA_PERIPHERAL_RX src_index, enum DMA_PERIPHERAL_TX dst_index, uint32_t size, void (*trans_callback)(void));
-#endif
+
 
 /// @} DMA
 #endif /* CONFIG_ENABLE_DRIVER_DMA==TRUE */

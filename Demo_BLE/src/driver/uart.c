@@ -25,8 +25,7 @@
  ****************************************************************************************
  */
 #include "uart.h"
-#if ((CONFIG_ENABLE_DRIVER_UART0==TRUE || CONFIG_ENABLE_DRIVER_UART1==TRUE) \
-    && CONFIG_ENABLE_ROM_DRIVER_UART==FALSE)
+#if ((CONFIG_ENABLE_DRIVER_UART0==TRUE || CONFIG_ENABLE_DRIVER_UART1==TRUE))
 #include "gpio.h"
 #if UART_DMA_EN==TRUE
 #include "dma.h"

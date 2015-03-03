@@ -220,6 +220,13 @@ struct qpps_data_val_ind
  */
 void qpps_init(void);
 
+/**
+ ****************************************************************************************
+ * @brief Update UUID of the Quintic private profile module.
+ * This function should be called before added QPP service into the database.
+ ****************************************************************************************
+ */
+void qpps_set_service_uuid(uint8_t param[ATT_UUID_128_LEN]);
 
 /*
  * TASK DESCRIPTOR DECLARATIONS

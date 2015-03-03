@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.1 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -26,7 +26,7 @@
 #include "serialflash.h"
 #include "syscon.h"
 
-#if CONFIG_ENABLE_DRIVER_SERIAL_FLASH==TRUE && CONFIG_ENABLE_ROM_DRIVER_SERIAL_FLASH==FALSE
+#if CONFIG_ENABLE_DRIVER_SERIAL_FLASH==TRUE
 /// Serial flash command list
 uint8_t g_flash_cmd[MAX_FLASH_CMD_NUM]=
 {
@@ -110,8 +110,6 @@ void set_flash_clock(uint32_t clock_div)
 */
 uint32_t read_flash_id(void)
 {
-    while(is_flash_busy()); // wait for flash free
-
     return sf_ctrl_GetFlashID(QN_SF_CTRL);
 }
 

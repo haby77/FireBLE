@@ -21,7 +21,7 @@ int main (void)
     gpio_init(NULL);
     gpio_set_direction(GPIO_P01, GPIO_OUTPUT); // P0.1 output
     gpio_write_pin(GPIO_P01, GPIO_LOW);
-    delay(10000);
+    delay(100);
 
 #if SYS_CLK_32K_EN==TRUE
     syscon_set_sysclk_src(CLK_LOW_32K, __32K_TYPE);
@@ -37,8 +37,8 @@ int main (void)
     while (1)                                /* Loop forever */
     {
 
-        //wdt_set(0x7F);
-        delay(2);
+        wdt_set(0x7F);
+        delay(1000);
 
         // test lock function
         //QN_WDT->LOAD = 0x7F;

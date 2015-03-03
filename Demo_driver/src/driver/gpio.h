@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -210,44 +210,7 @@ __STATIC_INLINE void gpio_reset(void)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_GPIO==TRUE
 
-typedef void            (*p_gpio_init)(void);
-typedef enum gpio_level (*p_gpio_read_pin)(enum gpio_pin pin);
-typedef void            (*p_gpio_write_pin)(enum gpio_pin pin, enum gpio_level level);
-typedef void            (*p_gpio_set_direction)((enum gpio_pin pin, enum gpio_direction direction));
-
-typedef uint32_t        (*p_gpio_read_pin_field)(uint32_t pin_mask);
-typedef uint32_t        (*p_gpio_write_pin_field)(uint32_t pin_mask, uint32_t level_value);
-typedef uint32_t        (*p_gpio_set_direction_field)(uint32_t pin_mask, uint32_t direction_value);
-
-typedef void            (*p_gpio_toggle_pin)(enum gpio_pin pin);
-typedef void            (*p_gpio_set_interrupt)(enum gpio_pin pin, uint32_t edge, uint32_t polarity);
-typedef void            (*p_gpio_enable_interrupt)(enum gpio_pin pin, gpio_callback_t p_callback);
-typedef void            (*p_gpio_disable_interrupt)(enum gpio_pin pin);
-typedef void            (*p_gpio_pull_set)(enum gpio_pin pin, enum gpio_pull pull_state);
-typedef void            (*p_gpio_wakeup_config)(enum gpio_pin pin, enum gpio_wakeup_type type);
-typedef bool            (*p_gpio_sleep_allowed)();
-
-
-#define gpio_init                        ((p_gpio_init)                _gpio_init)
-#define gpio_read_pin                    ((p_gpio_read_pin)            _gpio_read_pin)
-#define gpio_write_pin                   ((p_gpio_write_pin)           _gpio_write_pin)
-#define gpio_set_direction               ((p_gpio_set_direction)       _gpio_set_direction)
-
-#define gpio_read_pin_field              ((p_gpio_read_pin_field)      _gpio_read_pin_field)
-#define gpio_write_pin_field             ((p_gpio_write_pin_field)     _gpio_write_pin_field)
-#define gpio_set_direction_field         ((p_gpio_set_direction_field) _gpio_set_direction_field)
-
-#define gpio_toggle_pin                  ((p_gpio_toggle_pin)          _gpio_toggle_pin)
-#define gpio_set_interrupt               ((p_gpio_set_interrupt)       _gpio_set_interrupt)
-#define gpio_enable_interrupt            ((p_gpio_enable_interrupt)    _gpio_enable_interrupt)
-#define gpio_disable_interrupt           ((p_gpio_disable_interrupt)   _gpio_disable_interrupt)
-#define gpio_pull_set                    ((p_gpio_pull_set)            _gpio_pull_set)
-#define gpio_wakeup_config               ((p_gpio_wakeup_config)       _gpio_wakeup_config)
-#define gpio_sleep_allowed               ((p_gpio_sleep_allowed)       _gpio_sleep_allowed)
-
-#else
 
 #if CONFIG_GPIO_DEFAULT_IRQHANDLER==TRUE
 void GPIO_IRQHandler(void);
@@ -269,7 +232,7 @@ extern void gpio_disable_interrupt(enum gpio_pin pin);
 extern void gpio_pull_set(enum gpio_pin pin, enum gpio_pull pull_state);
 extern void gpio_wakeup_config(enum gpio_pin pin, enum gpio_wakeup_type type);
 extern bool gpio_sleep_allowed(void);
-#endif
+
 
 /// @} GPIO
 #endif /* CONFIG_ENABLE_DRIVER_GPIO */

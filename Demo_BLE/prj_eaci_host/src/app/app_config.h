@@ -20,10 +20,6 @@
 /// QN9020 Chip Version Number
 #if (defined(CFG_9020_B2))
     #define QN_9020_B2
-#elif (defined(CFG_9020_B1))
-    #define QN_9020_B1
-#elif (defined(CFG_9020_B0))
-    #define QN_9020_B0
 #else
     #error "No correct chip version is defined!"
 #endif

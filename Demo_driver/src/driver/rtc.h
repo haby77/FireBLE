@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -194,30 +194,6 @@ __STATIC_INLINE void rtc_reset(void)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_RTC==TRUE
-
-#define rtc_env (*(struct rtc_env_tag *)_rtc_env)
-
-typedef void    (*p_rtc_void)(void);
-typedef void    (*p_rtc_calibration)(uint8_t dir, uint16_t ppm);
-typedef void    (*p_rtc_correction)(uint32_t sleep_count);
-typedef void    (*p_rtc_time_set)(uint8_t year, uint8_t month,  uint8_t day, uint8_t hour, uint8_t minute, uint8_t second, void (*callback)(void));
-typedef void    (*p_rtc_capture_enable)(enum RTC_CAP_EDGE edge, void (*callback)(void));
-typedef uint8_t (*p_dec2bcd)(uint8_t decade);
-typedef uint8_t (*p_bcd2dec)(uint8_t bcd);
-
-#define rtc_init             ((p_rtc_void)            _rtc_init)
-#define rtc_calibration      ((p_rtc_calibration)     _rtc_calibration)
-#define rtc_correction       ((p_rtc_correction)      _rtc_correction)
-#define rtc_time_set         ((p_rtc_time_set)        _rtc_time_set)
-#define rtc_time_get         ((p_rtc_void)            _rtc_time_get)
-#define rtc_capture_enable   ((p_rtc_capture_enable)  _rtc_capture_enable)
-#define rtc_capture_disable  ((p_rtc_void)            _rtc_capture_disable)
-#define dec2bcd              ((p_dec2bcd)             _dec2bcd)
-#define bcd2dec              ((p_bcd2dec)             _bcd2dec)
-
-
-#else
 
 extern struct rtc_env_tag rtc_env;
 
@@ -242,7 +218,6 @@ extern uint8_t bcd2dec(uint8_t bcd);
 extern uint32_t rtc_time_get(void);
 #else
 extern void rtc_time_get(void);
-#endif
 #endif
 
 /// @} RTC

@@ -264,8 +264,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>85</TopLine>
-      <CurrentLine>89</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\system.c</PathWithFileName>
       <FilenameWithoutPath>system.c</FilenameWithoutPath>
@@ -280,8 +280,8 @@
       <Focus>0</Focus>
       <ColumnNumber>39</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>244</TopLine>
-      <CurrentLine>249</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\usr_design.c</PathWithFileName>
       <FilenameWithoutPath>usr_design.c</FilenameWithoutPath>
@@ -304,8 +304,8 @@
       <Focus>0</Focus>
       <ColumnNumber>6</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1179</TopLine>
-      <CurrentLine>1195</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\app_util.c</PathWithFileName>
       <FilenameWithoutPath>app_util.c</FilenameWithoutPath>
@@ -352,8 +352,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\app_sys.c</PathWithFileName>
       <FilenameWithoutPath>app_sys.c</FilenameWithoutPath>
@@ -368,8 +368,8 @@
       <Focus>0</Focus>
       <ColumnNumber>30</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>592</TopLine>
-      <CurrentLine>599</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\app_task.c</PathWithFileName>
       <FilenameWithoutPath>app_task.c</FilenameWithoutPath>
@@ -384,8 +384,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>32</TopLine>
-      <CurrentLine>49</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\gap\app_gap.c</PathWithFileName>
       <FilenameWithoutPath>app_gap.c</FilenameWithoutPath>
@@ -400,8 +400,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1194</TopLine>
-      <CurrentLine>1198</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\gap\app_gap_task.c</PathWithFileName>
       <FilenameWithoutPath>app_gap_task.c</FilenameWithoutPath>
@@ -432,8 +432,8 @@
       <Focus>0</Focus>
       <ColumnNumber>4</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>642</TopLine>
-      <CurrentLine>646</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\gatt\app_gatt_task.c</PathWithFileName>
       <FilenameWithoutPath>app_gatt_task.c</FilenameWithoutPath>
@@ -464,8 +464,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>465</TopLine>
-      <CurrentLine>469</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\smp\app_smp_task.c</PathWithFileName>
       <FilenameWithoutPath>app_smp_task.c</FilenameWithoutPath>
@@ -480,8 +480,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>50</TopLine>
-      <CurrentLine>54</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\proxr\app_proxr.c</PathWithFileName>
       <FilenameWithoutPath>app_proxr.c</FilenameWithoutPath>
@@ -496,8 +496,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>111</TopLine>
-      <CurrentLine>123</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\proxr\app_proxr_task.c</PathWithFileName>
       <FilenameWithoutPath>app_proxr_task.c</FilenameWithoutPath>
@@ -512,8 +512,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>16</TopLine>
-      <CurrentLine>35</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\app\otas\app_otas_task.c</PathWithFileName>
       <FilenameWithoutPath>app_otas_task.c</FilenameWithoutPath>
@@ -536,8 +536,8 @@
       <Focus>0</Focus>
       <ColumnNumber>20</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1418</TopLine>
-      <CurrentLine>1448</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\profiles\prf_utils.c</PathWithFileName>
       <FilenameWithoutPath>prf_utils.c</FilenameWithoutPath>
@@ -552,8 +552,8 @@
       <Focus>0</Focus>
       <ColumnNumber>18</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>149</TopLine>
-      <CurrentLine>153</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\profiles\prox\proxr\proxr.c</PathWithFileName>
       <FilenameWithoutPath>proxr.c</FilenameWithoutPath>
@@ -568,8 +568,8 @@
       <Focus>0</Focus>
       <ColumnNumber>17</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>72</TopLine>
-      <CurrentLine>73</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\profiles\prox\proxr\proxr_task.c</PathWithFileName>
       <FilenameWithoutPath>proxr_task.c</FilenameWithoutPath>
@@ -736,8 +736,8 @@
       <Focus>0</Focus>
       <ColumnNumber>13</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>9</TopLine>
-      <CurrentLine>16</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\src\driver\serialflash.c</PathWithFileName>
       <FilenameWithoutPath>serialflash.c</FilenameWithoutPath>

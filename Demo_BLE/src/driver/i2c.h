@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.0 $
+ * $Rev: 1.1 $
  *
  ****************************************************************************************
  */
@@ -57,15 +57,9 @@
 /// Define QN9020 I2C slave address
 #define QN9020_I2C_ADDR                 0x1A
 
-#ifdef QN_9020_B2
 /// Define I2C ratio algorithm: I2C CLK(x) should less than or equal to __APB_CLK/20
 #define I2C_SCL_RATIO(x)                (((__APB_CLK/(20 * (x))) - 1) << I2C_POS_SCL_RATIO)
 //#define I2C_SCL_RATIO(x)                (((g_ApbClock/(20 * (x))) - 1) << I2C_POS_SCL_RATIO)
-#else 
-/// Define I2C ratio algorithm: I2C CLK(x) should less than or equal to __APB_CLK/40
-#define I2C_SCL_RATIO(x)                (((__APB_CLK/(40 * (x))) - 1) << I2C_POS_SCL_RATIO)
-//#define I2C_SCL_RATIO(x)                (((g_ApbClock/(40 * (x))) - 1) << I2C_POS_SCL_RATIO)
-#endif
 
 /// Set QN9020 I2C slave address
 #define I2C_SLAVE_ADDR(x)               ((x) << I2C_POS_SLAVE_ADDR)
@@ -105,6 +99,17 @@ enum I2C_OP_FSM
     I2C_OP_FINISH    = 5        /*!< I2C operate finish */
 };
 
+
+/// I2C error code
+enum I2C_ERR_CODE
+{
+    I2C_NO_ERROR     = 0,       /*!< I2C no error */
+    I2C_CONFLICT     = 1,       /*!< I2C conflict */
+    I2C_NO_ACK       = 2,       /*!< I2C no ack */
+    I2C_TIMEOUT      = 3        /*!< I2C timeout */
+};
+
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -133,26 +138,6 @@ __STATIC_INLINE void i2c_reset(void)
 
 #if I2C_MODE == I2C_MASTER
 
-#if CONFIG_ENABLE_ROM_DRIVER_I2C==TRUE
-
-typedef void    (*p_i2c_init)(uint32_t speed, uint8_t *buffer, uint16_t size);
-typedef void    (*p_I2C_BYTE_WRITE)(uint8_t saddr, uint8_t reg_addr, uint8_t reg_data);
-typedef uint8_t (*p_I2C_BYTE_READ)(uint8_t saddr, uint8_t reg_addr);
-typedef void    (*p_I2C_BYTE_WRITE2)(uint8_t saddr, uint16_t reg_addr, uint8_t reg_data);
-typedef uint8_t (*p_I2C_BYTE_READ2)(uint8_t saddr, uint16_t reg_addr);
-typedef void    (*p_I2C_nBYTE_WRITE2)(uint8_t saddr, uint16_t reg_addr, uint8_t *buffer, uint16_t len);
-typedef void    (*p_I2C_nBYTE_READ2)(uint8_t saddr, uint16_t reg_addr, uint8_t *buffer, uint16_t len);
-
-#define i2c_init           ((p_i2c_init)         _i2c_init)
-#define I2C_BYTE_WRITE     ((p_I2C_BYTE_WRITE)   _I2C_BYTE_WRITE)
-#define I2C_BYTE_READ      ((p_I2C_BYTE_READ)    _I2C_BYTE_READ)
-#define I2C_BYTE_WRITE2    ((p_I2C_BYTE_WRITE2)  _I2C_BYTE_WRITE2)
-#define I2C_BYTE_READ2     ((p_I2C_BYTE_READ2)   _I2C_BYTE_READ2)
-#define I2C_nBYTE_WRITE2   ((p_I2C_nBYTE_WRITE2) _I2C_nBYTE_WRITE2)
-#define I2C_nBYTE_READ2    ((p_I2C_nBYTE_READ2)  _I2C_nBYTE_READ2)
-
-#else
-
 #if CONFIG_I2C_DEFAULT_IRQHANDLER==TRUE
 void I2C_IRQHandler( void );
 #endif
@@ -165,7 +150,6 @@ extern void I2C_nBYTE_WRITE(uint8_t saddr, uint8_t reg_addr, uint8_t *buffer, ui
 extern void I2C_nBYTE_READ(uint8_t saddr, uint8_t reg_addr, uint8_t *buffer, uint16_t len);
 extern void I2C_nBYTE_WRITE2(uint8_t saddr, uint16_t reg_addr, uint8_t *buffer, uint16_t len);
 extern void I2C_nBYTE_READ2(uint8_t saddr, uint16_t reg_addr, uint8_t *buffer, uint16_t len);
-#endif
 
 #else // I2C_MODE == I2C_SLAVE
 

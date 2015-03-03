@@ -1899,6 +1899,9 @@
       <name>$PROJ_DIR$\..\..\src\driver\rtc.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\src\driver\serialflash.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\src\driver\sleep.c</name>
     </file>
     <file>

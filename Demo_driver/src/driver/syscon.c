@@ -7,13 +7,13 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
 
 #include "syscon.h"
-#if CONFIG_ENABLE_DRIVER_SYSCON==TRUE && CONFIG_ENABLE_ROM_DRIVER_SYSCON==FALSE
+#if CONFIG_ENABLE_DRIVER_SYSCON==TRUE
 #ifdef BLE_PRJ
 #include "lib.h"
 #endif

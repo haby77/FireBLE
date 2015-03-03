@@ -70,37 +70,19 @@ static void adc_WCMP_cb(void)
 }
 #endif
 
-void adc_io_config(void)
-{
-    // pin mux
-    syscon_SetPMCR0(QN_SYSCON, P00_UART0_TXD_PIN_CTRL
-                             | P05_ADCT_PIN_CTRL
-    #if ADC_EXT_REF_EN==TRUE
-                             | P06_AIN2_PIN_CTRL
-                             | P07_AIN3_PIN_CTRL
-    #else
-                             | P06_SW_DAT_PIN_CTRL
-                             | P07_SW_CLK_PIN_CTRL
-    #endif
-                             | P17_UART0_RXD_PIN_CTRL
-                             );
-    syscon_SetPMCR1(QN_SYSCON, P27_PWM0_PIN_CTRL
-                             | P26_PWM1_PIN_CTRL
-                             | P31_AIN1_PIN_CTRL
-                             | P30_AIN0_PIN_CTRL
-                             );
-}
 
 int main (void)
 {
 
     SystemInit();
 
-    adc_io_config();
-    analog_pin_enable(AIN0, MASK_ENABLE);
-    analog_pin_enable(AIN1, MASK_ENABLE);
-    analog_pin_enable(AIN2, MASK_ENABLE);
-    analog_pin_enable(AIN3, MASK_ENABLE);
+    adc_pin_enable(AIN0, MASK_ENABLE);
+    adc_pin_enable(AIN1, MASK_ENABLE);
+    
+#if ADC_EXT_REF_EN==TRUE
+    adc_pin_enable(AIN2, MASK_ENABLE);
+    adc_pin_enable(AIN3, MASK_ENABLE);
+#endif
     
 #if (__AHB_CLK == 32000UL)
     uart_init(QN_UART0, __USART_CLK, UART_1200);
@@ -108,7 +90,6 @@ int main (void)
     uart_init(QN_UART0, __USART_CLK, UART_115200);
 #endif
     uart_tx_enable(QN_UART0, MASK_ENABLE);
-
     
     
     // ADC initialization    
@@ -136,7 +117,7 @@ int main (void)
     read_cfg.trig_src = ADC_TRIG_GPIO;
     syscon_SetPMCR2WithMask(QN_SYSCON, SYSCON_MASK_ADCT_PIN_SEL, ADC_GPIO15_TRIG);
 
-    // triger by gpio in burst or burst scan mode, connect PWM output to ADC trigger PIN
+    // triger by gpio in single or single scan mode, connect PWM output to ADC trigger PIN
     pwm_init(PWM_CH0);
     pwm_config(PWM_CH0, PWM_PSCAL_DIV, PWM_COUNT_US(50, PWM_PSCAL_DIV), PWM_COUNT_US(25, PWM_PSCAL_DIV));
     pwm_enable(PWM_CH0, MASK_ENABLE);
@@ -172,7 +153,7 @@ int main (void)
     adc_done = 0;
     
     // modify here
-    read_cfg.mode = BURST_MOD;
+    read_cfg.mode = SINGLE_MOD;
     read_cfg.start_ch = AIN0;
     read_cfg.end_ch = AIN0;
     adc_read(&read_cfg, buf, 512, adc_test_cb);
@@ -213,7 +194,7 @@ int main (void)
     adc_init(ADC_DIFF_WITH_BUF_DRV, ADC_CLK_1000000, ADC_INT_REF, ADC_12BIT);
     adc_done = 0;
     read_cfg.trig_src = ADC_TRIG_SOFT;
-    read_cfg.mode = BURST_MOD;
+    read_cfg.mode = SINGLE_MOD;
     read_cfg.start_ch = TEMP;
     read_cfg.end_ch = TEMP;
     adc_read(&read_cfg, &tempv, 1, adc_test_cb);
@@ -228,7 +209,7 @@ int main (void)
     adc_init(ADC_SINGLE_WITH_BUF_DRV, ADC_CLK_1000000, ADC_INT_REF, ADC_12BIT);
     adc_done = 0;
     read_cfg.trig_src = ADC_TRIG_SOFT;
-    read_cfg.mode = BURST_MOD;
+    read_cfg.mode = SINGLE_MOD;
     read_cfg.start_ch = BATT;
     read_cfg.end_ch = BATT;
     adc_read(&read_cfg, &battv, 1, adc_test_cb);

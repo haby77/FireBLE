@@ -33,11 +33,6 @@ struct usr_env_tag
 {
     uint16_t    led1_on_dur;
     uint16_t    led1_off_dur;
-
-#if (defined(QN_ADV_WDT))
-    bool        adv_wdt_enable;
-    void        (*adv_wdt_to)(void);
-#endif
 };
 
 extern struct usr_env_tag usr_env;

@@ -36,8 +36,8 @@
  *    - ADC conversion can be triggered by 4 sources: Software Start, Timer0/1 overflow and GPIO
  *    - Support selectable decimation rates, thereby corresponding improved effective resolutions
  *    - Support window compare, and generate corresponding interrupt
- *    - Support burst conversion mode, continuous conversion mode
- *    - Support burst scan conversion mode, continuous scan conversion mode
+ *    - Support single conversion mode, continuous conversion mode
+ *    - Support single scan conversion mode, continuous scan conversion mode
  *    - Support up to 1MHz/20 sampling rate
  *    - Support DMA
  *    - Support selectable reference voltage
@@ -106,10 +106,10 @@ enum ADC_CH
 /// ADC work mode
 enum ADC_WORK_MOD
 {
-    BURST_MOD = 0,      /*!< Burst mode,  */
+    SINGLE_MOD = 0,     /*!< Single mode,  */
     CONTINUE_MOD,       /*!< Continue mode, only need trigger once */
-    BURST_SCAN_MOD,     /*!< Burst Scan mode */
-    CONTINUE_SCAN_MOD   /*!< Continue Scan mode */
+    SINGLE_SCAN_MOD,    /*!< Single scan mode */
+    CONTINUE_SCAN_MOD   /*!< Continue scan mode */
 };
 
 /// ADC reference voltage
@@ -337,30 +337,26 @@ __STATIC_INLINE void adc_reset(void)
     syscon_SetADCCRWithMask(QN_SYSCON, SYSCON_MASK_ADC_DIG_RST, MASK_ENABLE);
 }
 
+/**
+ ****************************************************************************************
+ * @brief Enable or disable analog input pin .
+ * @param[in]   ainx        Analog pin index
+ * @param[in]   able        MASK_ENABLE or MASK_DISABLE
+ * @description
+ *  This function is used to enable or disable analog input pin.
+ *****************************************************************************************
+ */
+__STATIC_INLINE void adc_pin_enable(enum ADC_CH ainx, uint32_t able)
+{
+    if (ainx <= AIN3) {
+        syscon_SetAnalogCRWithMask(QN_SYSCON, (1 << (ainx + SYSCON_POS_AINX_EN)), able);
+    }
+}
 
 /*
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_ADC==TRUE
-
-typedef void (*p_adc_void)(void);
-typedef void (*p_adc_init)(enum ADC_WORK_CLK work_clk, enum ADC_TRIG_SRC trig_src, enum ADC_REF ref_vol);
-typedef void (*p_adc_buf_in_set)(enum BUFF_IN_TYPE buf_in_p, enum BUFF_IN_TYPE buf_in_n);
-typedef void (*p_adc_buf_gain_set)(enum ADC_BUFF_GAIN gain);
-typedef void (*p_adc_compare_init)(enum WCMP_DATA data, int16_t high, int16_t low, void (*callback)(void));
-typedef void (*p_adc_decimation_enable)(enum DECIMATION_RATE rate, uint32_t able);
-typedef void (*p_adc_read)(enum ADC_MODE mode, enum ADC_CH start_ch, enum ADC_CH end_ch, int16_t *buf, uint32_t samples, void (*callback)(void));
-
-#define adc_clean_fifo        ((p_adc_void)              _adc_clean_fifo)
-#define adc_init              ((p_adc_init)              _adc_init)
-#define adc_read              ((p_adc_read)              _adc_read)
-#define adc_buf_in_set        ((p_adc_buf_in_set)        _adc_buf_in_set)
-#define adc_buf_gain_set      ((p_adc_buf_gain_set)      _adc_buf_gain_set)
-#define adc_compare_init      ((p_adc_compare_init)      _adc_compare_init)
-#define adc_decimation_enable ((p_adc_decimation_enable) _adc_decimation_enable)
-
-#else
 
 #if CONFIG_ADC_DEFAULT_IRQHANDLER==TRUE
 void ADC_IRQHandler(void);
@@ -374,7 +370,7 @@ extern void adc_buf_gain_set(enum ADC_BUFF_GAIN gain);
 extern void adc_compare_init(enum WCMP_DATA data, int16_t high, int16_t low, void (*callback)(void));
 extern void adc_decimation_enable(enum DECIMATION_RATE rate, uint32_t able);
 extern int16_t ADC_RESULT_mV(int16_t adc_data);
-#endif
+
 
 #ifdef __cplusplus
 #if __cplusplus

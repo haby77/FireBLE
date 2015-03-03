@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 #include "i2c.h"
-#if CONFIG_ENABLE_DRIVER_I2C==TRUE && CONFIG_ENABLE_ROM_DRIVER_I2C==FALSE
+#if CONFIG_ENABLE_DRIVER_I2C==TRUE
 
 #if I2C_MODE == I2C_MASTER
 /*
@@ -74,6 +74,7 @@ void I2C_IRQHandler(void)
     if (status & I2C_MASK_RX_INT) {
         i2c_i2c_ClrIntStatus(QN_I2C, I2C_MASK_RX_INT);
 
+        // store read result
         i2c_env.i2cBuffer[i2c_env.i2cIndex++] = i2c_i2c_GetRXD(QN_I2C);
         i2c_env.i2cRxCount--;
         if (i2c_env.i2cRxCount > 1) {
@@ -84,9 +85,9 @@ void I2C_IRQHandler(void)
             reg = I2C_MASK_RD_EN
                 | I2C_MASK_NACK_SEND;        // NACK
         }
-        else if (i2c_env.i2cRxCount == 0) {
-            i2c_env.i2cOpFsm = I2C_OP_FINISH;
+        else if (i2c_env.i2cRxCount == 0) {  // data rx finish
             reg = I2C_MASK_STOP;             // STOP
+            i2c_env.i2cOpFsm = I2C_OP_FINISH;
         }
         i2c_i2c_SetTXD(QN_I2C, reg);
 
@@ -168,12 +169,11 @@ void i2c_polling(void)
             reg = I2C_MASK_RD_EN
                 | I2C_MASK_NACK_SEND;        // NACK
         }
-        else if (i2c_env.i2cRxCount == 0) {
-            i2c_env.i2cOpFsm = I2C_OP_FINISH;
+        else if (i2c_env.i2cRxCount == 0) {  // data rx finish
             reg = I2C_MASK_STOP;             // STOP
+            i2c_env.i2cOpFsm = I2C_OP_FINISH;
         }
         i2c_i2c_SetTXD(QN_I2C, reg);
-
     }
 
     if (status & I2C_MASK_TX_INT) {
@@ -296,7 +296,8 @@ enum I2C_BUS_STATE i2c_bus_check( void )
 /**
  ****************************************************************************************
  * @brief Start a data reception.
- * @param[in]      saddr          slave device address (7bits, without R/W bit)
+ * @param[in]  saddr         slave device address(7bits, without R/W bit)
+ * @return Error code
  * @description
  * This function is used to complete an I2C read transaction from start to stop. All the intermittent steps
  * are handled in the interrupt handler while the interrupt is enabled.
@@ -305,13 +306,13 @@ enum I2C_BUS_STATE i2c_bus_check( void )
  * As soon as the end of the data transfer is detected, the callback function is called.
  *****************************************************************************************
  */
-void i2c_read(uint8_t saddr)
+static enum I2C_ERR_CODE i2c_read(uint8_t saddr)
 {
     uint32_t reg;
     uint32_t timeout = 0;
 
     if (i2c_bus_check() == I2C_BUS_BUSY) {
-        return;
+        return I2C_CONFLICT;
     }
 
     if (i2c_env.i2cTxCount) {
@@ -322,21 +323,21 @@ void i2c_read(uint8_t saddr)
             | ((saddr << 1) & 0xFE);
         i2c_i2c_SetTXD(QN_I2C, reg);
 
-#ifdef SLP_TEST_EN
-        // Wait For Interrupt
-        __WFI();  // Enter sleep mode
-        // Wakeup when I2C interrupt is triggered
-#endif
 
         do {
             timeout++;
             if (timeout > I2C_MAX_TIMEOUT) {
-                break;
+                return I2C_TIMEOUT;
             }
 #if CONFIG_I2C_ENABLE_INTERRUPT==FALSE
             i2c_polling();
 #endif
-        } while ((i2c_env.i2cOpFsm != I2C_OP_RDDATA)&&(i2c_env.i2cOpFsm != I2C_OP_ABORT));
+
+            if (i2c_env.i2cOpFsm == I2C_OP_ABORT) {
+                return I2C_NO_ACK;
+            }
+
+        } while (i2c_env.i2cOpFsm != I2C_OP_RDDATA);
     }
     else {
         // does not need write address, directly read data from device
@@ -352,28 +353,35 @@ void i2c_read(uint8_t saddr)
     timeout = 0;
     do {
         timeout++;
-        if (timeout > I2C_MAX_TIMEOUT){
-            break;
+        if (timeout > I2C_MAX_TIMEOUT) {
+            return I2C_TIMEOUT;
         }
 #if CONFIG_I2C_ENABLE_INTERRUPT==FALSE
         i2c_polling();
 #endif
+
+        if (i2c_env.i2cOpFsm == I2C_OP_ABORT) {
+            return I2C_NO_ACK;
+        }
+
     } while (i2c_env.i2cOpFsm != I2C_OP_FINISH);
 
 #if I2C_CALLBACK_EN==TRUE
     // Call end of reception callback
-    if ((i2c_env.i2cOpFsm == I2C_OP_FINISH) && (i2c_env.callback != NULL))
+    if (i2c_env.callback != NULL)
     {
         i2c_env.callback();
     }
 #endif
 
+    return I2C_NO_ERROR;
 }
 
 /**
  ****************************************************************************************
  * @brief Start a data transmission.
  * @param[in]  saddr         slave device address(7bits, without R/W bit)
+ * @return Error code
  * @description
  * This function is used to complete an I2C write transaction from start to stop. All the intermittent steps
  * are handled in the interrupt handler while the interrupt is enabled.
@@ -382,13 +390,13 @@ void i2c_read(uint8_t saddr)
  * As soon as the end of the data transfer is detected, the callback function is called.
  *****************************************************************************************
  */
-void i2c_write(uint8_t saddr)
+static enum I2C_ERR_CODE i2c_write(uint8_t saddr)
 {
     uint32_t reg;
     uint32_t timeout = 0;
 
     if (i2c_bus_check() == I2C_BUS_BUSY) {
-        return;
+        return I2C_CONFLICT;
     }
     else {
         i2c_env.i2cOpFsm = I2C_OP_WRDATA;
@@ -402,22 +410,28 @@ void i2c_write(uint8_t saddr)
 
     do {
         timeout++;
-        if (timeout > I2C_MAX_TIMEOUT){
-            break;
+        if (timeout > I2C_MAX_TIMEOUT) {
+            return I2C_TIMEOUT;
         }
 #if CONFIG_I2C_ENABLE_INTERRUPT==FALSE
         i2c_polling();
 #endif
-    } while ((i2c_env.i2cOpFsm != I2C_OP_FINISH)&&(i2c_env.i2cOpFsm != I2C_OP_ABORT));
+
+        if (i2c_env.i2cOpFsm == I2C_OP_ABORT) {
+            return I2C_NO_ACK;
+        }
+
+    } while (i2c_env.i2cOpFsm != I2C_OP_FINISH);
 
 #if I2C_CALLBACK_EN==TRUE
     // Call end of transmission callback
-    if ((i2c_env.i2cOpFsm == I2C_OP_FINISH) && (i2c_env.callback != NULL))
+    if (i2c_env.callback != NULL)
     {
         i2c_env.callback();
     }
 #endif
 
+    return I2C_NO_ERROR;
 }
 
 /**
@@ -675,13 +689,8 @@ void I2C_nBYTE_WRITE2(uint8_t saddr, uint16_t reg_addr, uint8_t *buffer, uint16_
 
 #else // I2C_SLAVE
 
-#ifdef QN_9020_B2
 #define I2C_MASK_SLV_NACK_SEND                  0x00000000      /* 20 */
 #define I2C_MASK_SLV_ACK_SEND                   0x00100000      /* 20 */
-#else
-#define I2C_MASK_SLV_NACK_SEND                  0x00100000      /* 20 */
-#define I2C_MASK_SLV_ACK_SEND                   0x00000000      /* 20 */
-#endif
 
 /*
  * STRUCTURE DEFINITIONS
@@ -722,6 +731,7 @@ void i2c_init(uint8_t *buffer, uint16_t size)
     i2c_env.i2cBufferSize = size;
     i2c_env.i2cBuffer = buffer;
 
+    i2c_reset();
 
 #if CONFIG_I2C_ENABLE_INTERRUPT==TRUE
     /* Enable the I2C Interrupt */
@@ -784,21 +794,19 @@ void I2C_IRQHandler(void)
         if (reg & 0x01) { // master read, slave write
 
             reg = I2C_MASK_WR_EN
+                | I2C_MASK_SLV_ACK_SEND     // ACK
                 | i2c_env.i2cBuffer[i2c_env.i2cIndex++];
-            i2c_i2c_SetTXD(QN_I2C, reg);
             i2c_env.i2cOpFsm = I2C_OP_WRDATA;
         }
         else { // mast write, slave read
 
             reg = I2C_MASK_RD_EN
                 | I2C_MASK_SLV_ACK_SEND;     // ACK
-            i2c_i2c_SetTXD(QN_I2C, reg);
             i2c_env.i2cOpFsm = I2C_OP_SETADDR;
         }
-
-        i2c_i2c_ClrIntStatus(QN_I2C, I2C_MASK_SAM_INT);
+        i2c_i2c_SetTXD(QN_I2C, reg);
+        i2c_i2c_ClrIntStatus(QN_I2C, I2C_MASK_SAM_INT|I2C_MASK_RX_INT);
         status = 0;
-        i2c_i2c_ClrIntStatus(QN_I2C, I2C_MASK_RX_INT);
     }
 
     if (status & I2C_MASK_RX_INT) {
@@ -830,15 +838,15 @@ void I2C_IRQHandler(void)
             }
 
             reg = I2C_MASK_WR_EN
+                | I2C_MASK_SLV_ACK_SEND     // ACK
                 | i2c_env.i2cBuffer[i2c_env.i2cIndex++];
-            i2c_i2c_SetTXD(QN_I2C, reg);
         }
         else { // NO ACK, SLAVE back to RD
             reg = I2C_MASK_RD_EN
                 | I2C_MASK_SLV_ACK_SEND;     // ACK
-            i2c_i2c_SetTXD(QN_I2C, reg);
         }
 
+        i2c_i2c_SetTXD(QN_I2C, reg);
         i2c_i2c_ClrIntStatus(QN_I2C, I2C_MASK_TX_INT);
     }
 }

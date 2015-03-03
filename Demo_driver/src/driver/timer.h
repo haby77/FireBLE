@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -328,26 +328,6 @@ __STATIC_INLINE void timer_reset(QN_TIMER_TypeDef *TIMER)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_TIMER==TRUE
-
-#define timer0_env  (*(struct timer_env_tag *) _timer0_env)
-#define timer1_env  (*(struct timer_env_tag *) _timer1_env)
-#define timer2_env  (*(struct timer_env_tag *) _timer2_env)
-#define timer3_env  (*(struct timer_env_tag *) _timer3_env)
-
-typedef void (*p_timer_delay)(QN_TIMER_TypeDef *TIMER, uint32_t pscal, uint32_t count);
-typedef void (*p_timer_init)(QN_TIMER_TypeDef *TIMER, void (*callback)(void));
-typedef void (*p_timer_config)(QN_TIMER_TypeDef *TIMER, uint32_t pscal, uint32_t count);
-typedef void (*p_timer_pwm_config)(QN_TIMER_TypeDef *TIMER, uint32_t pscal, uint32_t periodcount, uint32_t pulsecount);
-typedef void (*p_timer_capture_config)(QN_TIMER_TypeDef *TIMER, uint32_t cap_mode, uint32_t pscal, uint32_t count, uint32_t event_num);
-
-#define timer_delay             ((p_timer_delay)            _timer_delay)
-#define timer_init              ((p_timer_init)             _timer_init)
-#define timer_config            ((p_timer_config)           _timer_config)
-#define timer_pwm_config        ((p_timer_pwm_config)       _timer_pwm_config)
-#define timer_capture_config    ((p_timer_capture_config)   _timer_capture_config)
-
-#else
 
 /// @cond
 #if (CONFIG_ENABLE_DRIVER_TIMER0==TRUE && CONFIG_TIMER0_DEFAULT_IRQHANDLER==TRUE)
@@ -373,7 +353,7 @@ extern void timer_init(QN_TIMER_TypeDef *TIMER, void (*callback)(void));
 extern void timer_config(QN_TIMER_TypeDef *TIMER, uint32_t pscal, uint32_t count);
 extern void timer_pwm_config(QN_TIMER_TypeDef *TIMER, uint32_t pscal, uint32_t periodcount, uint32_t pulsecount);
 extern void timer_capture_config(QN_TIMER_TypeDef *TIMER, uint32_t cap_mode, uint32_t pscal, uint32_t count, uint32_t event_num);
-#endif
+
 
 /// @} TIMER
 #endif /* CONFIG_ENABLE_DRIVER_TIMER==TRUE */

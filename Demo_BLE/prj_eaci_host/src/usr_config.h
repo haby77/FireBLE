@@ -15,7 +15,7 @@
 #ifndef USR_CONFIG_H_
 #define USR_CONFIG_H_
 
-/// Chip version: CFG_9020_B2, CFG_9020_B1, CFG_9020_B0
+/// Chip version: CFG_9020_B2
 #define CFG_9020_B2
 
 

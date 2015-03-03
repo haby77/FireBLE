@@ -76,6 +76,21 @@ void assert_warn(const char *condition, const char * file, int line)
 }
 #endif //CFG_DBG_PRINT
 
+/**
+ ****************************************************************************************
+ * @brief Hardfault exception handler
+ *
+ * The hardfault exception will be processed here if CFG_SW_RELEASE is defined.
+ *
+ ****************************************************************************************
+ */
+#if (defined(QN_SW_RELEASE))
+void HardFault_Handler(void)
+{
+    // Reboot system
+    syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_REBOOT_SYS);
+}
+#endif
 
 /**
  ****************************************************************************************
@@ -108,15 +123,15 @@ int main(void)
     // DC-DC
     dc_dc_enable(QN_DC_DC_ENABLE);
 
+#if (QN_LOW_POWER_MODE_EN==TRUE)
+    enable_32k_mode();
+#endif
+
     // QN platform initialization
 #if QN_NVDS_WRITE
     plf_init(QN_POWER_MODE, __XTAL, QN_32K_RCO, nvds_tmp_buf, NVDS_TMP_BUF_SIZE);
 #else
     plf_init(QN_POWER_MODE, __XTAL, QN_32K_RCO, NULL, 0);
-#endif
-
-#if (defined(QN_9020_B1) && (!QN_PMU_VOLTAGE))
-    disable_patch_b1();
 #endif
 
     // System initialization, user configuration

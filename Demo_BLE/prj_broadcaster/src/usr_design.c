@@ -124,13 +124,6 @@ void usr_sleep_restore(void)
     uart_tx_enable(QN_DEBUG_UART, MASK_ENABLE);
     uart_rx_enable(QN_DEBUG_UART, MASK_ENABLE);
 #endif
-
-#if (defined(QN_ADV_WDT))
-    if (usr_env.adv_wdt_enable)
-    {
-        wdt_init(1007616, WDT_INT_MOD); // 30.75s
-    }
-#endif
 }
 
 /**

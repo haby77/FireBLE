@@ -22,42 +22,29 @@
 *
 ****************************************************************************/
 
+
 volatile uint8_t rx_flag = 0;
 volatile uint8_t tx_flag = 0;
 
+// configure SPI test mode: 1: master, 0: slave
+#define CFG_SPI_TEST_MODE_MASTER_EN     1
+// configure SPI test port: 1: QN_SPI1, 0: QN_SPI0
+#define CFG_SPI_TEST_PORT_NUM           0
 
-void led_blink_left(void)
+#if CFG_SPI_TEST_PORT_NUM
+#define SPI_TEST_PORT               QN_SPI1
+#else 
+#define SPI_TEST_PORT               QN_SPI0
+#endif
+
+void spi_rx_cb(void)
 {
     rx_flag = 0;
 }
 
-void led_blink_right(void)
+void spi_tx_cb(void)
 {
     tx_flag = 0;
-}
-
-void spi_io_config(void)
-{
-    // pin mux
-    syscon_SetPMCR0(QN_SYSCON, P07_SW_CLK_PIN_CTRL       
-                             | P06_SW_DAT_PIN_CTRL       
-                             | P13_SPI1_CLK_PIN_CTRL      //P1.3 spi1 clk
-                             | P12_SPI1_CS0_PIN_CTRL      //P1.2 spi1 cs
-                             | P11_SPI1_DAT_PIN_CTRL      //P1.1 spi1 data out 
-                             | P10_SPI1_DIN_PIN_CTRL      //P1.0 spi1 data in
-                             );
-    syscon_SetPMCR1(QN_SYSCON, P35_SPI0_CS0_PIN_CTRL      //P3.5 spi0 cs 
-                             | P34_SPI0_CLK_PIN_CTRL      //P3.4 spi0 clk
-                             | P33_SPI0_DAT_PIN_CTRL      //P3.3 spi0 data out
-                             | P32_SPI0_DIN_PIN_CTRL      //P3.2 spi0 data in
-                             );
-    
-    // pin select
-    syscon_SetPMCR2(QN_SYSCON, SYSCON_MASK_SPI0_PIN_SEL);   
-
-    // pin pull ( 00 : High-Z,  01 : Pull-down,  10 : Pull-up,  11 : Reserved )
-    syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
-    syscon_SetPPCR1(QN_SYSCON, 0x2AAAAAAA);	     
 }
 
 /*  
@@ -66,47 +53,67 @@ void spi_io_config(void)
 int main (void)
 {
     uint32_t j;
-    uint8_t buffer[40];
+    uint8_t txbuffer[40];
     uint8_t rxbuffer[40];
     
     SystemInit();
     
-    //SPI io configurate
-    spi_io_config();
-    
-    //Initialize SPI
-//    spi_init(QN_SPI0, SPI_BITRATE(1000000), SPI_32BIT,  SPI_MASTER_MOD);
-    spi_init(QN_SPI1, SPI_BITRATE(1000000), SPI_8BIT, SPI_MASTER_MOD);
-
     for (j = 0; j < 40; j++) {
         rxbuffer[j] = 0;
-        buffer[j] = j;
+        txbuffer[j] = 0x55 + j;
     }
 
-    //Write 4byte data
-    tx_flag = 1;
-//    spi_write(QN_SPI0, buffer, 4, led_blink_right);
-    spi_write(QN_SPI1, buffer, 4, led_blink_right);
-    while(tx_flag);
+#if CFG_SPI_TEST_MODE_MASTER_EN    
     
-    //Read 4byte data
+    //Initialize SPI
+    spi_init(SPI_TEST_PORT, SPI_BITRATE(1000000), SPI_8BIT, SPI_MASTER_MOD);
+
+    
+    #if 1  // full-duplex, interrupt should be enabled
     rx_flag = 1;
-//    spi_read(QN_SPI0,  rxbuffer, 4, led_blink_left);
-    spi_read(QN_SPI1,  rxbuffer, 4, led_blink_left);
+    
+    spi_write(SPI_TEST_PORT, txbuffer, 8, spi_tx_cb);
+    spi_read(SPI_TEST_PORT,  rxbuffer, 8, spi_rx_cb);
+    spi_int_enable(SPI_TEST_PORT, SPI_TX_INT|SPI_RX_INT, MASK_ENABLE); 
+    
     while(rx_flag);
     
+    #else  // half-duplex
+    
+    //Write 8byte data
+    tx_flag = 1;
+    spi_write(SPI_TEST_PORT, txbuffer, 8, spi_tx_cb);
+    spi_int_enable(SPI_TEST_PORT, SPI_TX_INT, MASK_ENABLE); 
+    while(tx_flag);
+    
+    // wait for slave ready
+    delay(100); 
+    
+    //Read 8byte data
+    rx_flag = 1;
+    spi_read(SPI_TEST_PORT,  rxbuffer, 8, spi_rx_cb);
+    spi_int_enable(SPI_TEST_PORT, SPI_RX_INT, MASK_ENABLE); 
+    while(rx_flag);
+    #endif
+    
+#else
+
+    //Initialize SPI
+    spi_init(SPI_TEST_PORT, SPI_BITRATE(1000000), SPI_8BIT, SPI_SLAVE_MOD);
+    tx_flag = 1;
+
+    spi_read(SPI_TEST_PORT,  rxbuffer, 8, spi_rx_cb);
+    spi_write(SPI_TEST_PORT, txbuffer, 8, spi_tx_cb);
+    spi_int_enable(SPI_TEST_PORT, SPI_TX_INT|SPI_RX_INT, MASK_ENABLE);
+
+    while(tx_flag);
+#endif
+    
+    spi_clock_off(SPI_TEST_PORT);
     
     while (1)                             /* Loop forever */
     {
-        tx_flag = 1;
-        spi_write(QN_SPI1, buffer, 8, led_blink_right);
-        while(tx_flag);
-        delay(1000);
         
-        rx_flag = 1;
-        spi_read(QN_SPI1,  rxbuffer, 8, led_blink_left);
-        while(rx_flag);
-        delay(1000);
     }
 }
 

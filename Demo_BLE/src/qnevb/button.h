@@ -20,12 +20,20 @@
  */
 #if !defined(QN_9021_MINIDK)
 
+#if defined(CFG_FCC_CE_TEST)
+#define BUTTON1_PIN    (CFG_FCC_CE_CTRL_PIN)
+#else
 #define BUTTON1_PIN    (GPIO_P14)
+#endif
 #define BUTTON2_PIN    (GPIO_P15)
 
 #else
 
+#if defined(CFG_FCC_CE_TEST)
+#define BUTTON1_PIN    (CFG_FCC_CE_CTRL_PIN)
+#else
 #define BUTTON1_PIN    (GPIO_P12)
+#endif
 #define BUTTON2_PIN    (GPIO_P10)
 
 #endif

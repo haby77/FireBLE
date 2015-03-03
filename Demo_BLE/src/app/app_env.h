@@ -442,6 +442,13 @@ struct app_env_tag
     struct app_ancsc_env_tag ancsc_ev;
 #endif
 
+#if (BLE_OTA_SERVER)
+    #ifdef ENAB_OTAS_SET_UUID
+    uint8_t app_otas_uuid_flag;
+#endif
+#endif
+
+
 #if QN_DEMO_MENU
     uint8_t menu_id;
     uint8_t input[0x0F];

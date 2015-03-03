@@ -5,9 +5,9 @@
  *
  * @brief Header file of SPI for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.0 $
+ * $Rev: 5508 $
  *
  ****************************************************************************************
  */
@@ -72,35 +72,31 @@
 #define SPI_BITORDER_CFG                SPI_MSB_FIRST
 
 /// Dummy byte
-#define SPI_DUMMY_BYTE                  (0x0)
-//#define SPI_DUMMY_BYTE                  (0xFFFFFFFF)
+//#define SPI_DUMMY_DATA                  (0x0)
+#define SPI_DUMMY_DATA                  (0xFFFFFFFF)
 
-/// SPI bit rate algorithm
+/// SPI bit rate algorithm, x should less than (__USART_CLK/4)
 #define SPI_BITRATE(x)                  ((__USART_CLK/(2*(x)) - 1) << SPI_POS_CLK_DIV_MASTER)
 // SPI bit rate algorithm (usart divider bypass)
 //#define SPI_BITRATE(x)                  ((g_AhbClock/(2*(x)) - 1) << SPI_POS_CLK_DIV_MASTER)
 // SPI bit rate algorithm (usart divider not bypass)
 //#define SPI_BITRATE(div,x)              ((USARTx_CLK(div)/(2*(x)) - 1) << SPI_POS_CLK_DIV_MASTER)
 
-/// SPI0 mode confiure: TRUE(master), FALSE(slave)
-#define SPI0_MOD_MST_EN                 TRUE
-/// SPI0 mode confiure: TRUE(3-wire), FALSE(4-wire)
+/// SPI0 mode confiure: TRUE(3-wire: CS, CLK, DAT(I/O)), FALSE(4-wire: CS, CLK, DIN(I), DAT(O))
 #define SPI0_MOD_3WIRE_EN               FALSE
-/// SPI1 mode confiure: TRUE(master), FALSE(slave)
-#define SPI1_MOD_MST_EN                 TRUE
-/// SPI0 mode confiure: TRUE(3-wire), FALSE(4-wire)
+/// SPI1 mode confiure: TRUE(3-wire: CS, CLK, DAT(I/O)), FALSE(4-wire: CS, CLK, DIN(I), DAT(O))
 #define SPI1_MOD_3WIRE_EN               FALSE
 
 
 #if SPI_DMA_EN==TRUE
 // SPI TX DMA enable, DMA only have one channel
 #define SPI_TX_DMA_EN                   TRUE
-// SPI RX DMA enable, DMA only have one channel, only support in SLAVE mode
+// SPI RX DMA enable, only support in SLAVE mode, DMA only have one channel
 #define SPI_RX_DMA_EN                   FALSE
 #else
 // SPI TX DMA enable, DMA only have one channel
 #define SPI_TX_DMA_EN                   FALSE
-// SPI RX DMA enable, DMA only have one channel, only support in SLAVE mode
+// SPI RX DMA enable, only support in SLAVE mode, DMA only have one channel
 #define SPI_RX_DMA_EN                   FALSE
 #endif
 
@@ -148,8 +144,8 @@ enum SPI_BUFFER_WIDTH
 ///SPI byte endian
 enum SPI_BYTE_ENDIAN
 {
-    SPI_LITTLE_ENDIAN = 0,                      /*!< Set SPI as little endian mode */
-    SPI_BIG_ENDIAN = (1 << SPI_POS_BYTE_ENDIAN) /*!< Set SPI as big endian mode */
+    SPI_BIG_ENDIAN = 0,                             /*!< Set SPI as big endian mode */
+    SPI_LITTLE_ENDIAN = (1 << SPI_POS_BYTE_ENDIAN)  /*!< Set SPI as little endian mode */
 };
 
 /// SPI TX status
@@ -159,6 +155,48 @@ enum SPI_TX_STATE
     SPI_LAST_BYTE_ONGOING,     /*!< SPI last byte ongoing */
     SPI_TX_FREE                /*!< SPI Tx free */
 };
+
+/// SPI interrupt type
+enum SPI_INT_TYPE
+{
+    SPI_TX_INT = SPI_MASK_TX_FIFO_NFUL_IE,       /*!< SPI TX interrupt */
+    SPI_RX_INT = SPI_MASK_RX_FIFO_NEMT_IE        /*!< SPI RX interrupt */
+};
+
+
+
+/*
+ * STRUCT DEFINITIONS
+ *****************************************************************************************
+ */
+
+/// SPI channel parameters, holding data used for synchronous R/W data transactions
+struct spi_txrxchannel
+{
+    int32_t  size;                      /*!< Transmission size */
+    uint8_t  *bufptr;                   /*!< Data buffer of TX or RX */
+    #if SPI_CALLBACK_EN==TRUE
+    void     (*callback)(void);         /*!< Callback at the end of transmission */
+    #endif
+};
+
+///Structure defining SPI environment parameters
+struct spi_env_tag
+{
+    enum SPI_MODE mode;                 /*!< SPI work mode */
+    enum SPI_BUFFER_WIDTH width;        /*!< SPI transmission width */
+    struct spi_txrxchannel tx;          /*!< Instance of TX */
+    struct spi_txrxchannel rx;          /*!< Instance of RX */
+};
+
+#if CONFIG_ENABLE_DRIVER_SPI0==TRUE
+///SPI0 environment variable
+extern volatile struct spi_env_tag spi0_env;
+#endif
+#if CONFIG_ENABLE_DRIVER_SPI1==TRUE
+///SPI1 environment variable
+extern volatile struct spi_env_tag spi1_env;
+#endif
 
 /*
  * FUNCTION DEFINITIONS
@@ -198,6 +236,10 @@ __STATIC_INLINE void spi_clock_on(QN_SPI_TypeDef *SPI)
  */
 __STATIC_INLINE void spi_clock_off(QN_SPI_TypeDef *SPI)
 {
+
+    // Wait until the TX buffer is empty
+    while (!( spi_spi_GetSR(SPI) & SPI_MASK_TX_FIFO_EMPT )); 
+
     // Wait until the Busy bit is cleared
     while ( spi_spi_GetSR(SPI) & SPI_MASK_BUSY );
 
@@ -214,161 +256,135 @@ __STATIC_INLINE void spi_clock_off(QN_SPI_TypeDef *SPI)
 #endif
 }
 
-#if SPI_TX_DMA_EN==FALSE
 /**
  ****************************************************************************************
  * @brief Send data to SPI.
  * @param[in]       SPI           QN_SPI0 or QN_SPI1
- * @param[in]       width         32bits or 8bits
- * @param[in]       data          Pointer to the TX data buffer
- * @param[in]       len           Size of the expected transmition
+ * @param[in]       spi_env       Environment variable of specified SPI port
  * @description
- *  Send specified length data to SPI
+ *  Send a byte/word data to SPI
  *****************************************************************************************
  */
-__STATIC_INLINE void spi_tx_data(QN_SPI_TypeDef * SPI, enum SPI_BUFFER_WIDTH width, uint8_t *data, int32_t len)
+__STATIC_INLINE void spi_tx_data(QN_SPI_TypeDef * SPI, struct spi_env_tag *spi_env)
 {
-    uint32_t reg;
-    uint32_t i;
+    __set_PRIMASK(1);
+    union {
+        uint32_t u32reg;
+        uint8_t  u8array[4];
+    } tx_dat;
 
-    reg = *data++;
-    len--;
-    if (width == SPI_32BIT) { // little-endian
-        for (i = 1; ((i < 4) && (len > 0)); i++) {
-            reg |= (*data++ << 8*i);
-            len--;
+    if (spi_env->width == SPI_32BIT) {  // little endian
+        for (int i = 0; i < 4; i++) {
+            tx_dat.u8array[i] = *spi_env->tx.bufptr++;
         }
+        spi_env->tx.size -= 4;
     }
-
-    //reg = *data++;
-    //len--;
-    //if (width == SPI_32BIT) { // big-endian
-    //    for (i = 1; ((i < 4) && (len > 0)); i++) {
-    //        reg = (reg << 8) + *data++;
-    //        len--;
-    //    }
-    //}
-
-    spi_spi_SetTXD(SPI, reg);
-#ifdef SLP_TEST_EN
-#else
-    // Wait until the Busy bit is cleared
-    //while ( spi_spi_GetSR(SPI) & SPI_MASK_BUSY );
-#endif
+    else {
+        tx_dat.u32reg = *spi_env->tx.bufptr++;
+        spi_env->tx.size--;
+    }
+    spi_spi_SetTXD(SPI, tx_dat.u32reg);
+    __set_PRIMASK(0);
 }
-#endif
 
-#if (!(SPI_RX_DMA_EN==TRUE && SPI0_MOD_MST_EN==FALSE && SPI1_MOD_MST_EN==FALSE))
 /**
  ****************************************************************************************
  * @brief Get data form SPI.
  * @param[in]       SPI           QN_SPI0 or QN_SPI1
- * @param[in]       width         32bits or 8bits
- * @param[in]       data          Pointer to the TX data buffer
- * @param[in]       len           Size of the expected transmition
+ * @param[in]       spi_env       Environment variable of specified SPI port
  * @description
- *  Receive specified length data from SPI FIFO.
+ *  Receive a byte/word data from SPI.
  *****************************************************************************************
  */
-__STATIC_INLINE void spi_rx_data(QN_SPI_TypeDef * SPI, enum SPI_BUFFER_WIDTH width, uint8_t *data, int32_t len)
+__STATIC_INLINE void spi_rx_data(QN_SPI_TypeDef * SPI, struct spi_env_tag *spi_env)
 {
-    uint32_t reg;
-    int32_t i;
+    __set_PRIMASK(1);
+    union {
+        uint32_t u32reg;
+        uint8_t  u8array[4];
+    } rx_dat;
+    
+    rx_dat.u32reg = spi_spi_GetRXD(SPI);
+    if (spi_env->width == SPI_32BIT) {
+        for (int i = 0; i < 4; i++) {  // little endian
+            *spi_env->rx.bufptr++ = rx_dat.u8array[i];
+        }
+        spi_env->rx.size -= 4;
+    }
+    else {
+        *spi_env->rx.bufptr++ = rx_dat.u8array[0];
+        spi_env->rx.size--;
+    }
+    __set_PRIMASK(0);
+}
 
-    reg = spi_spi_GetRXD(SPI);
-    *data++ = reg & 0xFF;
-    len--;
-    if (width == SPI_32BIT) { // little-endian
-        for (i = 1; ((i < 4) && (len > 0)); i++) {
-            reg = reg >> 8;
-            *data++ = reg & 0xFF;
-            len--;
+/**
+ ****************************************************************************************
+ * @brief Enable/Disable SPI interrupt.
+ * @param[in]       SPI           QN_SPI0 or QN_SPI1
+ * @param[in]       type          Interrupt type: refer to enum SPI_INT_TYPE
+ * @param[in]       able          MASK_ENABLE or MASK_DISABLE
+ * @description
+ *  Enable or disable specified SPI interrupt
+ *****************************************************************************************
+ */
+__STATIC_INLINE void spi_int_enable(QN_SPI_TypeDef *SPI, uint32_t type, uint32_t able)
+{
+    uint32_t dev = 0;
+    uint32_t mask = type;
+    struct spi_env_tag *spi_env;
+
+    if (SPI == QN_SPI0) {
+#if CONFIG_ENABLE_DRIVER_SPI0==TRUE
+        
+        spi_env = (struct spi_env_tag *)&spi0_env;
+
+        #if SPI_RX_ACTIVE_BIT_EN==TRUE
+        if (type & SPI_RX_INT) {
+            dev |= PM_MASK_SPI0_RX_ACTIVE_BIT;
+        }
+        #endif
+
+        if (type & SPI_TX_INT) {
+            dev |= PM_MASK_SPI0_TX_ACTIVE_BIT;
+        }
+#endif
+    }
+    else {
+#if CONFIG_ENABLE_DRIVER_SPI1==TRUE
+        
+        spi_env = (struct spi_env_tag *)&spi1_env;
+
+        #if SPI_RX_ACTIVE_BIT_EN==TRUE
+        if (type & SPI_RX_INT) {
+            dev |= PM_MASK_SPI1_RX_ACTIVE_BIT;
+        }
+        #endif
+
+        if (type & SPI_TX_INT) {
+            dev |= PM_MASK_SPI1_TX_ACTIVE_BIT;
+        }
+#endif
+    }
+
+    if (able) {
+        dev_prevent_sleep(dev);
+        
+        if (!(spi_spi_GetCR0(SPI) & SPI_MASK_TX_FIFO_NFUL_IE)) { // if TX interrupt not enabled
+            if ((spi_env->tx.size > 0) && (spi_spi_GetSR(SPI) & SPI_MASK_TX_FIFO_NFUL_IF)) {
+                spi_tx_data(SPI, spi_env);
+            }
+            else if ((spi_env->mode == SPI_MASTER_MOD) && (spi_env->rx.size > 0)) {
+                spi_spi_SetTXD(SPI, SPI_DUMMY_DATA);
+            }
         }
     }
-
-    //*data++ = reg & 0xFF;
-    //len--;
-    //if (width == SPI_32BIT) { // big-endian
-    //    for (i = 0; ((i < 4) && (len > 0)); i++) {
-    //        *data++ = (reg >> 24) & 0xFF;
-    //        reg <<= 8 ;
-    //        len--;
-    //    }
-    //}
-}
-#endif
-
-#if SPI_TX_DMA_EN==FALSE
-/**
- ****************************************************************************************
- * @brief Enable/Disable SPI TX interrupt.
- * @param[in]       SPI           QN_SPI0 or QN_SPI1
- * @param[in]       able          MASK_ENABLE or MASK_DISABLE
- * @description
- *  Enable or disable specified SPI TX interrupt
- *****************************************************************************************
- */
-__STATIC_INLINE void spi_tx_int_enable(QN_SPI_TypeDef *SPI, uint32_t able)
-{
-    uint32_t dev = 0;
-
-    if (SPI == QN_SPI0) {
-        dev = PM_MASK_SPI0_TX_ACTIVE_BIT;
-    }
     else {
-        dev = PM_MASK_SPI1_TX_ACTIVE_BIT;
-    }
-        
-    if(able == MASK_DISABLE)
-    {
         dev_allow_sleep(dev);
     }
-    else {
-        dev_prevent_sleep(dev);
-    }
 
-    // Wait until the Busy bit is cleared
-    //while ( spi_spi_GetSR(SPI) & SPI_MASK_BUSY );
-    // TX buffer not full interrupt
-    spi_spi_SetCR0WithMask(SPI, SPI_MASK_TX_FIFO_NFUL_IE, able);
+    spi_spi_SetCR0WithMask(SPI, mask, able);
 }
-#endif
-
-#if (!(SPI_RX_DMA_EN==TRUE && SPI0_MOD_MST_EN==FALSE && SPI1_MOD_MST_EN==FALSE))
-/**
- ****************************************************************************************
- * @brief Enable/Disable all SPI RX interrupt.
- * @param[in]       SPI           QN_SPI0 or QN_SPI1
- * @param[in]       able          MASK_ENABLE or MASK_DISABLE
- * @description
- *  Enable or disable specified SPI RX interrupt
- *****************************************************************************************
- */
-__STATIC_INLINE void spi_rx_int_enable(QN_SPI_TypeDef *SPI, uint32_t able)
-{
-#if SPI_RX_ACTIVE_BIT_EN==TRUE
-    uint32_t dev = 0;
-
-    if (SPI == QN_SPI0) {
-        dev = PM_MASK_SPI0_RX_ACTIVE_BIT;
-    }
-    else {
-        dev = PM_MASK_SPI1_RX_ACTIVE_BIT;
-    }
-        
-    if(able == MASK_DISABLE)
-    {
-        dev_allow_sleep(dev);
-    }
-    else {
-        dev_prevent_sleep(dev);
-    }
-#endif
-
-    // RX buffer not empty interrupt, RX buffer overrun interrupt
-    spi_spi_SetCR0WithMask(SPI, SPI_MASK_RX_FIFO_NEMT_IE|SPI_MASK_RX_FIFO_OVR_IE, able);
-}
-#endif
 
 #if (CONFIG_ENABLE_DRIVER_UART0==FALSE && CONFIG_ENABLE_DRIVER_UART1==FALSE)
 /**
@@ -403,36 +419,20 @@ __STATIC_INLINE void usart_reset(uint32_t usart)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_SPI==TRUE
 
-typedef void (*p_spi_init)(QN_SPI_TypeDef * SPI, uint32_t bitrate, enum SPI_BUFFER_WIDTH width, enum SPI_MODE mode);
-typedef void (*p_spi_read)(QN_SPI_TypeDef *SPI, uint8_t *bufptr, int32_t size, void (*rx_callback)(void));
-typedef void (*p_spi_write)(QN_SPI_TypeDef *SPI,  uint8_t *bufptr, int32_t size, void (*tx_callback)(void));
-
-#define spi_init      ((p_spi_init)  _spi_init)
-#define spi_read      ((p_spi_read)  _spi_read)
-#define spi_write     ((p_spi_write) _spi_write)
-
-#else
-
-#if (CONFIG_ENABLE_DRIVER_SPI0==TRUE && CONFIG_SPI0_TX_DEFAULT_IRQHANDLER==TRUE)
-void SPI0_TX_IRQHandler(void);
+#if (CONFIG_ENABLE_DRIVER_SPI0==TRUE && CONFIG_SPI0_DEFAULT_IRQHANDLER==TRUE)
+void SPI0_IRQHandler(void);
 #endif
-#if (CONFIG_ENABLE_DRIVER_SPI0==TRUE && CONFIG_SPI0_RX_DEFAULT_IRQHANDLER==TRUE)
-void SPI0_RX_IRQHandler(void);
-#endif
-#if (CONFIG_ENABLE_DRIVER_SPI1==TRUE && CONFIG_SPI1_TX_DEFAULT_IRQHANDLER==TRUE)
-void SPI1_TX_IRQHandler(void);
-#endif
-#if (CONFIG_ENABLE_DRIVER_SPI1==TRUE && CONFIG_SPI1_RX_DEFAULT_IRQHANDLER==TRUE)
-void SPI1_RX_IRQHandler(void);
+
+#if (CONFIG_ENABLE_DRIVER_SPI1==TRUE && CONFIG_SPI1_DEFAULT_IRQHANDLER==TRUE)
+void SPI1_IRQHandler(void);
 #endif
 
 extern void spi_init(QN_SPI_TypeDef * SPI, uint32_t bitrate, enum SPI_BUFFER_WIDTH width, enum SPI_MODE mode);
 extern void spi_read(QN_SPI_TypeDef *SPI, uint8_t *bufptr, int32_t size, void (*rx_callback)(void));
 extern void spi_write(QN_SPI_TypeDef *SPI,  uint8_t *bufptr, int32_t size, void (*tx_callback)(void));
 extern int spi_check_tx_free(QN_SPI_TypeDef *SPI);
-#endif
+
 
 /// @} SPI
 #endif /* CONFIG_ENABLE_DRIVER_SPI==TRUE */

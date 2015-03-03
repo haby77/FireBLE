@@ -20,9 +20,11 @@
  ****************************************************************************************
  */
 #include <stdbool.h>
+#include "qnrf.h"
 #if (QN_WORK_MODE == WORK_MODE_SOC)
 #include "app_env.h"
 #endif
+
 
 /*
  * DEFINITIONS
@@ -76,6 +78,13 @@ typedef void (*hci_api)(void *port, uint8_t *bufptr, uint32_t size, void (*callb
 
 /**
  ****************************************************************************************
+ * @brief Enable 32k low power mode
+ ***************************************************************************************
+ */
+extern void enable_32k_mode(void);
+
+/**
+ ****************************************************************************************
  * @brief DC-DC Enable
  * @param[in]   enable true - enable dc-dc; false - disable
  ****************************************************************************************
@@ -88,12 +97,8 @@ extern void dc_dc_enable(bool enable);
  * @param[in]     ppm
  ***************************************************************************************
  */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 typedef void (*p_set_32k_ppm)(int32_t ppm);
 #define set_32k_ppm ((p_set_32k_ppm)(_set_32k_ppm))
-#elif defined(QN_9020_B0)
-extern void set_32k_ppm(int32_t ppm);
-#endif
 
 /**
  ****************************************************************************************
@@ -101,12 +106,8 @@ extern void set_32k_ppm(int32_t ppm);
  * @param[in]     freq  frequency (Hz)
  ***************************************************************************************
  */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 typedef void (*p_set_32k_freq)(int32_t ppm);
 #define set_32k_freq ((p_set_32k_freq)(_set_32k_freq))
-#elif defined(QN_9020_B0)
-extern void set_32k_freq(uint32_t freq);
-#endif
 
 /**
  ****************************************************************************************
@@ -177,12 +178,8 @@ typedef void (*p_enable_ble_sleep)(bool enable);
  * @param[in]   duration    unit 625us, maximum is 209715199(36hours16mins)
  ****************************************************************************************
  */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 typedef bool (*p_set_max_sleep_duration)(uint32_t duration);
 #define set_max_sleep_duration ((p_set_max_sleep_duration)(_set_max_sleep_duration))
-#elif defined(QN_9020_B0)
-extern bool set_max_sleep_duration(uint32_t duration);
-#endif
 
 /**
  ****************************************************************************************
@@ -191,9 +188,7 @@ extern bool set_max_sleep_duration(uint32_t duration);
  * @param[in]   latency    0 < latency <= 8, unit 625us, default value is 4
  ****************************************************************************************
  */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 extern void set_ble_program_latency(uint8_t latency);
-#endif
 
 /**
  ***************************************************************
@@ -214,12 +209,8 @@ extern bool ble_ext_wakeup_allow(void);
  * @brief Wakeup BLE hardware by software.
  ***************************************************************
 */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 typedef void (*p_sw_wakeup_ble_hw)(void);
 #define sw_wakeup_ble_hw ((p_sw_wakeup_ble_hw)(_sw_wakeup_ble_hw))
-#elif defined(QN_9020_B0)
-extern void sw_wakeup_ble_hw(void);
-#endif
 
 /**
  ****************************************************************************************
@@ -238,12 +229,8 @@ extern void reg_ble_sleep_cb(bool (*enter_cb)(void), void (*exit_cb)(void));
  * @brief Save configuration which will lose in sleep mode
  ****************************************************************************************
  */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 typedef void (*p_save_ble_setting)(void);
 #define save_ble_setting ((p_save_ble_setting)(_save_ble_setting))
-#elif defined(QN_9020_B0)
-extern void save_ble_setting(void);
-#endif
 
 /**
  ****************************************************************************************
@@ -314,12 +301,8 @@ typedef void (*p_ke_evt_clear)(uint32_t const);
  * @return                      Status
  ****************************************************************************************
  */
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
 typedef enum KE_EVENT_STATUS (*p_ke_evt_callback_set)(uint8_t event_type, void (*p_callback)(void));
 #define ke_evt_callback_set ((p_ke_evt_callback_set)(_ke_evt_callback_set))
-#elif defined(QN_9020_B0)
-extern enum KE_EVENT_STATUS ke_evt_callback_set(uint8_t event_type, void (*p_callback)(void));
-#endif
 
 /**
  ****************************************************************************************
@@ -345,10 +328,20 @@ extern void set_dbg_info(uint32_t dbg_info_bit);
 
 /**
  ****************************************************************************************
- * @brief Disable B1 patch
+ * @brief FCC/CE Tx Test
+ * @param[in]  freq         frequency
+ * @param[in]  enable_mod   0-disable modulation 1-enable modulation
  ****************************************************************************************
  */
-void disable_patch_b1(void);
+extern void fcc_ce_tx_test(uint32_t freq, uint32_t enable_mod, enum TX_POWER txpwr);
+
+/**
+ ****************************************************************************************
+ * @brief FCC/CE Rx Test
+ * @param[in]  freq         frequency
+ ****************************************************************************************
+ */
+extern void fcc_ce_rx_test(uint32_t freq);
 
 #endif
 

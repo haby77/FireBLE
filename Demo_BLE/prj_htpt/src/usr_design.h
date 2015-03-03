@@ -117,11 +117,6 @@ struct usr_env_tag
 
     // measure counter
     size_t meas_counter;
-
-#if (defined(QN_ADV_WDT))
-    bool        adv_wdt_enable;
-    void        (*adv_wdt_to)(void);
-#endif
 };
 
 extern struct usr_env_tag usr_env;

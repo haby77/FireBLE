@@ -25,8 +25,7 @@
  */
 #include "timer.h"
 #if ((CONFIG_ENABLE_DRIVER_TIMER0==TRUE || CONFIG_ENABLE_DRIVER_TIMER1==TRUE \
-    || CONFIG_ENABLE_DRIVER_TIMER1==TRUE  || CONFIG_ENABLE_DRIVER_TIMER3==TRUE) \
-    && CONFIG_ENABLE_ROM_DRIVER_TIMER==FALSE)
+    || CONFIG_ENABLE_DRIVER_TIMER1==TRUE  || CONFIG_ENABLE_DRIVER_TIMER3==TRUE))
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -85,7 +84,7 @@ void timer_delay(QN_TIMER_TypeDef *TIMER, uint32_t pscal, uint32_t count)
         | FREE_RUNNING_MOD;                     /* select free running mode */
     timer_timer_SetCR(TIMER, reg);              /* must disable timer first */
 
-    timer_enable(TIMER, MASK_ENABLE);
+    timer_timer_SetCRWithMask(TIMER, TIMER_MASK_TEN, MASK_ENABLE);
     /* wait until delay time has elapsed */
     while (!(timer_timer_GetIntFlag(TIMER) & TIMER_MASK_TOVF));
 
@@ -286,6 +285,7 @@ void TIMER3_IRQHandler(void)
  */
 void timer_init(QN_TIMER_TypeDef *TIMER, void (*callback)(void))
 {
+    timer_enable(TIMER, MASK_DISABLE);
     timer_clock_on(TIMER);
 
 #if CONFIG_ENABLE_DRIVER_TIMER0==TRUE

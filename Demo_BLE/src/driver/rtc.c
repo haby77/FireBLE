@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 #include "rtc.h"
-#if CONFIG_ENABLE_DRIVER_RTC==TRUE && CONFIG_ENABLE_ROM_DRIVER_RTC==FALSE
+#if CONFIG_ENABLE_DRIVER_RTC==TRUE
 
 #ifdef USE_STD_C_LIB_TIME
 #include <time.h>

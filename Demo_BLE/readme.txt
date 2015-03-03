@@ -1,5 +1,5 @@
 Project                 Content
-prj_ancsc		   Example for Apple Notification Center Service
+prj_ancsc               Example for apple notification center service client(NC).
 prj_anps                Example for alert notification service.
 prj_bass                Example for battery service.
 prj_blps                Example for blood pressure sensor.
@@ -21,4 +21,5 @@ prj_rscps               Example for running speed and cadence service.
 prj_scpps               Example for scan server.
 prj_simple_peripheral   Example for simple peripheral.
 prj_tips                Example for time server.
+prj_fcc_ce              Example for fcc/ce test.
 

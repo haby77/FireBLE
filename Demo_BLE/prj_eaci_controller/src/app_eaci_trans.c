@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2013
  *
- * $Rev: 1.0 $
+ * $Rev: 5520 $
  *
  ****************************************************************************************
  */
@@ -34,6 +34,8 @@ uint8_t eaci_msg_buf_used = 0;
 static struct eaci_msg eaci_msg_buf[EACI_BUF_DEEP];
 #endif
 
+volatile uint8_t eaci_tx_done_flag = 0;
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -59,12 +61,14 @@ static void eaci_trans_read_start(void)
     uart_read(QN_HCI_PORT, (uint8_t *)&eaci_env.msg_type, 1, eaci_trans_rx_done);
     #elif (defined(CFG_HCI_SPI))
     spi_read(QN_HCI_PORT, (uint8_t *)&eaci_env.msg_type, 1, eaci_trans_rx_done);
+    spi_int_enable(QN_HCI_PORT, SPI_RX_INT, MASK_ENABLE); 
     #endif
 #else
     #if (defined(CFG_HCI_UART))
     uart_read(QN_HCI_PORT, &eaci_env.msg_type, 1, eaci_trans_rx_done);
     #elif (defined(CFG_HCI_SPI))
     spi_read(QN_HCI_PORT, &eaci_env.msg_type, 1, eaci_trans_rx_done);
+    spi_int_enable(QN_HCI_PORT, SPI_RX_INT, MASK_ENABLE);
     #endif
 #endif
 }
@@ -78,6 +82,7 @@ static void eaci_trans_read_hdr(void)
     uart_read(QN_HCI_PORT, (uint8_t *)&eaci_env.msg_id, EACI_MSG_HDR_LEN, eaci_trans_rx_done);
 #elif (defined(CFG_HCI_SPI))
     spi_read(QN_HCI_PORT, (uint8_t *)&eaci_env.msg_id, EACI_MSG_HDR_LEN, eaci_trans_rx_done);
+    spi_int_enable(QN_HCI_PORT, SPI_RX_INT, MASK_ENABLE);
 #endif
 }
 
@@ -91,12 +96,14 @@ static void eaci_trans_read_payl(uint8_t len)
     uart_read(QN_HCI_PORT, (uint8_t *)&eaci_msg_buf[eaci_msg_idx].param[1], len, eaci_trans_rx_done);
     #elif (defined(CFG_HCI_SPI))
     spi_read(QN_HCI_PORT, (uint8_t *)&eaci_msg_buf[eaci_msg_idx].param[1], len, eaci_trans_rx_done);
+    spi_int_enable(QN_HCI_PORT, SPI_RX_INT, MASK_ENABLE);
     #endif
 #else
     #if (defined(CFG_HCI_UART))
     uart_read(QN_HCI_PORT, eaci_env.param + 1, len, eaci_trans_rx_done);
     #elif (defined(CFG_HCI_SPI))
     spi_read(QN_HCI_PORT, eaci_env.param + 1, len, eaci_trans_rx_done);
+    spi_int_enable(QN_HCI_PORT, SPI_RX_INT, MASK_ENABLE);
     #endif
 #endif
 }
@@ -111,6 +118,8 @@ void eaci_trans_tx_done()
 {
     // Defer the freeing of resources to ensure that it is done in background
     ke_evt_set(0x10000000);
+    
+    eaci_tx_done_flag = 1;
 
 #if (defined(QN_EACI_GPIO_WAKEUP_EX_MCU))
     eaci_wakeup_ex_mcu_stop();
@@ -121,15 +130,28 @@ void eaci_trans_write(struct ke_msg *msg)
 {
     //go to start tx state
     eaci_env.tx_state = EACI_STATE_TX_ONGOING;
+    eaci_tx_done_flag = 0;
 
 #if (defined(QN_EACI_GPIO_WAKEUP_EX_MCU))
     eaci_wakeup_ex_mcu_start();
 #endif
 
-#if (defined(CFG_HCI_UART))  
+#if (defined(CFG_HCI_UART))
     uart_write(QN_HCI_PORT, ((uint8_t *)&msg->param), msg->param_len, eaci_trans_tx_done);
 #elif (defined(CFG_HCI_SPI))
     spi_write(QN_HCI_PORT, ((uint8_t *)&msg->param), msg->param_len, eaci_trans_tx_done);
+    spi_int_enable(QN_HCI_PORT, SPI_TX_INT, MASK_ENABLE);
+    
+    gpio_write_pin(CFG_HCI_SPI_WR_CTRL_PIN, GPIO_LOW);
+    while ( eaci_tx_done_flag==0 );
+    
+    // Wait until the TX buffer is empty
+    while (!( spi_spi_GetSR(QN_HCI_PORT) & SPI_MASK_TX_FIFO_EMPT )); 
+    
+    // Wait until the Busy bit is cleared
+    while ( spi_spi_GetSR(QN_HCI_PORT) & SPI_MASK_BUSY );
+    
+    gpio_write_pin(CFG_HCI_SPI_WR_CTRL_PIN, GPIO_HIGH);
 #endif
 }
 

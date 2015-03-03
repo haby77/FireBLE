@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\Quintic\qn9020.ddf</state>
+          <state></state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -117,7 +117,7 @@
         </option>
         <option>
           <name>FlashLoadersV3</name>
-          <state>$TOOLKIT_DIR$\config\flashloader\Quintic\FlashQN9020.board</state>
+          <state>$TOOLKIT_DIR$\config\flashloader\</state>
         </option>
         <option>
           <name>OCImagesSuppressCheck1</name>
@@ -774,7 +774,7 @@
         </option>
         <option>
           <name>CCJLinkInterfaceRadio</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>OCJLinkAttachSlave</name>
@@ -783,7 +783,7 @@
         <option>
           <name>CCJLinkResetList</name>
           <version>6</version>
-          <state>7</state>
+          <state>5</state>
         </option>
         <option>
           <name>CCJLinkInterfaceCmdLine</name>

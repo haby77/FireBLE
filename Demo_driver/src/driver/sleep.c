@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -25,7 +25,7 @@
  */
 
 #include "sleep.h"
-#if CONFIG_ENABLE_DRIVER_SLEEP==TRUE && CONFIG_ENABLE_ROM_DRIVER_SLEEP==FALSE
+#if CONFIG_ENABLE_DRIVER_SLEEP==TRUE
 #include "syscon.h"
 #include "intc.h"
 #include "lib.h"
@@ -34,6 +34,9 @@
 #include "uart.h"
 #include "spi.h"
 #include "button.h"
+#endif
+#if ACMP_WAKEUP_EN == TRUE
+#include "analog.h"
 #endif
 
 /*
@@ -86,9 +89,17 @@ int usr_sleep(void)
 
     if ((rt >= PM_SLEEP) && (!gpio_sleep_allowed()))
     {
-        return PM_ACTIVE;    // If CLOCK OFF & POWER DOWN is disabled, return immediately
+        return PM_ACTIVE;
     }
 
+#if ACMP_WAKEUP_EN == TRUE
+    if ((rt >= PM_SLEEP) && (!acmp_sleep_allowed()))
+    {
+        return PM_ACTIVE;
+    }
+#endif
+    
+    
 #if QN_DBG_PRINT
     int uart_tx_st = uart_check_tx_free(QN_DEBUG_UART);
     
@@ -134,6 +145,21 @@ int usr_sleep(void)
     #endif
 
 #endif
+    
+#if !(QN_32K_RCO)
+    // wait for 32k xtal ready
+    if(syscon_GetBLESR(QN_SYSCON) & SYSCON_MASK_CLK_XTAL32_RDY)
+    {
+        // disable schmitt trigger in 32.768KHz buffer
+        syscon_SetIvrefX32WithMask(QN_SYSCON, SYSCON_MASK_X32SMT_EN, MASK_DISABLE);
+        // Set 32.768KHz xtal to normal current
+        syscon_SetIvrefX32WithMask(QN_SYSCON, SYSCON_MASK_X32ICTRL, 16);
+    }
+    else if(rt > PM_IDLE)
+    {
+        rt = PM_IDLE;
+    }
+#endif
 
     return rt;
 }
@@ -165,11 +191,7 @@ void sleep_init(void)
     sleep_env.retention_modules |= QN_MEM_RETENTION;
 
     // power down all module in sleep except retention modules
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
     syscon_SetPGCR0WithMask(QN_SYSCON, 0xF7FFFCFE, (0xFFFFFC00 | QN_MEM_UNRETENTION));
-#elif defined(QN_9020_B0)
-    syscon_SetPGCR0WithMask(QN_SYSCON, 0xFFFFFCFE, (0xFFFFFC00 | QN_MEM_UNRETENTION));
-#endif
 
     // power down all unretention memory all the time.
     // if you want to use the unretention memory in the active mode, remove the following snippet.
@@ -222,15 +244,11 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
     else if (mode == SLEEP_NORMAL) {
         
 #if QN_LOW_POWER_MODE_EN==TRUE
+
+        // Ensure we use SLEEP
+        SCB->SCR &= ~(1UL << 2);
+
         enter_low_power_mode(0);
-
-        // --------------------------------------------
-        // cpu clock disable
-        // --------------------------------------------
-
-        // Ensure we use deep SLEEP - SLEEPDEEP should be set
-        // SCR[2] = SLEEPDEEP
-        SCB->SCR |= (1UL << 2);
 
 #else
         // --------------------------------------------
@@ -241,21 +259,18 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
         // Save configuration before power down
         save_ble_setting();
 #endif
-
-#if (defined(QN_9020_B1) && QN_PMU_VOLTAGE)
-        // Switch off REF PLL power
-        syscon_SetPGCR1WithMask(QN_SYSCON, SYSCON_MASK_DIS_REF_PLL, MASK_ENABLE);
-#endif
-        
+       
         // switch to internal 20MHz
         syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_CLK_MUX, CLK_INT_20M<<SYSCON_POS_CLK_MUX);
         
         // power down all module in sleep except 32K and retention memory
         syscon_SetPGCR0WithMask(QN_SYSCON, sleep_env.retention_modules|0x00000001, 0x00000001);
-
-#if (defined(QN_9020_B0) && QN_PMU_VOLTAGE)
-        syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS|SYSCON_MASK_AHB_DIVIDER, 
-                                              (0xf<<SYSCON_POS_AHB_DIVIDER));
+        
+#if (defined(QN_EXT_FLASH))
+        syscon_SetCRSC(QN_SYSCON, SYSCON_MASK_GATING_SPI_AHB);
+        sf_ctrl_SetCRWithMask(QN_SF_CTRL, SF_CTRL_MASK_BOOT_DONE, MASK_ENABLE);
+        syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_GATING_SPI_AHB);
+        syscon_SetPGCR0WithMask(QN_SYSCON, SYSCON_MASK_BOND_EN, MASK_DISABLE);
 #endif
 
         // Ensure we use deep SLEEP - SLEEPDEEP should be set
@@ -284,6 +299,10 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
 
         // Disable interrupt in the wakeup procedure.
         NVIC->ICER[0] = iconfig;
+        
+#if (defined(QN_EXT_FLASH))
+        syscon_SetPGCR0WithMask(QN_SYSCON, SYSCON_MASK_BOND_EN, MASK_ENABLE);
+#endif
 
 #if QN_LOW_POWER_MODE_EN==TRUE
 #ifdef BLE_PRJ
@@ -297,19 +316,12 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
         syscon_SetIvrefX32WithMask(QN_SYSCON, SYSCON_MASK_VREG12_A|SYSCON_MASK_VREG12_D|SYSCON_MASK_DVDD12_SW_EN, 
                                               (0x1 << SYSCON_POS_VREG12_A)|(0x0 << SYSCON_POS_VREG12_D)|SYSCON_MASK_DVDD12_SW_EN);
 
-#if (defined(QN_9020_B0) && QN_PMU_VOLTAGE)
-        syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS, MASK_ENABLE);
-#endif
         syscon_SetPGCR2WithMask(QN_SYSCON, SYSCON_MASK_PD_STATE|SYSCON_MASK_DVDD12_PMU_SET, MASK_DISABLE);
 
 #if SLEEP_CALLBACK_EN == TRUE
         if (callback != NULL) {
             callback();
         }
-#endif
-
-#if (defined(QN_9020_B0) && QN_PMU_VOLTAGE)
-        syscon_set_ahb_clk(__AHB_CLK);
 #endif
 
         // 16MHz/32MHz XTAL is ready
@@ -329,7 +341,7 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
 
 #endif // QN_LOW_POWER_MODE_EN==TRUE
 
-#if ((defined(QN_9020_B2) || defined(QN_9020_B1)) && defined(BLE_PRJ))
+#if (defined(BLE_PRJ))
         sleep_post_process();
 #endif
     }
@@ -343,26 +355,19 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
         // Save configuration before power down
         save_ble_setting();
 #endif
-
-#if (defined(QN_9020_B1) && QN_PMU_VOLTAGE)
-        // Switch off REF PLL power
-        syscon_SetPGCR1WithMask(QN_SYSCON, SYSCON_MASK_DIS_REF_PLL, MASK_ENABLE);
-#endif
-        
+     
         // switch to internal 20MHz
         syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_CLK_MUX, CLK_INT_20M<<SYSCON_POS_CLK_MUX);
 
         sleep_env.deep_sleep = true;
         // power down all module in deep sleep except retention memory
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
         syscon_SetPGCR0WithMask(QN_SYSCON, 0xF7FFFCFF, 0xFFFFFC01|~sleep_env.retention_modules);
-#elif defined(QN_9020_B0)
-        syscon_SetPGCR0WithMask(QN_SYSCON, 0xFFFFFCFF, 0xFFFFFC01|~sleep_env.retention_modules);
-#endif
 
-#if (defined(QN_9020_B0) && QN_PMU_VOLTAGE)
-        syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS|SYSCON_MASK_AHB_DIVIDER, 
-                                              (0xf<<SYSCON_POS_AHB_DIVIDER));
+#if (defined(QN_EXT_FLASH))
+        syscon_SetCRSC(QN_SYSCON, SYSCON_MASK_GATING_SPI_AHB);
+        sf_ctrl_SetCRWithMask(QN_SF_CTRL, SF_CTRL_MASK_BOOT_DONE, MASK_ENABLE);
+        syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_GATING_SPI_AHB);
+        syscon_SetPGCR0WithMask(QN_SYSCON, SYSCON_MASK_BOND_EN, MASK_DISABLE);
 #endif
 
         // Ensure we use deep SLEEP - SLEEPDEEP should be set
@@ -388,24 +393,21 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
 
         // Disable interrupt in the wakeup procedure.
         NVIC->ICER[0] = iconfig;
+        
+#if (defined(QN_EXT_FLASH))
+        syscon_SetPGCR0WithMask(QN_SYSCON, SYSCON_MASK_BOND_EN, MASK_ENABLE);
+#endif
 
         // 1.2V
         syscon_SetIvrefX32WithMask(QN_SYSCON, SYSCON_MASK_VREG12_A|SYSCON_MASK_VREG12_D|SYSCON_MASK_DVDD12_SW_EN, 
                                               (0x1 << SYSCON_POS_VREG12_A)|(0x0 << SYSCON_POS_VREG12_D)|SYSCON_MASK_DVDD12_SW_EN);
 
-#if (defined(QN_9020_B0) && QN_PMU_VOLTAGE)
-        syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS, MASK_ENABLE);
-#endif
         syscon_SetPGCR2WithMask(QN_SYSCON, SYSCON_MASK_PD_STATE|SYSCON_MASK_DVDD12_PMU_SET, MASK_DISABLE);
 
 #if SLEEP_CALLBACK_EN == TRUE
         if (callback != NULL) {
             callback();
         }
-#endif
-
-#if (defined(QN_9020_B0) && QN_PMU_VOLTAGE)
-        syscon_set_ahb_clk(__AHB_CLK);
 #endif
 
         // 16MHz/32MHz XTAL is ready
@@ -423,7 +425,7 @@ void enter_sleep(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void))
         }
         syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_CLK_MUX, CLK_XTAL<<SYSCON_POS_CLK_MUX);
 
-#if ((defined(QN_9020_B2) || defined(QN_9020_B1)) && defined(BLE_PRJ))
+#if (defined(BLE_PRJ))
         sleep_post_process();
 #endif
     }
@@ -477,12 +479,12 @@ void wakeup_by_analog_comparator(enum ACMP_CH acmpch, void (*callback)(void))
     }
     
     if (acmpch == ACMP0) {
-        analog_pin_enable(AIN0, MASK_ENABLE);
+        acmp_pin_enable(ACMP0_PIN_P, MASK_ENABLE);
     }
     else {
-        analog_pin_enable(AIN2, MASK_ENABLE);
+        acmp_pin_enable(ACMP1_PIN_P, MASK_ENABLE);
     }
-    comparator_init(acmpch, VDD_8, ACMPO_0_GEN_INT, callback);
+    acmp_init(acmpch, VDD_8, ACMPO_0_GEN_INT, HYST_ENABLE, callback);
 }
 #endif
 
@@ -614,17 +616,18 @@ volatile uint8_t low_power_mode_en = 0;
  */
 void enter_low_power_mode(uint32_t en)
 {
+    uint32_t reg_pgcr1;
+    uint32_t mask;
+
     PGCR1_restore = syscon_GetPGCR1(QN_SYSCON);
+    reg_pgcr1 = PGCR1_restore;
+
+    // bypass AHB divider, prepare for clock switch to 32k
+    syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS|SYSCON_MASK_APB_DIV_BYPASS, MASK_ENABLE);
  
-    syscon_SetPGCR0WithMask(QN_SYSCON, SYSCON_MASK_PL_VERG_D, MASK_DISABLE);
+    syscon_SetPGCR0WithMask(QN_SYSCON, SYSCON_MASK_PL_VREG_D, MASK_DISABLE);
     syscon_SetPGCR2WithMask(QN_SYSCON, SYSCON_MASK_PD_STATE|SYSCON_MASK_PMUENABLE, MASK_DISABLE);
     
-    low_power_mode_en = 1;
-    // set system clock to 32K
-    syscon_set_sysclk_src(CLK_LOW_32K, __32K_TYPE);
-    syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS|SYSCON_MASK_APB_DIV_BYPASS, MASK_ENABLE);
-
-    uint32_t mask;
     // power off all not needed modules
     mask = SYSCON_MASK_DIS_OSC
          | SYSCON_MASK_DIS_BG
@@ -660,7 +663,17 @@ void enter_low_power_mode(uint32_t en)
          | SYSCON_MASK_DIS_MEM1
          | SYSCON_MASK_DIS_SAR_BUF
          ;
-    syscon_SetPGCR1WithMask(QN_SYSCON, mask&(~QN_MEM_RETENTION), MASK_ENABLE);
+
+    reg_pgcr1 |= (mask & (~QN_MEM_RETENTION));
+
+    // set 32k low power flag
+    low_power_mode_en = 1;
+
+    // set system clock to 32K
+    syscon_set_sysclk_src(CLK_LOW_32K, __32K_TYPE);
+
+    // disable power of unused block in 32k mode
+    syscon_SetPGCR1(QN_SYSCON, reg_pgcr1);
 
 #if 0
     // gating all not needed modules
@@ -684,8 +697,6 @@ void enter_low_power_mode(uint32_t en)
          ;
     syscon_SetCRSS(QN_SYSCON, mask&(~en));
 #endif
-    // set PMU to 0.8V, b1 should set PMU after OSC disabled
-    syscon_SetPGCR2WithMask(QN_SYSCON, SYSCON_MASK_DVDD12_PMU_SET, MASK_ENABLE);
 }
 
 /**

@@ -7,7 +7,7 @@
  *
  * Copyright (C) Quintic 2012-2014
  *
- * $Rev: 1.0 $
+ * $Rev: 5444 $
  *
  ****************************************************************************************
  */
@@ -24,8 +24,7 @@
  ****************************************************************************************
  */
 #include "pwm.h"
-#if ((CONFIG_ENABLE_DRIVER_PWM0==TRUE || CONFIG_ENABLE_DRIVER_PWM1==TRUE) \
-    && CONFIG_ENABLE_ROM_DRIVER_PWM==FALSE)
+#if ((CONFIG_ENABLE_DRIVER_PWM0==TRUE || CONFIG_ENABLE_DRIVER_PWM1==TRUE))
 
 
 /*

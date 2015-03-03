@@ -17,18 +17,23 @@
 
 // User configuration
 
-/// Chip version: CFG_9020_B2, CFG_9020_B1, CFG_9020_B0
-// The library file must use the correct version according to chip version.
-// If CFG_9020_B2 is defined, the library file 'qn9020b2_lib_peripheral.lib' or
-// 'qn9020b2_lib_allroles.lib' should be selected.
-// If CFG-9020_B1 is defined, the library file 'qn9020b1_lib_peripheral.lib' or
-// 'qn9020b1_lib_allroles.lib' should be selected.
+/// Software verion: CFG_SW_DEBUG, CFG_SW_RELEASE
+// In the debug version the program will be in the infinite loop if the hardfault exception is triggered.
+// In the release version the program will execute a system reboot if the hardfault exception is triggered.
+#define CFG_SW_DEBUG
+
+/// Chip version: CFG_9020_B2
 #define CFG_9020_B2
 
 /// Evaluation board indication
 // The GPIOs used for QN9021 miniDK's LED and button are different from QN9020 miniDK.
 // If the QN9021 miniDK is used, the following macro shall be defined.
 // #define CFG_9021_MINIDK
+
+/// External flash
+// QN9022 uses external flash. BOND_EN should be set correctly in this case
+// to prevent extra power consumption in SLEEP mode.
+//#define CFG_EXT_FLASH
 
 /// Work mode: CFG_WM_SOC, CFG_WM_NP, CFG_WM_HCI
 #define CFG_WM_SOC
@@ -60,11 +65,6 @@
 
 /// Test mode controll pin
 //#define CFG_TEST_CTRL_PIN GPIO_P31
-
-/// ADV watchdog timer
-#if (defined(CFG_9020_B0))
-#define CFG_ADV_WDT
-#endif
 
 /// Memory retention
 #define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK6 | MEM_BLOCK7)

@@ -141,29 +141,6 @@ __STATIC_INLINE void flash_clock_off(void)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_SERIAL_FLASH==TRUE
-
-typedef  void     (*p_set_flash_clock)(uint32_t clock_div);
-typedef  void     (*p_read_flash)(uint32_t addr, uint32_t *pBuf, uint32_t nbyte);
-typedef  void     (*p_write_flash)(uint32_t addr,const uint32_t * pBuf,uint32_t nbyte);
-typedef  void     (*p_sector_erase_flash)(uint32_t addr, uint32_t n);
-typedef  void     (*p_block_erase_flash)(uint32_t addr, uint32_t block_size, uint32_t n);
-typedef  void     (*p_chip_erase_flash)(void);
-typedef  void     (*p_power_on_or_off_flash)(enum POWER_TYPE on_or_off);
-typedef  uint32_t (*p_read_flash_id)(void);
-
-#define set_flash_clock        ((p_set_flash_clock)       _set_flash_clock)
-#define read_flash             ((p_read_flash)            _read_flash)
-#define write_flash            ((p_write_flash)           _write_flash)
-#define sector_erase_flash     ((p_sector_erase_flash)    _sector_erase_flash)
-#define block_erase_flash      ((p_block_erase_flash)     _block_erase_flash)
-#define chip_erase_flash       ((p_chip_erase_flash)      _chip_erase_flash)
-#define power_on_or_off_flash  ((p_power_on_or_off_flash) _power_on_or_off_flash)
-#define read_flash_id          ((p_read_flash_id)         _read_flash_id)
-
-#define g_flash_cmd            ((uint8_t *)_flash_cmd)
-
-#else
 
 extern uint8_t g_flash_cmd[];
 
@@ -179,7 +156,6 @@ extern bool is_flash_present(void);
 extern void power_on_flash(void);
 extern void power_off_flash(void);
 
-#endif
 
 #ifdef __cplusplus
 #if __cplusplus

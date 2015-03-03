@@ -24,7 +24,7 @@
  ****************************************************************************************
  */
 #include "gpio.h"
-#if CONFIG_ENABLE_DRIVER_GPIO==TRUE && CONFIG_ENABLE_ROM_DRIVER_GPIO==FALSE
+#if CONFIG_ENABLE_DRIVER_GPIO==TRUE
 #include "sleep.h"
 /*
  * STRUCT DEFINITIONS
@@ -411,6 +411,18 @@ bool gpio_sleep_allowed(void)
     }
     
     return TRUE;
+}
+
+void gpio_open_drain_out(enum gpio_pin pin, enum gpio_level level)
+{
+    if (level == GPIO_LOW) {
+        gpio_set_direction(pin, GPIO_OUTPUT);
+        gpio_write_pin(pin, GPIO_LOW);
+    }
+    else { // pull-up by external resistor
+        gpio_set_direction(pin, GPIO_INPUT);
+        gpio_pull_set(pin, GPIO_HIGH_Z);
+    }
 }
 
 #endif /* CONFIG_ENABLE_DRIVER_GPIO */

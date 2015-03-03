@@ -827,6 +827,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\profiles\hogp\hogprh\hogprh_task.c</FilePath>
             </File>
+            <File>
+              <FileName>qppc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\profiles\qpp\qppc\qppc.c</FilePath>
+            </File>
+            <File>
+              <FileName>qppc_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\profiles\qpp\qppc\qppc_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -867,6 +877,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\driver\dma.c</FilePath>
             </File>
+            <File>
+              <FileName>serialflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\serialflash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -876,11 +891,6 @@
               <FileName>qn9020b2_lib_allroles.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\..\src\lib\keil\qn9020b2_lib_allroles.lib</FilePath>
-            </File>
-            <File>
-              <FileName>qn_qppc.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\src\profiles\qpp\qppc\qn_qppc.lib</FilePath>
             </File>
           </Files>
         </Group>

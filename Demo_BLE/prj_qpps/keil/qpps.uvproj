@@ -30,7 +30,6 @@
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
           <SFDFile></SFDFile>
-          <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
@@ -98,7 +97,6 @@
           <StopOnExitCode>3</StopOnExitCode>
           <CustomArgument></CustomArgument>
           <IncludeLibraryModules></IncludeLibraryModules>
-          <ComprImg>1</ComprImg>
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
@@ -139,11 +137,9 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>7</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -173,10 +169,6 @@
           <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
-          <pFcarmOut></pFcarmOut>
-          <pFcarmGrp></pFcarmGrp>
-          <pFcArmRoot></pFcArmRoot>
-          <FcArmLst>0</FcArmLst>
         </Utilities>
         <TargetArmAds>
           <ArmAdsMisc>
@@ -355,8 +347,6 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
               <Define></Define>
@@ -373,7 +363,6 @@
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
-            <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -390,7 +379,6 @@
             <useFile>0</useFile>
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
-            <pXoBase></pXoBase>
             <ScatterFile>..\..\src\link\keil\qn9020_link.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
@@ -536,6 +524,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\profiles\dis\diss\diss_task.c</FilePath>
             </File>
+            <File>
+              <FileName>qpps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\profiles\qpp\qpps\qpps.c</FilePath>
+            </File>
+            <File>
+              <FileName>qpps_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\profiles\qpp\qpps\qpps_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -576,6 +574,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\driver\rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>serialflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\serialflash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -585,11 +588,6 @@
               <FileName>qn9020b2_lib_peripheral.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\..\src\lib\keil\qn9020b2_lib_peripheral.lib</FilePath>
-            </File>
-            <File>
-              <FileName>qn_qpp.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\src\profiles\qpp\qpps\qn_qpp.lib</FilePath>
             </File>
           </Files>
         </Group>
