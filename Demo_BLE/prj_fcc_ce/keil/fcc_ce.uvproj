@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>cscps</TargetName>
+      <TargetName>fcc_ce</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -45,7 +45,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\obj\</OutputDirectory>
-          <OutputName>cscps</OutputName>
+          <OutputName>fcc_ce</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -72,13 +72,11 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
-            <nStopB1X>0</nStopB1X>
-            <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>fromelf --bin --output ./bin/cscps.bin ./obj/cscps.axf</UserProg1Name>
+            <UserProg1Name>fromelf --bin --output ./bin/fcc_ce.bin ./obj/fcc_ce.axf</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -130,19 +128,19 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreWatchpoints>0</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -171,7 +169,7 @@
             <Capability>1</Capability>
             <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>1</bUseTDR>
+          <bUseTDR>0</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -363,7 +361,7 @@
               <MiscControls>--C99</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\src\fw;..\..\src\profiles;..\..\src\profiles\cscp;..\..\src\profiles\cscp\cscps;..\..\src\profiles\dis\diss;..\..\src\app;..\..\src\app\gap;..\..\src\app\gatt;..\..\src\app\smp;..\..\src\app\cscps;..\..\src\app\diss;..\..\src\cmsis;..\..\src\driver;..\..\src\lib;..\..\src\qnevb;..\src</IncludePath>
+              <IncludePath>..\..\src\fw;..\..\src\profiles;..\..\src\profiles\prox\proxr;..\..\src\app;..\..\src\app\gap;..\..\src\app\gatt;..\..\src\app\smp;..\..\src\app\proxr;..\..\src\cmsis;..\..\src\driver;..\..\src\lib;..\..\src\qnevb;..\src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -498,16 +496,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\app\smp\app_smp_task.c</FilePath>
             </File>
-            <File>
-              <FileName>app_cscps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\cscps\app_cscps.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_cscps_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\cscps\app_cscps_task.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -518,30 +506,25 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\profiles\prf_utils.c</FilePath>
             </File>
-            <File>
-              <FileName>cscps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\profiles\cscp\cscps\cscps.c</FilePath>
-            </File>
-            <File>
-              <FileName>cscps_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\profiles\cscp\cscps\cscps_task.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>drivers</GroupName>
           <Files>
             <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\uart.c</FilePath>
-            </File>
-            <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\src\driver\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>serialflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\serialflash.c</FilePath>
             </File>
             <File>
               <FileName>sleep.c</FileName>
@@ -554,34 +537,14 @@
               <FilePath>..\..\src\driver\syscon.c</FilePath>
             </File>
             <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\rtc.c</FilePath>
-            </File>
-            <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\src\driver\timer.c</FilePath>
             </File>
             <File>
-              <FileName>wdt.c</FileName>
+              <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\driver\wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>serialflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\serialflash.c</FilePath>
-            </File>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>analog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\analog.c</FilePath>
+              <FilePath>..\..\src\driver\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -607,11 +570,6 @@
               <FileName>button.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\src\qnevb\button.c</FilePath>
-            </File>
-            <File>
-              <FileName>joysticks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\qnevb\joysticks.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>cscps</TargetName>
+      <TargetName>acmp</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -16,7 +16,7 @@
           <Vendor>Quintic</Vendor>
           <Cpu>IRAM(0x00008000-0x0000FFFF) IROM(0x00000000-0x00007FFF) CLOCK(16000000) CPUTYPE("Cortex-M0") </Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"STARTUP\Quintic\QN9020\startup_QN9020.s" ("Quintic QN9020 Startup Code")</StartupFile>
+          <StartupFile>"STARTUP\Quintic\QN9020\startup_QN9020.s" ("Quintic QN9020 Startup src")</StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -FO7 -FD10000000 -FC8000 -FN1 -FF0QN9020_DEVICE -FS000000000 -FL010000)</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>QN9020.h</RegisterFile>
@@ -45,13 +45,13 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\obj\</OutputDirectory>
-          <OutputName>cscps</OutputName>
+          <OutputName>acmp</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
-          <ListingPath>.\listings\</ListingPath>
+          <ListingPath>.\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
           <CreateBatchFile>0</CreateBatchFile>
@@ -72,13 +72,11 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
-            <nStopB1X>0</nStopB1X>
-            <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>fromelf --bin --output ./bin/cscps.bin ./obj/cscps.axf</UserProg1Name>
+            <UserProg1Name>fromelf --bin --output ./bin/acmp.bin ./obj/acmp.axf</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -130,19 +128,19 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
+            <RunToMain>0</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
             <RestoreWatchpoints>1</RestoreWatchpoints>
             <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -171,7 +169,7 @@
             <Capability>1</Capability>
             <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>1</bUseTDR>
+          <bUseTDR>0</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -194,8 +192,8 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>0</AdsALst>
-            <AdsACrf>0</AdsACrf>
+            <AdsALst>1</AdsALst>
+            <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
             <AdsLLst>1</AdsLLst>
@@ -226,7 +224,7 @@
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <RoSelD>3</RoSelD>
-            <RwSelD>5</RwSelD>
+            <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -237,12 +235,12 @@
             <Ro1Chk>0</Ro1Chk>
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
-            <Ir1Chk>0</Ir1Chk>
+            <Ir1Chk>1</Ir1Chk>
             <Ir2Chk>0</Ir2Chk>
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
-            <Im1Chk>0</Im1Chk>
+            <Im1Chk>1</Im1Chk>
             <Im2Chk>0</Im2Chk>
             <OnChipMemories>
               <Ocm1>
@@ -307,7 +305,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
+                <StartAddress>0x10000000</StartAddress>
                 <Size>0x8000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -332,7 +330,7 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x8000</StartAddress>
+                <StartAddress>0x10008000</StartAddress>
                 <Size>0x8000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
@@ -363,7 +361,7 @@
               <MiscControls>--C99</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\src\fw;..\..\src\profiles;..\..\src\profiles\cscp;..\..\src\profiles\cscp\cscps;..\..\src\profiles\dis\diss;..\..\src\app;..\..\src\app\gap;..\..\src\app\gatt;..\..\src\app\smp;..\..\src\app\cscps;..\..\src\app\diss;..\..\src\cmsis;..\..\src\driver;..\..\src\lib;..\..\src\qnevb;..\src</IncludePath>
+              <IncludePath>..\src;..\..\src\driver;..\..\src\fw;..\..\src\cmsis;..\..\src\lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -396,9 +394,7 @@
             <ScatterFile>..\..\src\link\keil\qn9020_link.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--no_autoat --remove
-
-</Misc>
+            <Misc></Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -416,163 +412,18 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>main</GroupName>
-          <Files>
-            <File>
-              <FileName>app_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\main\app_main.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>usr</GroupName>
+          <GroupName>system</GroupName>
           <Files>
             <File>
               <FileName>system.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\system.c</FilePath>
             </File>
-            <File>
-              <FileName>usr_design.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\usr_design.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
+          <GroupName>driver</GroupName>
           <Files>
-            <File>
-              <FileName>app_util.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\app_util.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_env.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\app_env.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_printf.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\app_printf.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\app_sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\app_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_gap.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\gap\app_gap.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_gap_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\gap\app_gap_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_gatt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\gatt\app_gatt.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_gatt_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\gatt\app_gatt_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_smp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\smp\app_smp.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_smp_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\smp\app_smp_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_cscps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\cscps\app_cscps.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_cscps_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\app\cscps\app_cscps_task.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>profiles</GroupName>
-          <Files>
-            <File>
-              <FileName>prf_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\profiles\prf_utils.c</FilePath>
-            </File>
-            <File>
-              <FileName>cscps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\profiles\cscp\cscps\cscps.c</FilePath>
-            </File>
-            <File>
-              <FileName>cscps_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\profiles\cscp\cscps\cscps_task.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>drivers</GroupName>
-          <Files>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>sleep.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\sleep.c</FilePath>
-            </File>
-            <File>
-              <FileName>syscon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\syscon.c</FilePath>
-            </File>
-            <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>serialflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\driver\serialflash.c</FilePath>
-            </File>
             <File>
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
@@ -583,45 +434,85 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\driver\analog.c</FilePath>
             </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>serialflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\serialflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>sleep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\sleep.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>syscon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\syscon.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\wdt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>lib</GroupName>
           <Files>
             <File>
-              <FileName>qn9020b2_lib_peripheral.lib</FileName>
+              <FileName>qn902xb2_lib_lite.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\..\src\lib\keil\qn9020b2_lib_peripheral.lib</FilePath>
+              <FilePath>..\..\src\lib\keil\qn902xb2_lib_lite.lib</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>qnevb</GroupName>
+          <GroupName>main</GroupName>
           <Files>
             <File>
-              <FileName>led.c</FileName>
+              <FileName>acmp_example.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\qnevb\led.c</FilePath>
-            </File>
-            <File>
-              <FileName>button.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\qnevb\button.c</FilePath>
-            </File>
-            <File>
-              <FileName>joysticks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\qnevb\joysticks.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>retarget</GroupName>
-          <Files>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\retarget\retarget.c</FilePath>
+              <FilePath>..\src\acmp_example.c</FilePath>
             </File>
           </Files>
         </Group>
