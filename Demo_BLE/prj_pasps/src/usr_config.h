@@ -48,7 +48,7 @@
 //#define  CFG_SWD
  
 ///define it when used Joysticks
-#define CFG_JOYSTICKS
+//#define CFG_JOYSTICKS
 
 /// DC-DC enable
 #define CFG_DC_DC

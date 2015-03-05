@@ -568,6 +568,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\src\driver\adc.c</FilePath>
             </File>
+            <File>
+              <FileName>serialflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\driver\serialflash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

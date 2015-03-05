@@ -22,19 +22,31 @@
 
 #if !defined(FireBLE_platform)
 
+#if	defined(CFG_FCC_CE_TEST)
+#define	BUTTON1_PIN			CFG_FCC_CE_CTRL_PIN
+#else
 #define BUTTON1_PIN    (GPIO_P14)
+#endif
 #define BUTTON2_PIN    (GPIO_P15)
 
 #else
 
-#define	BUTTON1_PIN	 (GPIO_P12)
+#if	defined(CFG_FCC_CE_TEST)
+#define	BUTTON1_PIN			CFG_FCC_CE_CTRL_PIN
+#else
+#define BUTTON1_PIN    (GPIO_P12)
+#endif
 #define	BUTTON2_PIN	 (GPIO_P02)  // no pin in QN9021
 
 #endif
 
 #else
 
+#if	defined(CFG_FCC_CE_TEST)
+#define	BUTTON1_PIN			CFG_FCC_CE_CTRL_PIN
+#else
 #define BUTTON1_PIN    (GPIO_P12)
+#endif
 #define BUTTON2_PIN    (GPIO_P10)
 
 #endif
