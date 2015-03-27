@@ -68,7 +68,7 @@
 #endif
 
 /// Memory retention
-#define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK6 | MEM_BLOCK7)
+#define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK3 | MEM_BLOCK6 | MEM_BLOCK7)
 
 /// Deep sleep support
 #define CFG_DEEP_SLEEP
