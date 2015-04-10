@@ -41,16 +41,19 @@ button_env usr_button_env = {0,button_idle};
 int app_key_scan_timer_handler(ke_msg_id_t const msgid, void const *param,
                                ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-		adc_init(ADC_SINGLE_WITHOUT_BUF_DRV, ADC_CLK_1000000, ADC_INT_REF, ADC_12BIT);
-		
-    // Read voltage. use interrupt
-    adc_read_configuration read_cfg;
-    read_cfg.trig_src = ADC_TRIG_SOFT;
-    read_cfg.mode = BURST_MOD;
-    read_cfg.start_ch = AIN0;
-    read_cfg.end_ch = AIN0;
-    adc_read(&read_cfg,adc_key_value, KEY_SAMPLE_NUMBER, adc_test_cb);
-    while(adc_done == 0);	
+		if (gpio_read_pin(BUTTON1_PIN) == GPIO_LOW)
+		{
+				adc_init(ADC_SINGLE_WITHOUT_BUF_DRV, ADC_CLK_1000000, ADC_INT_REF, ADC_12BIT);
+				
+				// Read voltage. use interrupt
+				adc_read_configuration read_cfg;
+				read_cfg.trig_src = ADC_TRIG_SOFT;
+				read_cfg.mode = BURST_MOD;
+				read_cfg.start_ch = AIN0;
+				read_cfg.end_ch = AIN0;
+				adc_read(&read_cfg,adc_key_value, KEY_SAMPLE_NUMBER, adc_test_cb);
+				while(adc_done == 0);
+		}
 		return(KE_MSG_CONSUMED);
 }
 
