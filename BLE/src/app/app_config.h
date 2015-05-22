@@ -65,6 +65,24 @@
 #else
 		#define	FB_JOYSTICKS						0
 #endif
+#if	(defined(CFG_IIC_OLED) || defined(CFG_SPI_OLED))
+		#define	FB_OLED									1
+
+#if	defined(CFG_IIC_OLED)
+		#define	FB_IIC_OLED							1
+#else
+		#define	FB_IIC_OLED							0
+#endif
+
+#if defined(CFG_SPI_OLED)
+		#define	FB_SPI_OLED							1
+#else
+		#define	FB_SPI_OLED							0
+#endif
+
+#else
+		#define	FB_OLED									0
+#endif
 #endif
 
 

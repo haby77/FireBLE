@@ -21,6 +21,10 @@
   #include "joysticks.h"
 #endif
 
+#if		(FB_OLED)
+#include	"oled.h"
+#endif
+
 #if QN_DEMO_MENU
 #include "app_menu.h"
 #endif
@@ -189,6 +193,15 @@ const struct ke_msg_handler app_default_state[] =
 #if (FB_JOYSTICKS)
 		{APP_KEY_PROCESS_TIMER,						(ke_msg_func_t) app_key_process_timer_handler},
 		{APP_KEY_SCAN_TIMER,						(ke_msg_func_t) app_key_scan_timer_handler},
+#endif
+#if	(FB_OLED)
+		{APP_OLED_DISPLAY_TIMER,						(ke_msg_func_t) app_oled_display_timer_handler},
+		{APP_OLED_STATE_DISPlAY_TIMER,			(ke_msg_func_t) app_oled_state_display_timer_handler},
+		{APP_OLED_CLEAR_KEY_DISPLAY_TIMER,	(ke_msg_func_t) app_oled_clear_key_display_timer_handler},
+#endif
+#if	(CONFIG_ENABLE_DRIVER_MPU6050 == TRUE)
+		{APP_MPU6050_TEMPERATURE_TEST_TIMER,		(ke_msg_func_t) app_mpu6050_temperature_test_timer_handler},
+		{APP_MPU6050_ADD_READ_TIMER,						(ke_msg_func_t) app_mpu6050_addr_read_test_timer_handler},
 #endif
 #endif
 #endif
