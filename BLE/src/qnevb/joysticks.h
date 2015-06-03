@@ -31,5 +31,9 @@ extern int app_key_process_timer_handler(ke_msg_id_t const msgid, void const *pa
 extern int app_key_scan_timer_handler(ke_msg_id_t const msgid, void const *param,
                                ke_task_id_t const dest_id, ke_task_id_t const src_id);
 extern void app_event_adc_key_sample_cmp_handler(void);
+#if FB_OLED
+extern int app_oled_clear_key_display_timer_handler(ke_msg_id_t const msgid, void const *param,
+                               ke_task_id_t const dest_id, ke_task_id_t const src_id);
+#endif
 #endif
 

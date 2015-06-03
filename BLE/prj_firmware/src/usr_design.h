@@ -23,9 +23,6 @@
 
 #include "app_env.h"
 #include "gpio.h"
-#if	(FB_OLED)
-#include	"oled.h"
-#endif
 
 /*
  * STRUCTURE DEFINITIONS
@@ -96,25 +93,18 @@ extern int app_button_timer_handler(ke_msg_id_t const msgid, void const *param, 
 extern void usr_init(void);
 extern void gpio_interrupt_callback(enum gpio_pin pin);
 extern void	timer0_callback(void);
-extern int app_oled_state_display_timer_handler(ke_msg_id_t const msgid,
-                               void *param,
-                               ke_task_id_t const dest_id,
-                               ke_task_id_t const src_id);
+
+#if (CONFIG_ENABLE_DRIVER_MPU6050 == TRUE)
 extern int app_mpu6050_temperature_test_timer_handler(ke_msg_id_t const msgid, void const *param,
                                ke_task_id_t const dest_id, ke_task_id_t const src_id);
 extern int app_mpu6050_addr_read_test_timer_handler(ke_msg_id_t const msgid, void const *param,
                                ke_task_id_t const dest_id, ke_task_id_t const src_id);
-extern int app_test_data_send_timer_handler(ke_msg_id_t const msgid, void const *param,
-                               ke_task_id_t const dest_id, ke_task_id_t const src_id);
-extern int app_test_error_timer_handler(ke_msg_id_t const msgid, void const *param,
-                               ke_task_id_t const dest_id, ke_task_id_t const src_id);
-extern int app_test_passed_timer_handler(ke_msg_id_t const msgid, void const *param,
-                               ke_task_id_t const dest_id, ke_task_id_t const src_id);
-extern int app_test_led_process_timer_handler(ke_msg_id_t const msgid, void const *param,
-                               ke_task_id_t const dest_id, ke_task_id_t const src_id);
+#endif
 #if FB_OLED
-extern int app_oled_clear_key_display_timer_handler(ke_msg_id_t const msgid, void const *param,
-                               ke_task_id_t const dest_id, ke_task_id_t const src_id);
+extern int app_oled_state_display_timer_handler(ke_msg_id_t const msgid,
+                               void *param,
+                               ke_task_id_t const dest_id,
+                               ke_task_id_t const src_id);
 #endif
 
 #endif

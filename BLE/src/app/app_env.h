@@ -38,6 +38,14 @@
 #include "nvds.h"
 #endif
 
+#if (FB_JOYSTICKS)
+#include "joysticks.h"
+#endif
+
+#if	(FB_OLED)
+#include	"oled.h"
+#endif
+
 #if BLE_HT_COLLECTOR
 #include "app_htpc.h"
 #endif

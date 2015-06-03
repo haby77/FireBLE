@@ -17,13 +17,6 @@
  ****************************************************************************************
  */
 #include "app_env.h"
-#if		(FB_JOYSTICKS)
-  #include "joysticks.h"
-#endif
-
-#if		(FB_OLED)
-#include	"oled.h"
-#endif
 
 #if QN_DEMO_MENU
 #include "app_menu.h"

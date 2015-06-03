@@ -81,6 +81,7 @@ volatile uint8_t	oled_tx_flag = 0;
  */ 
 
 
+#if (FB_OLED)
 /**
  ****************************************************************************************
  * @brief SPI RX CALLBACK FUNCTION.
@@ -468,7 +469,6 @@ void OLED_Init(void)
 	OLED_Set_Pos(0,0); 	
 } 
 
-#if (FB_OLED)
 int app_oled_display_timer_handler(ke_msg_id_t const msgid, void const *param,
                                ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {

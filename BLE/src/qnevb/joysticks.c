@@ -53,7 +53,7 @@ int app_key_scan_timer_handler(ke_msg_id_t const msgid, void const *param,
 				read_cfg.end_ch = AIN0;
 				adc_read(&read_cfg,adc_key_value, KEY_SAMPLE_NUMBER, adc_test_cb);
 				while(adc_done == 0);
-		}
+		}	
 		return(KE_MSG_CONSUMED);
 }
 
@@ -79,6 +79,9 @@ int app_key_process_timer_handler(ke_msg_id_t const msgid, void const *param,
                         // prevent entering into deep sleep mode
                         sleep_set_pm(PM_SLEEP);
 #endif
+#if	(FB_OLED)
+		ke_timer_set(APP_OLED_STATE_DISPlAY_TIMER,TASK_APP,20);
+#endif
                     //if APP_IDLE && KEY_LONG_PRESS && Server no working on,start adv.
                 }
                 else if(APP_ADV == ke_state_get(TASK_APP))
@@ -92,34 +95,61 @@ int app_key_process_timer_handler(ke_msg_id_t const msgid, void const *param,
 #endif
                 }//if APP_ADV ,stop ADV and sleep.
 								QPRINTF("\r\nkey_up!\r\n");
+#if	FB_OLED
+								OLED_ShowString(0,4, "                ");
+								OLED_ShowString(0,4,"    key_up!     ");
+#endif
 								key_value0 = 0;
 								break;
 								
 			case	key_left:
 								QPRINTF("\r\nkey_left!\r\n");
+#if	FB_OLED
+								OLED_ShowString(0,4, "                ");
+								OLED_ShowString(0,4,"    key_left!   ");
+#endif
 								led_set(2,LED_ON);
 								key_value0 = 0;
 						break;
 			case	key_center:
 								QPRINTF("\r\nkey_center!\r\n");
+#if	FB_OLED
+								OLED_ShowString(0,4,"                ");
+								OLED_ShowString(0,4,"  key_center!   ");
+#endif
 								key_value0 = 0;
 						break;
 			case	key_right:
 								QPRINTF("\r\nkey_right!\r\n");
+#if	FB_OLED
+								OLED_ShowString(0,4,"                ");
+								OLED_ShowString(0,4,"   key_right!   ");
+#endif
 								led_set(3,LED_ON);
 								key_value0 = 0;
 						break;
 			case	key_down:
 								QPRINTF("\r\nkey_down!\r\n");
+#if	FB_OLED
+								OLED_ShowString(0,4,"                  ");
+								OLED_ShowString(0,4,"    key_down!   ");
+#endif
 								led_set(2,LED_OFF);
 								led_set(3,LED_OFF);
 								key_value0 = 0;
 						break;
 			default	:	
 								QPRINTF("\r\nkey_up!\r\n");
+#if	FB_OLED
+								OLED_ShowString(0,4,"                ");
+								OLED_ShowString(0,4,"    key_up!     ");
+#endif
 								key_value0 = 0;
 					break;
 		}
+#if FB_OLED
+		ke_timer_set(APP_OLED_CLEAR_KEY_DISPLAY_TIMER,TASK_APP,60);
+#endif
 		usr_button_env.button_st = button_release;
 		gpio_enable_interrupt(BUTTON1_PIN);
     return(KE_MSG_CONSUMED);
@@ -140,7 +170,7 @@ void app_event_adc_key_sample_cmp_handler(void)
 				key_value0 = 0;
 		adc_key_value_avg = sum / 10;
 		//QPRINTF("key:::%d   %dmv\r\n",adc_key_value_avg,ADC_RESULT_mV(adc_key_value_avg));
-		if( (300 <	adc_key_value_avg)  && (adc_key_value_avg < 500))
+		if( (200 <	adc_key_value_avg)  && (adc_key_value_avg < 655))
 		{
 				key_value0 |= key_up;
 				usr_button_env.joystick_dir = key_up;
@@ -148,28 +178,28 @@ void app_event_adc_key_sample_cmp_handler(void)
 		}
 		else
 		{
-				if((800 <	adc_key_value_avg)  && (adc_key_value_avg < 1000))
+				if((656 <	adc_key_value_avg)  && (adc_key_value_avg < 1064))
 				{
 						usr_button_env.joystick_dir = key_right;
 						key_value0 |= key_right;
 				}
 				else
 				{
-						if((1000 <	adc_key_value_avg)  && (adc_key_value_avg < 1400))
+						if((1064 <	adc_key_value_avg)  && (adc_key_value_avg < 1474))
 						{
 								usr_button_env.joystick_dir = key_down;
 								key_value0 |= key_down;
 						}
 						else
 						{
-									if((1600 <	adc_key_value_avg)  && (adc_key_value_avg < 1800))
+									if((1475 <	adc_key_value_avg)  && (adc_key_value_avg < 1884))
 									{
 											usr_button_env.joystick_dir = key_left;
 											key_value0 |= key_left;
 									}
 									else
 									{
-										if((1600 <	adc_key_value_avg)  && (adc_key_value_avg < 2048))
+										if((1885 <	adc_key_value_avg)  && (adc_key_value_avg < 2048))
 										{											
 												usr_button_env.joystick_dir = key_center;
 												key_value0 |= key_center;
@@ -185,5 +215,14 @@ void app_event_adc_key_sample_cmp_handler(void)
 		//QPRINTF("key_value0 %d\r\n",key_value0);
 		ke_timer_set(APP_KEY_PROCESS_TIMER,TASK_APP,10);
 }
+
+#if FB_OLED
+int app_oled_clear_key_display_timer_handler(ke_msg_id_t const msgid, void const *param,
+                               ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+		OLED_ShowString(0,4,"                ");		
+		return(KE_MSG_CONSUMED);
+}
+#endif
 #endif
 ///@USR END

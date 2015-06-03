@@ -37,9 +37,7 @@
 #include "wdt.h"
 #endif
 #include "sleep.h"
-#if (FB_JOYSTICKS)
-#include "joysticks.h"
-#endif
+
 #if	(CONFIG_ENABLE_DRIVER_MPU6050 == TRUE)
 #include "mpu6050.h"
 #endif
@@ -653,6 +651,7 @@ void usr_init(void)
 #endif
 }
 
+#if FB_OLED
 /**
  ****************************************************************************************
  * @brief Handles oled display status.
@@ -703,14 +702,6 @@ int app_oled_state_display_timer_handler(ke_msg_id_t const msgid,
 			}break;				
 		}
     return (KE_MSG_CONSUMED);
-}
-
-#if FB_OLED
-int app_oled_clear_key_display_timer_handler(ke_msg_id_t const msgid, void const *param,
-                               ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-		OLED_ShowString(0,4,"                ");		
-		return(KE_MSG_CONSUMED);
 }
 #endif
 
