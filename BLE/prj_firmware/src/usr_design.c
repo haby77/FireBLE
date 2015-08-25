@@ -61,6 +61,12 @@
 #define EVENT_BUTTON1_PRESS_ID     0
 #define EVENT_BUTTON2_PRESS_ID     1
 
+///IOS GAP Peripheral Preferred Connection Parameter - 8 octets
+#define IOS_PPCP_CONN_INTV_MAX                              0x0008
+#define IOS_PPCP_CONN_INTV_MIN                              0x0012
+#define IOS_PPCP_SLAVE_LATENCY                              0x0000
+#define IOS_PPCP_STO_MULT                                   0x012C
+
 
 
 /*
@@ -229,13 +235,13 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
                         // Update connection parameters here
                         struct gap_conn_param_update conn_par;
                         /// Connection interval minimum
-                        conn_par.intv_min = GAP_PPCP_CONN_INTV_MIN;
+                        conn_par.intv_min = IOS_PPCP_CONN_INTV_MIN;
                         /// Connection interval maximum
-                        conn_par.intv_max = GAP_PPCP_CONN_INTV_MAX;
+                        conn_par.intv_max = IOS_PPCP_CONN_INTV_MAX;
                         /// Latency
-                        conn_par.latency = GAP_PPCP_SLAVE_LATENCY;
+                        conn_par.latency = IOS_PPCP_SLAVE_LATENCY;
                         /// Supervision timeout, Time = N * 10 msec
-                        conn_par.time_out = GAP_PPCP_STO_MULT;
+                        conn_par.time_out = IOS_PPCP_STO_MULT;
                         app_gap_param_update_req(((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl, &conn_par);
                     }
                 }
