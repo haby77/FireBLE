@@ -30,6 +30,7 @@
  */
  
 #define	DISCON_COUNT_MAX	100
+#define QPPS_NOTIFY_NUM     5
 
 typedef struct	gsensor_data_tag
 {

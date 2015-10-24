@@ -5,7 +5,8 @@
  *
  * @brief Application CSCPS API
  *
- * Copyright (C) Quintic 2013-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

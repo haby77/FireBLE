@@ -99,10 +99,15 @@ static void SystemIOCfg(void)
     syscon_SetPDCR(QN_SYSCON, 0x0); // 0 : low driver, 1 : high driver
 
     // pin pull ( 00 : High-Z,  01 : Pull-down,  10 : Pull-up,  11 : Reserved )
-#if		(FB_SWD)
-		syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
+#if defined(QN_EXT_FLASH)
+    // If external flash is used, P1.0~P1.3 should be Pull down for preventing leakage.
+    syscon_SetPPCR0(QN_SYSCON, 0xAA555AAA);
+#else 
+#if (FB_SWD)
+    syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
 #else
-		syscon_SetPPCR0(QN_SYSCON, 0xAAAAAAAA);
+    syscon_SetPPCR0(QN_SYSCON, 0xAAAAAAAA);
+#endif
 #endif
     syscon_SetPPCR1(QN_SYSCON, 0x2AAAAAAA);
 }

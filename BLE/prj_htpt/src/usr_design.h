@@ -5,7 +5,8 @@
  *
  * @brief Product related design header file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -117,11 +118,6 @@ struct usr_env_tag
 
     // measure counter
     size_t meas_counter;
-
-#if (defined(QN_ADV_WDT))
-    bool        adv_wdt_enable;
-    void        (*adv_wdt_to)(void);
-#endif
 };
 
 extern struct usr_env_tag usr_env;

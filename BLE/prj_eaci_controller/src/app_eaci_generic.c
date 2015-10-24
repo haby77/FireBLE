@@ -5,7 +5,8 @@
  *
  * @brief Application GENERIC ACI
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -31,7 +32,7 @@
 #include "usr_design.h"
 
 #if (defined(CFG_EACI))
-struct device_name_set device_name = {12, "QUINTIC_EACI"};
+struct device_name_set device_name = {8, "NXP_EACI"};
 #endif
 
 #define LED_ON_DUR_ADV_FAST        2

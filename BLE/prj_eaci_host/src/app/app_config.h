@@ -5,7 +5,8 @@
  *
  * @brief Application Configuration File
  *
- * Copyright (C) Quintic 2009-2012
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *
@@ -20,10 +21,6 @@
 /// QN9020 Chip Version Number
 #if (defined(CFG_9020_B2))
     #define QN_9020_B2
-#elif (defined(CFG_9020_B1))
-    #define QN_9020_B1
-#elif (defined(CFG_9020_B0))
-    #define QN_9020_B0
 #else
     #error "No correct chip version is defined!"
 #endif
@@ -32,7 +29,7 @@
 #define QN_APP_VER                  "1.0.5"
 
 /// Set Device Name
-#define DEVICE_NAME                 "Quintic_Eaci"
+#define DEVICE_NAME                 "NXP_Eaci"
 
 /// ATT parts
 #define BLE_ATTS            1

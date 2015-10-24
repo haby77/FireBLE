@@ -5,9 +5,10 @@
  *
  * @brief User system setup and initial configuration header file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
- * $Rev: 5444 $
+ * $Rev: 5991 $
  *
  ****************************************************************************************
  */

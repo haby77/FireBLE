@@ -5,7 +5,8 @@
  *
  * @brief Header file of RF for QN9020.
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.1 $
  *

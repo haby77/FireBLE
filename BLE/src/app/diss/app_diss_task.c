@@ -5,7 +5,8 @@
  *
  * @brief Application DISS task implementation
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -30,9 +31,9 @@
 
 /// @cond
 // Manufacturing name
-#define DIS_MANU_NAME_VAL               "Firefly"
+#define DIS_MANU_NAME_VAL               "NXP"
 //Model number
-#define DIS_MODEL_NB_VAL                "Fire-BLE-B2"
+#define DIS_MODEL_NB_VAL                "QN-BLE-B2"
 //Serial number
 #define DIS_SERIAL_NB_VAL               "1.3.3-LE"
 //Firmware Revision string value

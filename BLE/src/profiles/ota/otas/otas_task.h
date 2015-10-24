@@ -3,9 +3,10 @@
  *
  * @file otas_task.h
  *
- * @brief Header file - Quintic Private Profile Server Task.
+ * @brief Header file - NXP OTA Server Task.
  *
- * Copyright (C) Quintic 2013-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *
@@ -61,6 +62,12 @@
 #undef TASK_OTAS
 #define TASK_OTAS TASK_PRF7
 
+/// Default 128BIT OTAS UUID 
+#define OTAS_SVC_UUID_128BIT        "\xFB\x34\x9B\x5F\x80\x00\x00\x80\x00\x10\x00\x00\xE8\xFE\x00\x00"
+
+//saving data in flash addr
+#define FALSH_DAT_START_ADDR        (120*1024)  //0x1E000
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -110,10 +117,10 @@ enum
     OTAS_STATE_MAX,
 };
 
-/// Messages for Quintic OTA Server
+/// Messages for NXP OTA Server
 enum
 {
-    ///Start the Quintic private Profile Server - at connection
+    ///Start the NXP OTA Server - at connection
     OTAS_ENABLE_REQ = KE_FIRST_MSG(TASK_OTAS),
     ///Disable profile role - at disconnection
     OTAS_DISABLE_REQ,
@@ -248,6 +255,18 @@ struct otas_transimit_status_ind
     -	OTA_STATUS_FINISH_FAIL  : Error type
     */
     uint16_t status_des;
+    /** status detail description information : 
+    -	Total size              
+    -	Received bytes          
+    -	Error type : 
+            include following 5 types errors
+            0x01 , Current packet checksum error  
+            0x02 , current packet length overflow or equal to 0
+            0x03 , Device don't support OTA
+            0x04 , OTA firmware size overflow or equal to 0
+            0x05 , OTA firmware verify error
+    -	NULL 
+    */   
 };
 
 ///Parameters of the otas start control relevant.
@@ -403,6 +422,35 @@ void app_ota_ctrl_resp(enum otas_ctrl_resp ctrl_resp);
  */
 uint8_t otas_get_app_info(struct otas_app_information_t  *ota_app_information);
 
+/*
+ ****************************************************************************************
+ * @brief  function to change OTA service UUID to user defined*//**
+ * @param[in] p_uuid Pointer to a 128bit OTA service UUID
+ * @response  
+ *          - true : change to new UUID
+ *          - false : p_uuid pointer is NULL.
+ * @description
+ * This function must be called before ota create database. 
+  ****************************************************************************************
+ */
+uint8_t app_otas_change_svc_uuid(uint8_t *p_uuid);
+
+
+/*
+ ****************************************************************************************
+ * @brief   function to change OTA data aero address in flash *//**
+ * @param[in] data_addr  Start address in flash to put data
+ * @response  
+ *          - true : success to set data addr
+ *          - false : fail to set data addr because of following reason,
+                      1. data_addr > 0x1F000(Flash limited)
+                      2. data_addr < firmware 2 start address
+                      3. not the integer of 4k report error
+ * @description
+ * This function must be called before ota create database. 
+ ****************************************************************************************
+ */
+uint8_t app_otas_set_data_addr(uint32_t data_addr);
 
 
 #endif /* BLE_OTA_SERVER */

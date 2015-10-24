@@ -5,7 +5,8 @@
  *
  * @brief User configuration file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -17,12 +18,12 @@
 
 // User configuration
 
-/// Chip version: CFG_9020_B2, CFG_9020_B1, CFG_9020_B0
-// The library file must use the correct version according to chip version.
-// If CFG_9020_B2 is defined, the library file 'qn9020b2_lib_peripheral.lib' or
-// 'qn9020b2_lib_allroles.lib' should be selected.
-// If CFG-9020_B1 is defined, the library file 'qn9020b1_lib_peripheral.lib' or
-// 'qn9020b1_lib_allroles.lib' should be selected.
+/// Software verion: CFG_SW_DEBUG, CFG_SW_RELEASE
+// In the debug version the program will be in the infinite loop if the hardfault exception is triggered.
+// In the release version the program will execute a system reboot if the hardfault exception is triggered.
+#define CFG_SW_DEBUG
+
+/// Chip version: CFG_9020_B2
 #define CFG_9020_B2
 
 /// Evaluation board indication
@@ -30,11 +31,16 @@
 // If the QN9021 miniDK is used, the following macro shall be defined.
 // #define CFG_9021_MINIDK
 
+/// External flash
+// QN9022 uses external flash. BOND_EN should be set correctly in this case
+// to prevent extra power consumption in SLEEP mode.
+// #define CFG_EXT_FLASH
+
+
 /// Evaluation board indication
 // The GPIOs used for FireBlue's LED and button are different from FireBlue.
 // If the FireBlue is used, the following macro shall be defined.
 #define CFG_FireBLE
-
 
 /// Work mode: CFG_WM_SOC, CFG_WM_NP, CFG_WM_HCI
 #define CFG_WM_SOC
@@ -50,10 +56,10 @@
 #endif
 
 /// Local name
-// The local name defined by this macro is only used when the device name tag 
+// The local name defined by this macro is only used when the device name tag
 // is not availiable in the NVDS. Generally the local name in the advertising
 // packet is obtained from device name in the NVDS.
-#define CFG_LOCAL_NAME   "FireBlue PROXR"
+#define CFG_LOCAL_NAME   "NXP PROXR"
 
 /// DC-DC enable
 #define CFG_DC_DC
@@ -73,13 +79,15 @@
 /// Test mode controll pin
 //#define CFG_TEST_CTRL_PIN GPIO_P31
 
-/// ADV watchdog timer
-#if (defined(CFG_9020_B0))
-#define CFG_ADV_WDT
-#endif
-
 /// Memory retention
-#define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK6 | MEM_BLOCK7)
+// There are 8 banks of SRAM, and each bank is 8k bytes. Bank0 is always power on.
+// The power of bank 1~7 can be configured by developer. If the memory bank is not
+// used by application, it can be off to save power.
+// The BLE stack stores its data in the bank 6 & 7. If the BLE is used, bank 6 & 7
+// should be power on.
+// The develop can configure this macro based on memory usage to optimize power
+// consumption.
+#define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK3 | MEM_BLOCK6 | MEM_BLOCK7)
 
 /// Deep sleep support
 #define CFG_DEEP_SLEEP

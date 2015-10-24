@@ -16,9 +16,10 @@
  *
  * @file co_error.h
  *
- * @brief Quintic revised and cut.
+ * @brief NXP revised and cut.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

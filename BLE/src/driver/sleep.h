@@ -5,7 +5,8 @@
  *
  * @brief Header file of sleep for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -111,8 +112,8 @@ extern "C"{
 
 /// Wakeup by all of the system interrupt source
 #define WAKEUP_BY_ALL_IRQ_SOURCE   ( WAKEUP_BY_GPIO          \
-                                   | WAKEUP_BY_COMPARATOR0   \
-                                   | WAKEUP_BY_COMPARATOR1   \
+                                   | WAKEUP_BY_ACMP0         \
+                                   | WAKEUP_BY_ACMP1         \
                                    | WAKEUP_BY_BLE           \
                                    | WAKEUP_BY_RTC_CAP       \
                                    | WAKEUP_BY_RTC           \
@@ -162,8 +163,8 @@ enum SLEEP_MODE
 enum WAKEUP_SOURCE
 {                        
     WAKEUP_BY_GPIO           = (1 << GPIO_IRQn),           /*!< Wakeup by GPIO          */ 
-    WAKEUP_BY_COMPARATOR0    = (1 << COMPARATOR0_IRQn),    /*!< Wakeup by COMPARATOR0   */ 
-    WAKEUP_BY_COMPARATOR1    = (1 << COMPARATOR1_IRQn),    /*!< Wakeup by COMPARATOR1   */ 
+    WAKEUP_BY_ACMP0          = (1 << ACMP0_IRQn),          /*!< Wakeup by ACMP0         */ 
+    WAKEUP_BY_ACMP1          = (1 << ACMP1_IRQn),          /*!< Wakeup by ACMP1         */ 
     WAKEUP_BY_BLE            = (1 << BLE_IRQn),            /*!< Wakeup by BLE           */ 
     WAKEUP_BY_RTC_CAP        = (1 << RTC_CAP_IRQn),        /*!< Wakeup by RTC_CAP       */ 
     WAKEUP_BY_OSC_EN         = (1 << OSC_EN_IRQn),         /*!< Wakeup by OSC_EN        */ 
@@ -189,11 +190,7 @@ enum WAKEUP_SOURCE
     WAKEUP_BY_CALIB          = (1 << CALIB_IRQn),          /*!< Wakeup by CALIB         */ 
     WAKEUP_BY_TUNER_RX       = (1 << TUNER_RX_IRQn),       /*!< Wakeup by TUNER_RX      */ 
     WAKEUP_BY_TUNER_TX       = (1 << TUNER_TX_IRQn),       /*!< Wakeup by TUNER_TX      */ 
-#if (defined(QN_9020_B2) || defined(QN_9020_B1))
-    WAKEUP_BY_TUNER_SETTING  = 0,                          /*!< Wakeup by TUNER_TX      */ 
-#elif defined(QN_9020_B0)
-    WAKEUP_BY_TUNER_SETTING  = (int)(1u << TUNER_SETTING_IRQn),  /*!< Wakeup by TUNER_TX      */ 
-#endif
+    WAKEUP_BY_TUNER_SETTING  = 0,                          /*!< Wakeup by TUNER_SETTING */ 
 };
 
 /*
@@ -216,6 +213,7 @@ extern struct sleep_env_tag sleep_env;
 
 extern volatile uint32_t PGCR1_restore;
 extern volatile uint8_t low_power_mode_en;
+extern volatile uint32_t ahb_clock_flag;
 
 /*
  * FUNCTION DECLARATIONS
@@ -299,31 +297,6 @@ __STATIC_INLINE void exit_low_power_mode(void)
     }
 }
 
-#if CONFIG_ENABLE_ROM_DRIVER_SLEEP==TRUE
-
-typedef  void (*p_sleep_init)(void);
-typedef  void (*p_enter_sleep)(enum SLEEP_MODE mode, uint32_t iconfig, void (*callback)(void));
-typedef  void (*p_wakeup_by_gpio)(enum gpio_pin pin, enum gpio_wakeup_type type, void (*callback)(void));
-typedef  void (*p_wakeup_by_analog_comparator)(enum ACMP_CH acmpch, void (*callback)(void));
-typedef  void (*p_wakeup_by_sleep_timer)(int clk_src);
-typedef  void (*p_sleep_void)(void);
-
-#define sleep_init                  ((p_sleep_init)                     _sleep_init)
-#define enter_sleep                 ((p_enter_sleep)                    _enter_sleep)
-#if GPIO_WAKEUP_EN == TRUE
-#define wakeup_by_gpio              ((p_wakeup_by_gpio)                 _wakeup_by_gpio)
-#endif
-#if ACMP_WAKEUP_EN == TRUE
-#define wakeup_by_analog_comparator ((p_wakeup_by_analog_comparator)    _wakeup_by_analog_comparator)
-#endif
-#if SLEEP_TIMER_WAKEUP_EN == TRUE
-#define wakeup_by_sleep_timer       ((p_wakeup_by_sleep_timer)          _wakeup_by_sleep_timer)
-#endif
-#if SLEEP_CALLBACK_EN == TRUE
-#define sleep_cb                    ((p_sleep_cb)                       _sleep_cb)
-#endif
-
-#else
 
 extern int usr_sleep(void);
 extern void sleep_init(void);
@@ -348,7 +321,7 @@ extern void wakeup_32k_xtal_start_timer(void);
 extern void enter_low_power_mode(uint32_t en);
 extern void restore_from_low_power_mode(void (*callback)(void));
 
-#endif
+
 
 
 #ifdef __cplusplus

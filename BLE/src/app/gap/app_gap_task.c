@@ -5,7 +5,8 @@
  *
  * @brief Application GAP task implementation
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -41,7 +42,8 @@ int8_t app_correct_rssi(int8_t rssi)
     
     if(rssi <= -17)
     {
-        accurate_rssi = 1.026 * rssi + 8.641 + 0.5;
+        // 1.026 * rssi + 8.641 + 0.5;
+        accurate_rssi = rssi + 9;
     }
     else if(rssi <= -4)
     {

@@ -5,7 +5,8 @@
  *
  * @brief Application PASPC implementation
  *
- * Copyright (C) Quintic 2013-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -17,11 +18,11 @@
 
 /**
  ****************************************************************************************
- * @addtogroup APP_PASPS_TASK Phone Alert Status Profile Server Task API
- * @ingroup APP_PASPS
- * @brief Phone Alert Status Profile Server Task API
+ * @addtogroup APP_PASPC_TASK Phone Alert Status Profile Client Task API
+ * @ingroup APP_PASPC
+ * @brief Phone Alert Status Profile Client Task API
  *
- * Phone Alert Status Profile Server Task APIs are used to handle the message from PASPS or APP.
+ * Phone Alert Status Profile Client Task APIs are used to handle the message from PASPC or APP.
  * @{
  ****************************************************************************************
  */

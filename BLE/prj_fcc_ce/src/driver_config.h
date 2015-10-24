@@ -5,9 +5,10 @@
  *
  * @brief Driver configuration for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
- * $Rev: 5465 $
+ * $Rev: 5976 $
  *
  ****************************************************************************************
  */
@@ -230,7 +231,7 @@
 #define ACMP_WAKEUP_EN                                  FALSE       /*!< Enable/Disable Analog comparator wakeup MCU */
 #define GPIO_WAKEUP_EN                                  TRUE        /*!< Enable/Disable GPIO wakeup MCU */
 #define SLEEP_TIMER_WAKEUP_EN                           TRUE        /*!< Enable/Disable Sleep timer wakeup MCU */
-#define QN_LOW_POWER_MODE_EN                            FALSE        /*!< Enable/Disable Low power mode */
+#define QN_32K_LOW_POWER_MODE_EN                        FALSE       /*!< Enable/Disable Low power mode */
 
 #if (QN_32K_RCO)
 #define CLOCK_32K_CORRECTION_EN                         TRUE        /*!< Enable/Disable 32K clock correction */

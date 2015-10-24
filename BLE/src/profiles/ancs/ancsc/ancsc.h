@@ -5,7 +5,8 @@
  *
  * @brief Header file - Apple Notification Center Service Notification Consumer (NC) Role.
  *
- * Copyright (C) Quintic 2014-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *

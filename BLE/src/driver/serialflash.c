@@ -5,7 +5,8 @@
  *
  * @brief Serial Flash driver for QN9020 (MX25L512_U2, W25X40_U4, S25FL008A_U3).
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.1 $
  *
@@ -26,7 +27,7 @@
 #include "serialflash.h"
 #include "syscon.h"
 
-#if CONFIG_ENABLE_DRIVER_SERIAL_FLASH==TRUE && CONFIG_ENABLE_ROM_DRIVER_SERIAL_FLASH==FALSE
+#if CONFIG_ENABLE_DRIVER_SERIAL_FLASH==TRUE
 /// Serial flash command list
 uint8_t g_flash_cmd[MAX_FLASH_CMD_NUM]=
 {
@@ -110,8 +111,6 @@ void set_flash_clock(uint32_t clock_div)
 */
 uint32_t read_flash_id(void)
 {
-    while(is_flash_busy()); // wait for flash free
-
     return sf_ctrl_GetFlashID(QN_SF_CTRL);
 }
 
@@ -243,15 +242,37 @@ bool is_flash_present(void)
 /**
 ****************************************************************************************
 * @brief Power on serial flash.
+* @param[in]  type        flash accessing type(read or write).
+* @description
+*   There is a setup duration from power on to accessing flash correctly. Generally
+*   the duration from power on to allowance of reading is shorter than the duration from
+*   power on to allowance of writing. The parameter allows the developer select this 
+*   duration depends on application scenarios.
+*   This duration is different for different flash. Please reference the specification
+*   of selected flash and configure macro FLASH_SETUP_DUR_RD and FLASH_SETUP_DUR_WR in 
+*   the serialflash.h.
 *****************************************************************************************
 */
-void power_on_flash(void)
+void power_on_flash(enum ACCESS_TYPE type)
 {
+    uint32_t setup_dur;
+
+#if defined(QN_EXT_FLASH)    
+    // switch to flash controller
+    syscon_SetPMCR1WithMask(QN_SYSCON, SYSCON_MASK_FLASH_CTRL_PIN, MASK_DISABLE);
+#endif
+    
     // power on
     syscon_SetPGCR2WithMask(QN_SYSCON, SYSCON_MASK_FLASH_VCC_EN, MASK_ENABLE);
+
+    // select flash setup duration
+    if(type == FLASH_RD)
+        setup_dur = FLASH_SETUP_DELAY_RD;
+    else
+        setup_dur = FLASH_SETUP_DELAY_WR;
     
-    // wait for 200us then enable flash clock
-    delay(g_AhbClock / 45000 + 1);
+    // wait for setup_dur(us) then enable flash clock
+    delay(setup_dur);
 
     // flash clock on
     flash_clock_on();
@@ -275,6 +296,11 @@ void power_off_flash(void)
 
     // flash clock off
     flash_clock_off();
+
+#if defined(QN_EXT_FLASH)
+    // switch to GPIO, prevent leakage 
+    syscon_SetPMCR1WithMask(QN_SYSCON, SYSCON_MASK_FLASH_CTRL_PIN, MASK_ENABLE);
+#endif
 }
 
 #endif /* CONFIG_ENABLE_DRIVER_SERIAL_FLASH==TRUE */

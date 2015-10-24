@@ -5,7 +5,8 @@
  *
  * @brief User system setup and initial configuration source file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -44,8 +45,8 @@ static void SystemIOCfg(void)
                              | P04_GPIO_4_PIN_CTRL
                              | P05_GPIO_5_PIN_CTRL
 #if	!(FB_SWD)
-														 | P06_GPIO_6_PIN_CTRL
-														 | P07_GPIO_7_PIN_CTRL
+                             | P06_GPIO_6_PIN_CTRL
+                             | P07_GPIO_7_PIN_CTRL
 #else
                              | P06_SW_DAT_PIN_CTRL
                              | P07_SW_CLK_PIN_CTRL
@@ -72,7 +73,7 @@ static void SystemIOCfg(void)
 #if	!defined(CFG_JOYSTICK)
                              | P30_GPIO_24_PIN_CTRL
 #else
-														 | P30_AIN0_PIN_CTRL
+                             | P30_AIN0_PIN_CTRL
 #endif
                              | P31_GPIO_25_PIN_CTRL
 #if (defined(CFG_HCI_SPI))                             
@@ -96,10 +97,15 @@ static void SystemIOCfg(void)
     syscon_SetPDCR(QN_SYSCON, 0x0); // 0 : low driver, 1 : high driver
 
     // pin pull ( 00 : High-Z,  01 : Pull-down,  10 : Pull-up,  11 : Reserved )
-#if		(FB_SWD)
-		syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
+#if defined(QN_EXT_FLASH)
+    // If external flash is used, P1.0~P1.3 should be Pull down for preventing leakage.
+    syscon_SetPPCR0(QN_SYSCON, 0xAA555AAA);
+#else 
+#if (FB_SWD)
+    syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
 #else
-		syscon_SetPPCR0(QN_SYSCON, 0xAAAAAAAA);
+    syscon_SetPPCR0(QN_SYSCON, 0xAAAAAAAA);
+#endif
 #endif
     syscon_SetPPCR1(QN_SYSCON, 0x2AAAAAAA);
 }
@@ -119,23 +125,43 @@ void SystemInit(void)
      **************************
      */
 
-    // Disable all peripheral clock, will be enabled in the driver initilization.
-    timer_clock_off(QN_TIMER0);
-    timer_clock_off(QN_TIMER1);
-    timer_clock_off(QN_TIMER2);
-    timer_clock_off(QN_TIMER3);
-    uart_clock_off(QN_UART0);
-    uart_clock_off(QN_UART1);
-    spi_clock_off(QN_SPI0);
-    usart_reset((uint32_t) QN_SPI1);
-    spi_clock_off(QN_SPI1);
-    flash_clock_off();
-    gpio_clock_off();
-    adc_clock_off();
-    dma_clock_off();
-    pwm_clock_off();
+    // Reset SPI1 module(since the default register value was changed in bootloader)
+    syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_USART1_RST);
+    syscon_SetCRSC(QN_SYSCON, SYSCON_MASK_USART1_RST);
     
-    // Configure sytem clock. 
+    /*
+        Disable all peripheral clock, will be enabled in the driver initilization.
+        The next function performs the equivalent effect of a collection of these functions.
+    
+        timer_clock_off(QN_TIMER0);
+        timer_clock_off(QN_TIMER1);
+        timer_clock_off(QN_TIMER2);
+        timer_clock_off(QN_TIMER3);
+        uart_clock_off(QN_UART0);
+        uart_clock_off(QN_UART1);
+        spi_clock_off(QN_SPI0);
+        spi_clock_off(QN_SPI1);
+        flash_clock_off();
+        gpio_clock_off();
+        adc_clock_off();
+        dma_clock_off();
+        pwm_clock_off();
+    */
+    syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_GATING_TIMER0
+                            | SYSCON_MASK_GATING_TIMER1
+                            | SYSCON_MASK_GATING_TIMER2
+                            | SYSCON_MASK_GATING_TIMER3
+                            | SYSCON_MASK_GATING_UART0
+                            | SYSCON_MASK_GATING_UART1
+                            | SYSCON_MASK_GATING_SPI0
+                            | SYSCON_MASK_GATING_SPI1
+                            | SYSCON_MASK_GATING_SPI_AHB
+                            | SYSCON_MASK_GATING_GPIO
+                            | SYSCON_MASK_GATING_ADC
+                            | SYSCON_MASK_GATING_DMA
+                            | SYSCON_MASK_GATING_PWM);
+    
+    // Configure sytem clock.
     syscon_set_sysclk_src(CLK_XTAL, __XTAL);
     syscon_set_ahb_clk(__AHB_CLK);
     syscon_set_ble_clk(__BLE_CLK);

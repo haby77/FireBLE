@@ -5,8 +5,6 @@
  *
  * Copyright (C) RivieraWaves 2009-2012
  *
- * Copyright (C) Quintic 2009-2012
- *
  * $Rev: $
  *
  ****************************************************************************************
@@ -16,9 +14,10 @@
  *
  * @file co_utils.h
  *
- * @brief Quintic revised and cut.
+ * @brief NXP revised and cut.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

@@ -5,7 +5,8 @@
  *
  * @brief Product related design.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -32,12 +33,10 @@
 #include "usr_design.h"
 #include "gpio.h"
 #include "button.h"
-#if (defined(QN_ADV_WDT))
-#include "wdt.h"
-#endif
 #include "sleep.h"
 #include "ke_mem.h"
 #include "joysticks.h"
+
 
 /*
  * MACRO DEFINITIONS
@@ -176,7 +175,8 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
 
         case GAP_DISCON_CMP_EVT:
             usr_led1_set(LED_ON_DUR_IDLE, LED_OFF_DUR_IDLE);
-
+           
+            app_ancsc_clear_buffer();
             // start adv
             app_gap_adv_start_req(GAP_GEN_DISCOVERABLE|GAP_UND_CONNECTABLE,
                     app_env.adv_data, app_set_adv_data(GAP_GEN_DISCOVERABLE),
@@ -194,8 +194,12 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
 #if (defined(QN_ADV_WDT))
                     usr_env.adv_wdt_enable = false;
 #endif
-
-                    app_ancsc_enable_req(NULL, false, ((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl);
+                   // if(app_ancsc_env->ancs.svc.shdl==0)
+                         app_ancsc_enable_req(NULL, false, ((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl);
+                   // else
+                      //  app_ancsc_enable_req(&(app_ancsc_env->ancs), false, ((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl);
+                    
+                    
 
 #if 0
                     // Update cnx parameters
@@ -221,7 +225,7 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
             {
                 struct gap_bond_req_cmp_evt *evt = (struct gap_bond_req_cmp_evt *)param;
 
-                app_ancsc_sm_entry(evt->status);
+                app_ancsc_sm_entry(app_get_rec_idx_by_conhdl(evt->conhdl), evt->status);
             }
             break;
         default:
@@ -292,7 +296,7 @@ int app_gap_adv_intv_update_timer_handler(ke_msg_id_t const msgid, void const *p
 void usr_sleep_restore(void)
 {
 #if QN_DBG_PRINT
-    uart_init(QN_DEBUG_UART, USARTx_CLK(0), UART_9600);
+    uart_init(QN_DEBUG_UART, USARTx_CLK(0), UART_115200);
     uart_tx_enable(QN_DEBUG_UART, MASK_ENABLE);
     uart_rx_enable(QN_DEBUG_UART, MASK_ENABLE);
 #endif
@@ -328,7 +332,7 @@ int app_button_timer_handler(ke_msg_id_t const msgid, void const *param,
             {
                 if(APP_IDLE == ke_state_get(TASK_APP))
                 {
-                    struct app_ancsc_env_tag *app_ancsc_env = &app_env.ancsc_ev;
+                    struct app_ancsc_env_tag *app_ancsc_env = &app_env.ancsc_ev[0];
                     if(!app_ancsc_env->enabled)
                     {
                         // start adv
@@ -380,6 +384,7 @@ void app_event_button1_press_handler(void)
         wakeup_32k_xtal_start_timer();
     }
 #endif
+
     // delay 20ms to debounce
 #if (FB_JOYSTICKS)
    ke_timer_set(APP_KEY_SCAN_TIMER,TASK_APP,2);
@@ -476,6 +481,14 @@ void usr_init(void)
 		}
 #endif
 }
-
+int app_ancsc_enable_reset_timer_handler(ke_msg_id_t const msgid, void const *param,
+                                         ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+    uint8_t idx = msgid-ANCS_ENABLE_SUVPER_TIMER0; 
+    if(app_ancsc_env[idx].conhdl!=0xFF)
+       app_ancsc_enable_req(NULL, false, app_ancsc_env[idx].conhdl);
+    //app_gap_discon_req(app_ancsc_env[idx].conhdl);
+    return (KE_MSG_CONSUMED);
+}
 /// @} USR
 

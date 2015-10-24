@@ -5,7 +5,8 @@
  *
  * @brief Product related design.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -35,9 +36,6 @@
 #include "adc.h"
 #include "analog.h"
 #include "nvds.h"
-#if (defined(QN_ADV_WDT))
-#include "wdt.h"
-#endif
 #include "sleep.h"
 
 #if	 (FB_JOYSTICKS)
@@ -69,18 +67,6 @@
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
-#if (defined(QN_ADV_WDT))
-static void adv_wdt_to_handler(void)
-{
-    ke_state_set(TASK_APP, APP_IDLE);
-
-    // start adv
-    app_gap_adv_start_req(GAP_GEN_DISCOVERABLE|GAP_UND_CONNECTABLE,
-                          app_env.adv_data, app_set_adv_data(GAP_GEN_DISCOVERABLE),
-                          app_env.scanrsp_data, app_set_scan_rsp_data(app_get_local_service_flag()),
-                          GAP_ADV_FAST_INTV1, GAP_ADV_FAST_INTV2);
-}
-#endif
 
 struct usr_env_tag usr_env = {LED_ON_DUR_IDLE,      // led1_on_dur
                               LED_OFF_DUR_IDLE,     // led1_off_dur
@@ -96,10 +82,6 @@ struct usr_env_tag usr_env = {LED_ON_DUR_IDLE,      // led1_on_dur
                               false,                // is_should_indicate
                               0,                    // meas_counter
                               0,                    // temp_offset
-#if (defined(QN_ADV_WDT))
-                              false,
-                              adv_wdt_to_handler
-#endif
                               };
 
 
@@ -794,16 +776,10 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
             {
                 usr_led1_set(LED_ON_DUR_ADV_FAST, LED_OFF_DUR_ADV_FAST);
                 ke_timer_set(APP_ADV_INTV_UPDATE_TIMER, TASK_APP, 30 * 100);
-#if (defined(QN_ADV_WDT))
-                usr_env.adv_wdt_enable = true;
-#endif
             }
             else if(APP_ADV == ke_state_get(TASK_APP))
             {
                 usr_led1_set(LED_ON_DUR_ADV_SLOW, LED_OFF_DUR_ADV_SLOW);
-#if (defined(QN_ADV_WDT))
-                usr_env.adv_wdt_enable = true;
-#endif
             }
             else if(APP_INIT == ke_state_get(TASK_APP))
             {
@@ -841,10 +817,6 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
 
                         // set idle connection timeout event
                         app_set_idle_connection();
-
-#if (defined(QN_ADV_WDT))
-                        usr_env.adv_wdt_enable = false;
-#endif
                     }
                 }
             }
@@ -946,13 +918,6 @@ void usr_sleep_restore(void)
     uart_init(QN_DEBUG_UART, USARTx_CLK(0), UART_9600);
     uart_tx_enable(QN_DEBUG_UART, MASK_ENABLE);
     uart_rx_enable(QN_DEBUG_UART, MASK_ENABLE);
-#endif
-
-#if (defined(QN_ADV_WDT))
-    if(usr_env.adv_wdt_enable)
-    {
-        wdt_init(1007616, WDT_INT_MOD); // 30.75s
-    }
 #endif
 }
 

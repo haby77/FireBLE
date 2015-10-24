@@ -5,7 +5,8 @@
  *
  * @brief APP Task implementation
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -36,7 +37,6 @@
  */
 #include "ke_task.h"
 #include "ke_msg.h"
-#include "app_config.h"
 
 /*
  * DEFINES
@@ -76,20 +76,24 @@ enum
 
     APP_SYS_BUTTON_1_TIMER,
     APP_SYS_BUTTON_2_TIMER,
-#if	(FB_JOYSTICKS)
-		APP_KEY_PROCESS_TIMER,
-		APP_KEY_SCAN_TIMER,
+#if (FB_JOYSTICKS)
+    APP_KEY_PROCESS_TIMER,
+    APP_KEY_SCAN_TIMER,
 #endif
 #if		(FB_OLED)
-		APP_OLED_DISPLAY_TIMER,
-		APP_OLED_STATE_DISPlAY_TIMER,
-		APP_OLED_CLEAR_KEY_DISPLAY_TIMER,
+    APP_OLED_DISPLAY_TIMER,
+    APP_OLED_STATE_DISPlAY_TIMER,
+    APP_OLED_CLEAR_KEY_DISPLAY_TIMER,
 #endif
-#if	(CONFIG_ENABLE_DRIVER_MPU6050 == TRUE)
-		APP_MPU6050_TEMPERATURE_TEST_TIMER,
-		APP_MPU6050_ADD_READ_TIMER,
+#if (CONFIG_ENABLE_DRIVER_MPU6050 == TRUE)
+    APP_MPU6050_TEMPERATURE_TEST_TIMER,
+    APP_MPU6050_ADD_READ_TIMER,
 #endif
 
+    // for ancsc
+    ANCS_ENABLE_SUVPER_TIMER0,
+    ANCS_ENABLE_SUVPER_TIMER1,
+    // end
     APP_HTPT_PERIOD_MEAS_TIMER,
     APP_HTPT_IDLE_CONNECTION_TIMEOUT_TIMER,
     

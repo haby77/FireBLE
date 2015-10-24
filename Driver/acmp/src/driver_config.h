@@ -5,9 +5,10 @@
  *
  * @brief Driver configuration for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
- * $Rev: 5444 $
+ * $Rev: 6091 $
  *
  ****************************************************************************************
  */
@@ -182,7 +183,7 @@
 #define CONFIG_ENABLE_DRIVER_ACMP0                      TRUE        /*!< Enable/Disable Analog Driver */
 #define CONFIG_ACMP0_DEFAULT_IRQHANDLER                 TRUE        /*!< Enable/Disable Analog Comparator Default IRQ Handler */
 #define CONFIG_ACMP0_ENABLE_INTERRUPT                   TRUE        /*!< Enable/Disable Analog Comparator Interrupt */
-#define CONFIG_ENABLE_DRIVER_ACMP1                      TRUE        /*!< Enable/Disable Analog Driver */
+#define CONFIG_ENABLE_DRIVER_ACMP1                      FALSE       /*!< Enable/Disable Analog Driver */
 #define CONFIG_ACMP1_DEFAULT_IRQHANDLER                 TRUE        /*!< Enable/Disable Analog Comparator Default IRQ Handler */
 #define CONFIG_ACMP1_ENABLE_INTERRUPT                   TRUE        /*!< Enable/Disable Analog Comparator Interrupt */
 
@@ -234,7 +235,7 @@
 #define ACMP_WAKEUP_EN                                  FALSE       /*!< Enable/Disable Analog comparator wakeup MCU */
 #define GPIO_WAKEUP_EN                                  TRUE        /*!< Enable/Disable GPIO wakeup MCU */
 #define SLEEP_TIMER_WAKEUP_EN                           TRUE        /*!< Enable/Disable Sleep timer wakeup MCU */
-#define QN_LOW_POWER_MODE_EN                            FALSE       /*!< Enable/Disable Low power mode */
+#define QN_32K_LOW_POWER_MODE_EN                        FALSE       /*!< Enable/Disable Low power mode */
 
 #if (QN_32K_RCO || CONFIG_ENABLE_DRIVER_RTC)
 #define CLOCK_32K_CORRECTION_EN                         TRUE        /*!< Enable/Disable 32K clock correction */

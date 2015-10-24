@@ -5,7 +5,8 @@
  *
  * @brief QN9020 time support.
  *
- * Copyright (C) Quintic 2013-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -21,8 +22,8 @@
 #define BASE_TIME_CNT_TO_S(n)     (((n) + 50 ) / 100)  //round-off
 #define MAX_TICK_COUNT_10MS       (0x7FFFFF)
 
-static volatile time_t   s_pre_tick_count_sec  = 0;
 static volatile uint32_t s_pre_tick_count_10ms = 0;
+static volatile uint64_t s_tick_count_10ms = 0;
 
 /**
  ****************************************************************************************
@@ -31,7 +32,7 @@ static volatile uint32_t s_pre_tick_count_10ms = 0;
  */
 void set_time_sec(time_t new_sec)
 {
-    s_pre_tick_count_sec  = new_sec;
+    s_tick_count_10ms = (uint64_t)new_sec * 100;
     s_pre_tick_count_10ms = ke_time();
 }
 
@@ -45,7 +46,7 @@ time_t get_time_sec(void)
     const uint32_t cur_tick_count_10ms = ke_time();
     uint32_t diff = 0;
 
-    if(cur_tick_count_10ms > s_pre_tick_count_10ms)
+    if(cur_tick_count_10ms >= s_pre_tick_count_10ms)
     {
         diff = cur_tick_count_10ms - s_pre_tick_count_10ms;
     }
@@ -54,7 +55,7 @@ time_t get_time_sec(void)
         diff = MAX_TICK_COUNT_10MS - s_pre_tick_count_10ms + cur_tick_count_10ms;
     }
 
-    return s_pre_tick_count_sec + BASE_TIME_CNT_TO_S(diff);
+    return BASE_TIME_CNT_TO_S(s_tick_count_10ms + diff);
 }
 
 /**
@@ -67,7 +68,7 @@ void time_check_trigger(void)
     const uint32_t cur_tick_count_10ms = ke_time();
     uint32_t diff = 0;
 
-    if(cur_tick_count_10ms > s_pre_tick_count_10ms)
+    if(cur_tick_count_10ms >= s_pre_tick_count_10ms)
     {
         diff = cur_tick_count_10ms - s_pre_tick_count_10ms;
     }
@@ -75,8 +76,8 @@ void time_check_trigger(void)
     {
         diff = MAX_TICK_COUNT_10MS - s_pre_tick_count_10ms + cur_tick_count_10ms;
     }
-
-    s_pre_tick_count_sec += BASE_TIME_CNT_TO_S(diff);
+    
+    s_tick_count_10ms += diff;
     s_pre_tick_count_10ms = cur_tick_count_10ms;
 
     ke_timer_set(APP_SYS_TIME_CHECK_TIMER, TASK_APP, SYS_TIME_CHECK_PERIOD);

@@ -10,7 +10,8 @@
  *    function to reset it or forbid deep sleep after leave deep sleep.
  * 2. Please include this file in your "usr_design.h"
  *
- * Copyright (C) Quintic 2013-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

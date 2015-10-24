@@ -6,7 +6,8 @@
  *
  * @brief Application Debug Configuration File
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -69,6 +70,11 @@ execUserReset()
     else if(chip_id == 0x2A01) // QN9020 B2
     {
         __message "Device: QN9020 B2";
+        cfg_fw_9020_B2();
+    }
+    else if(chip_id == 0x2B01) // QN9020 B3
+    {
+        __message "Device: QN9020 B3";
         cfg_fw_9020_B2();
     }
     else

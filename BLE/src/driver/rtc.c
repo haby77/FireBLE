@@ -5,7 +5,8 @@
  *
  * @brief real time clock driver for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -24,7 +25,7 @@
  ****************************************************************************************
  */
 #include "rtc.h"
-#if CONFIG_ENABLE_DRIVER_RTC==TRUE && CONFIG_ENABLE_ROM_DRIVER_RTC==FALSE
+#if CONFIG_ENABLE_DRIVER_RTC==TRUE
 
 #ifdef USE_STD_C_LIB_TIME
 #include <time.h>

@@ -5,7 +5,8 @@
  *
  * @brief Application Header File
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -447,8 +448,15 @@ struct app_env_tag
 #endif
 
 #if (BLE_ANCS_NC)
-    struct app_ancsc_env_tag ancsc_ev;
+    struct app_ancsc_env_tag ancsc_ev[BLE_CONNECTION_MAX];
 #endif
+
+#if (BLE_OTA_SERVER)
+    #ifdef ENAB_OTAS_SET_UUID
+    uint8_t app_otas_uuid_flag;
+#endif
+#endif
+
 
 #if QN_DEMO_MENU
     uint8_t menu_id;

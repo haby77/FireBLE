@@ -5,7 +5,8 @@
  *
  * @brief Product related design header file.
  *
- * Copyright (C) Quintic 2014-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -33,11 +34,6 @@ struct usr_env_tag
 {
     uint16_t    led1_on_dur;
     uint16_t    led1_off_dur;
-
-#if (defined(QN_ADV_WDT))
-    bool        adv_wdt_enable;
-    void        (*adv_wdt_to)(void);
-#endif
 };
 
 extern struct usr_env_tag usr_env;

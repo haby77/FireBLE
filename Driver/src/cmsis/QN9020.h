@@ -5,7 +5,8 @@
  *
  * @brief CMSIS compatible Cortex-M0 Core Peripheral Access Layer Header File for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -59,11 +60,11 @@ typedef enum IRQn
          according the interrupt handlers defined in startup_Device.s
          eg.: Interrupt for Timer#1       TIMER1_IRQHandler  ->  TIM1_IRQn                    */
     GPIO_IRQn                     = 0,        /*!< 0  GPIO Event                              */
-    COMPARATOR0_IRQn              = 1,        /*!< 1  Comparator0                             */
-    COMPARATOR1_IRQn              = 2,        /*!< 2  Comparator1                             */
+    ACMP0_IRQn                    = 1,        /*!< 1  ACMP0                                   */
+    ACMP1_IRQn                    = 2,        /*!< 2  ACMP1                                   */
     BLE_IRQn                      = 3,        /*!< 3  BLE                                     */
     RTC_CAP_IRQn                  = 4,        /*!< 4  RTC capture                             */
-    OSC_EN_IRQn                   = 5,        /*!< 5  BLE IP OSC_EN output                                  */
+    OSC_EN_IRQn                   = 5,        /*!< 5  BLE IP OSC_EN output                    */
     RTC_IRQn                      = 6,        /*!< 6  RTC                                     */
     ADC_IRQn                      = 7,        /*!< 7  ADC                                     */
     DMA_IRQn                      = 8,        /*!< 8  DMA                                     */
@@ -334,7 +335,7 @@ typedef struct
 #define SYSCON_MASK_PD_MEM3                 0x00000008   /* 3 */
 #define SYSCON_MASK_PD_MEM2                 0x00000004   /* 2 */
 #define SYSCON_MASK_PD_MEM1                 0x00000002   /* 1 */
-#define SYSCON_MASK_PL_VERG_D               0x00000001   /* 0 */
+#define SYSCON_MASK_PL_VREG_D               0x00000001   /* 0 */
 // POWER_GATING_CTRL1
 #define SYSCON_MASK_VDD_RCO_SET             0x80000000   /* 31 */
 #define SYSCON_MASK_DIS_OSC                 0x40000000   /* 30 */
@@ -549,6 +550,8 @@ typedef struct
 #define SYSCON_POS_BD_TH                            22
 #define SYSCON_POS_ACMP1_VALUE                      16
 #define SYSCON_POS_ACMP0_VALUE                      15
+#define SYSCON_POS_ACMP0_HYST                       14
+#define SYSCON_POS_ACMP1_HYST                       13
 #define SYSCON_POS_AINX_EN                           9
 // ADDITION_CTRL
 #define SYSCON_MASK_BUCK_TMOS_BAK           0x00007000   /* 14 - 12 */
@@ -1079,8 +1082,7 @@ typedef struct
 // DATA_LEN
 #define SF_CTRL_MASK_DATA_LEN               0x0001FFFF      /* 16 - 0 */
 // CTRL_STAT
-#define SF_CTRL_MASK_BOOT_ERR               0x80000000      /* 31 */
-#define SF_CTRL_MASK_BOOT_DONE              0x40000000      /* 30 */
+#define SF_CTRL_MASK_BOOT_DONE              0x80000000      /* 31 */
 #define SF_CTRL_MASK_RD_STAT_CMD            0x0000FF00      /* 15 - 8 */
 #define SF_CTRL_MASK_CLK_DIV                0x0000003F      /* 5 - 0 */
 #define SF_CTRL_POS_RD_STAT_CMD                      8
@@ -1685,13 +1687,13 @@ typedef struct
 #define P06_SW_DAT_PIN_CTRL                     (0<<12)      /*!< SW data */
 #define P06_GPIO_6_PIN_CTRL                     (1<<12)      /*!< GPIO */
 #define P06_AIN2_PIN_CTRL                       (2<<12)      /*!< AIN2 */
-#define P06_ACMP1_N_PIN_CTRL                    (3<<12)      /*!< ACMP1- */
+#define P06_ACMP1_P_PIN_CTRL                    (3<<12)      /*!< ACMP1+ */
 #define P06_MASK_PIN_CTRL                       (3<<12)      /*!< Mask of Pin */
 // PIN_CTRL0[15:14]
 #define P07_SW_CLK_PIN_CTRL                     (0<<14)      /*!< SW clk */
 #define P07_GPIO_7_PIN_CTRL                     (1<<14)      /*!< GPIO */
 #define P07_AIN3_PIN_CTRL                       (2<<14)      /*!< AIN3 */
-#define P07_ACMP1_P_PIN_CTRL                    (3<<14)      /*!< ACMP1+ */
+#define P07_ACMP1_N_PIN_CTRL                    (3<<14)      /*!< ACMP1- */
 #define P07_MASK_PIN_CTRL                       (3<<14)      /*!< Mask of Pin */
 // PIN_CTRL0[17:16]
 #define P10_GPIO_8_PIN_CTRL                     (0<<16)      /*!< GPIO */
@@ -1791,13 +1793,13 @@ typedef struct
 #define P30_GPIO_24_PIN_CTRL                    (0<<16)      /*!< GPIO */
 #define P30_TIMER2_ICP1_PIN_CTRL                (1<<16)      /*!< TIMER */
 #define P30_AIN0_PIN_CTRL                       (2<<16)      /*!< AIN0 */
-#define P30_ACMP0_N_PIN_CTRL                    (3<<16)      /*!< ACMP0- */
+#define P30_ACMP0_P_PIN_CTRL                    (3<<16)      /*!< ACMP0+ */
 #define P30_MASK_PIN_CTRL                       (3<<16)      /*!< Mask of Pin */
 // PIN_CTRL1[19:18]
 #define P31_GPIO_25_PIN_CTRL                    (0<<18)      /*!< GPIO */
 #define P31_TIMER0_ICP2_PIN_CTRL                (1<<18)      /*!< TIMER */
 #define P31_AIN1_PIN_CTRL                       (2<<18)      /*!< AIN1 */
-#define P31_ACMP0_P_PIN_CTRL                    (3<<18)      /*!< ACMP1+ */
+#define P31_ACMP0_N_PIN_CTRL                    (3<<18)      /*!< ACMP1- */
 #define P31_MASK_PIN_CTRL                       (3<<18)      /*!< Mask of Pin */
 // PIN_CTRL1[21:20]
 #define P32_GPIO_26_PIN_CTRL                    (0<<20)      /*!< GPIO */

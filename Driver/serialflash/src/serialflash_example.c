@@ -1,6 +1,6 @@
 /****************************************************************************
  *   $Id:: serialflash_example.c                                        $
- *   Project: QUINTIC QN9020 Flash Controller example
+ *   Project: NXP QN9020 Flash Controller example
  *
  *   Description:
  *     This file contains Flash Controller driver usage.
@@ -22,7 +22,7 @@ int main (void)
     SystemInit();
     
     // Power on inside serial flash
-    power_on_flash();
+    power_on_flash(FLASH_WR);
     
     // Reset value
     for (j = 0; j < 256; j++) {
@@ -31,6 +31,7 @@ int main (void)
     }
 
     // Read flash chip ID
+    id = id;  //avoid warning
     id = read_flash_id();
     
     // Erase 1 sector flash data from 0x4000, and 1 sector size is 4KB
@@ -68,6 +69,7 @@ int main (void)
     for (j = 0; j < 256; j++) {
         if (rxbuffer[j] != j) {
             // read flash data error
+            while(1);
         }
     }
         

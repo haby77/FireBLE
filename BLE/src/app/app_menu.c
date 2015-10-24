@@ -5,7 +5,8 @@
  *
  * @brief Application DEMO menu
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -908,6 +909,7 @@ static void app_menu_show_qppc(void)
 	QPRINTF("* QN BLE QPPC Menu\r\n");
     QPRINTF("* 0. Select device\r\n");
     QPRINTF("* 1. Enable\r\n");
+    QPRINTF("* 2. Send Data\r\n");
 	app_menu_show_line();
 }
 
@@ -933,6 +935,13 @@ static void app_menu_handler_qppc(void)
             QPRINTF("Enable QPPC disallowed.\r\n");
         break;
     }
+    
+    case '2':
+    {
+        uint8_t test[6] = {1,2,3,4,5,6};
+        app_qppc_wr_data_req(6,test,app_get_conhdl_by_idx(app_env.select_idx));
+    }
+        break;
     case 'r':
         app_env.menu_id = menu_main;
         break;

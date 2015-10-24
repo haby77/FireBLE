@@ -5,7 +5,8 @@
  *
  * @brief Header file of analog for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -50,7 +51,6 @@ extern "C"{
  ****************************************************************************************
  */
 #include "gpio.h"
-#include "adc.h"
 
 
 extern int16_t TEMP_OFFSET;
@@ -108,6 +108,21 @@ enum ACMP_INT_COND
     ACMPO_0_GEN_INT = 1         /*!< When ACMP output is 0, generate interrupt */
 };
 
+/// Analog comparator Hysteresis Status
+enum ACMP_HYST_STATUS
+{
+    HYST_DISABLE    = 0,        /*!< Disable Hysteresis */ 
+    HYST_ENABLE     = 1         /*!< Enable Hysteresis */ 
+};
+
+/// Analog comparator Pin Select
+enum ACMP_PIN
+{
+    ACMP0_PIN_P = 0,           /*!< Analog comparator Pin Select, P3.0 */
+    ACMP0_PIN_N,               /*!< Analog comparator Pin Select, P3.1 */
+    ACMP1_PIN_P,               /*!< Analog comparator Pin Select, P0.6 */
+    ACMP1_PIN_N                /*!< Analog comparator Pin Select, P0.7 */
+};
 /*
  * FUNCTION DECLARATIONS
  ****************************************************************************************
@@ -116,52 +131,38 @@ enum ACMP_INT_COND
 /**
  ****************************************************************************************
  * @brief Enable or disable analog input pin .
- * @param[in]   ainx        Analog pin index
+ * @param[in]   acmp_pin    ACMP pin index
+ *  This parameter can be one of the following value:
+ *      ACMP0_PIN_P               P3.0 selected as ACMP0 pin P
+ *      ACMP0_PIN_N               P3.1 selected as ACMP0 pin N
+ *      ACMP1_PIN_P               P0.6 selected as ACMP1 pin P
+ *      ACMP1_PIN_N               P0.7 selected as ACMP1 pin N
  * @param[in]   able        MASK_ENABLE or MASK_DISABLE
  * @description
  *  This function is used to enable or disable analog input pin.
  *****************************************************************************************
  */
-__STATIC_INLINE void analog_pin_enable(enum ADC_CH ainx, uint32_t able)
+__STATIC_INLINE void acmp_pin_enable(enum ACMP_PIN acmp_pin, uint32_t able)
 {
-    if (ainx <= AIN3) {
-        syscon_SetAnalogCRWithMask(QN_SYSCON, (1 << (ainx + SYSCON_POS_AINX_EN)), able);
-    }
+    syscon_SetAnalogCRWithMask(QN_SYSCON, (1 << (acmp_pin + SYSCON_POS_AINX_EN)), able);
 }
 
 
-#if CONFIG_ENABLE_ROM_DRIVER_ANALOG==TRUE
-
-typedef  void (*p_comparator_init)(enum ACMP_CH acmpch, enum ACMP_REF acmpref, enum ACMP_INT_COND acmpint, void (*callback)(void));
-typedef  void (*p_comparator_enable)(enum ACMP_CH acmpch, enum ACMP_INT_COND acmpint, uint32_t able);
-typedef  void (*p_battery_monitor_enable)(uint32_t able);
-typedef  void (*p_brown_out_enable)(uint32_t able);
-typedef  void (*p_temp_sensor_enable)(uint32_t able);
-
-#define comparator_init        ((p_comparator_init)        _comparator_init)
-#define comparator_enable      ((p_comparator_enable)      _comparator_enable)
-#define battery_monitor_enable ((p_battery_monitor_enable) _battery_monitor_enable)
-#define brown_out_enable       ((p_brown_out_enable)       _brown_out_enable)
-#define temp_sensor_enable     ((p_temp_sensor_enable)     _temp_sensor_enable)
-#else
-
-
 #if (CONFIG_ENABLE_DRIVER_ACMP0==TRUE || CONFIG_ACMP0_DEFAULT_IRQHANDLER==TRUE)
-void COMPARATOR0_IRQHandler(void);
+void ACMP0_IRQHandler(void);
 #endif
 #if (CONFIG_ENABLE_DRIVER_ACMP1==TRUE || CONFIG_ACMP1_DEFAULT_IRQHANDLER==TRUE)
-void COMPARATOR1_IRQHandler(void);
+void ACMP1_IRQHandler(void);
 #endif
 
 #if (CONFIG_ENABLE_DRIVER_ACMP0==TRUE || CONFIG_ENABLE_DRIVER_ACMP1==TRUE)
-extern void comparator_init(enum ACMP_CH acmpch, enum ACMP_REF acmpref, enum ACMP_INT_COND acmpint, void (*callback)(void));
-extern void comparator_enable(enum ACMP_CH acmpch, enum ACMP_INT_COND acmpint, uint32_t able);
+extern void acmp_init(enum ACMP_CH acmpch, enum ACMP_REF acmpref, enum ACMP_INT_COND acmpint, enum ACMP_HYST_STATUS acmphyst, void (*callback)(void));
+extern void acmp_enable(enum ACMP_CH acmpch, enum ACMP_INT_COND acmpint, uint32_t able);
 #endif
 extern void battery_monitor_enable(uint32_t able);
 extern void brown_out_enable(uint32_t able);
 extern void temp_sensor_enable(uint32_t able);
-
-#endif
+extern bool acmp_sleep_allowed(void);
 
 #ifdef __cplusplus
 #if __cplusplus

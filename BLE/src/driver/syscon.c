@@ -5,7 +5,8 @@
  *
  * @brief System controller driver API.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -13,7 +14,7 @@
  */
 
 #include "syscon.h"
-#if CONFIG_ENABLE_DRIVER_SYSCON==TRUE && CONFIG_ENABLE_ROM_DRIVER_SYSCON==FALSE
+#if CONFIG_ENABLE_DRIVER_SYSCON==TRUE
 #ifdef BLE_PRJ
 #include "lib.h"
 #endif

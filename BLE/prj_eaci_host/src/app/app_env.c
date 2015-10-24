@@ -5,7 +5,8 @@
  *
  * @brief Application Environment C file
  *
- * Copyright (C) Quintic 2009-2012
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *

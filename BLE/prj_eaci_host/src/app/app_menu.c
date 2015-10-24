@@ -5,7 +5,8 @@
  *
  * @brief Application DEMO menu
  *
- * Copyright (C) Quintic 2009-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *

@@ -5,7 +5,8 @@
  *
  * @brief UART Driver for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -25,8 +26,7 @@
  ****************************************************************************************
  */
 #include "uart.h"
-#if ((CONFIG_ENABLE_DRIVER_UART0==TRUE || CONFIG_ENABLE_DRIVER_UART1==TRUE) \
-    && CONFIG_ENABLE_ROM_DRIVER_UART==FALSE)
+#if ((CONFIG_ENABLE_DRIVER_UART0==TRUE || CONFIG_ENABLE_DRIVER_UART1==TRUE))
 #include "gpio.h"
 #if UART_DMA_EN==TRUE
 #include "dma.h"

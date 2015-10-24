@@ -5,7 +5,8 @@
  *
  * @brief Application QPPC API
  *
- * Copyright (C) Quintic 2013-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *
@@ -150,7 +151,7 @@ void app_qppc_cfg_indntf_req(uint16_t cfg_val, uint16_t conhdl, uint8_t char_cod
  * @param[in] len           Length of data to be sent
  * @param[in] val           Pointer to data to be sent
  * @param[in] conhdl        Connection handle
- * @response  QPPC_WR_CHAR_RSP or QPPC_ERROR_IND
+ * @response  QPPC_ERROR_IND
  * @description
  * This function is used by the application to send a raw data to server.
  * 

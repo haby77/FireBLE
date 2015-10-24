@@ -1,6 +1,6 @@
 /****************************************************************************
  *   $Id: acmp_example.c
- *   $Project: QUINTIC QN9020 Analog modules example
+ *   $Project: NXP QN9020 Analog modules example
  *
  *   Description:
  *     This file contains Analog driver usage.

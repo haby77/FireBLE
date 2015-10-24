@@ -5,7 +5,8 @@
  *
  * @brief Header file of button driver for qn evb.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -22,8 +23,10 @@
 
 #if !defined(FireBLE_platform)
 
-#if	defined(CFG_FCC_CE_TEST)
-#define	BUTTON1_PIN			CFG_FCC_CE_CTRL_PIN
+#if !defined(QN_EXT_FLASH)
+
+#if defined(CFG_FCC_CE_TEST)
+#define BUTTON1_PIN    (CFG_FCC_CE_CTRL_PIN)
 #else
 #define BUTTON1_PIN    (GPIO_P14)
 #endif
@@ -31,19 +34,30 @@
 
 #else
 
-#if	defined(CFG_FCC_CE_TEST)
-#define	BUTTON1_PIN			CFG_FCC_CE_CTRL_PIN
+#if defined(CFG_FCC_CE_TEST)
+#define BUTTON1_PIN    (CFG_FCC_CE_CTRL_PIN)
+#else
+#define BUTTON1_PIN    (GPIO_P16)
+#endif
+#define BUTTON2_PIN    (GPIO_P15)	// Can't use in QN9022
+
+#endif
+
+#else
+
+#if defined(CFG_FCC_CE_TEST)
+#define BUTTON1_PIN    (CFG_FCC_CE_CTRL_PIN)
 #else
 #define BUTTON1_PIN    (GPIO_P12)
 #endif
-#define	BUTTON2_PIN	 (GPIO_P02)  // no pin in QN9021
+#define BUTTON2_PIN    (GPIO_P02)
 
 #endif
 
 #else
 
-#if	defined(CFG_FCC_CE_TEST)
-#define	BUTTON1_PIN			CFG_FCC_CE_CTRL_PIN
+#if defined(CFG_FCC_CE_TEST)
+#define BUTTON1_PIN    (CFG_FCC_CE_CTRL_PIN)
 #else
 #define BUTTON1_PIN    (GPIO_P12)
 #endif

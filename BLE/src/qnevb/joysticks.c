@@ -48,7 +48,7 @@ int app_key_scan_timer_handler(ke_msg_id_t const msgid, void const *param,
 				// Read voltage. use interrupt
 				adc_read_configuration read_cfg;
 				read_cfg.trig_src = ADC_TRIG_SOFT;
-				read_cfg.mode = BURST_MOD;
+				read_cfg.mode = SINGLE_MOD;
 				read_cfg.start_ch = AIN0;
 				read_cfg.end_ch = AIN0;
 				adc_read(&read_cfg,adc_key_value, KEY_SAMPLE_NUMBER, adc_test_cb);

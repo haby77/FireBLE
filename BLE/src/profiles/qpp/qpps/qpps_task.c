@@ -5,7 +5,8 @@
  *
  * @brief Quintic Private Profile Server Task Implementation.
  *
- * Copyright (C) Quintic 2013-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *
@@ -198,33 +199,33 @@ static int qpps_enable_req_handler(ke_msg_id_t const msgid,
     // If this connection is a not configuration one, apply config saved by app
     if(param->con_type == PRF_CON_NORMAL)
     {
-		qpps_env.features = param->ntf_en;
-		for (uint8_t i = 0; i < qpps_env.ntf_char_num; i++)
-		{
-			//Set Val NTF Configuration in DB
-  			if (QPPS_IS_SUPPORTED(i, QPPS_VALUE_NTF_CFG))
-			{
-		        value = QPPS_VALUE_NTF_CFG;
-				attsdb_att_set_value(qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG + i*3, sizeof(uint16_t),
-									(uint8_t *)&value);
-		    }
+        qpps_env.features = param->ntf_en;
+        for (uint8_t i = 0; i < qpps_env.ntf_char_num; i++)
+        {
+            //Set Val NTF Configuration in DB
+              if (QPPS_IS_SUPPORTED(i, QPPS_VALUE_NTF_CFG))
+            {
+                value = QPPS_VALUE_NTF_CFG;
+                attsdb_att_set_value(qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG + i*3, sizeof(uint16_t),
+                                    (uint8_t *)&value);
+            }
             else
             {
                 value = 0;
-				attsdb_att_set_value(qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG + i*3, sizeof(uint16_t),
-									(uint8_t *)&value);
+                attsdb_att_set_value(qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG + i*3, sizeof(uint16_t),
+                                    (uint8_t *)&value);
             }
-		}
+        }
     }
-	else
-	{
-		for (uint8_t i = 0; i < qpps_env.ntf_char_num; i++)
-		{
-			//Set Val NTF Configuration in DB
-			attsdb_att_set_value(qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG + i*3, sizeof(uint16_t),
-								 (uint8_t *)&value);
-		}
-	}
+    else
+    {
+        for (uint8_t i = 0; i < qpps_env.ntf_char_num; i++)
+        {
+            //Set Val NTF Configuration in DB
+            attsdb_att_set_value(qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG + i*3, sizeof(uint16_t),
+                                 (uint8_t *)&value);
+        }
+    }
 
     // Enable Service + Set Security Level
     attsdb_svc_set_permission(qpps_env.shdl, param->sec_lvl);
@@ -311,7 +312,7 @@ static int gatt_write_cmd_ind_handler(ke_msg_id_t const msgid,
     if (param->conhdl == qpps_env.conhdl)
     {
         // Client Char. Configuration
-		uint8_t char_index = param->handle - (qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG);
+        uint8_t char_index = param->handle - (qpps_env.shdl + QPPS_IDX_VAL_NTF_CFG);
         if ((param->handle > (qpps_env.shdl + QPPS_IDX_VAL_CHAR)) && ((char_index % 3) == 0))
         {
             uint16_t value = 0x0000;
@@ -363,30 +364,30 @@ static int gatt_write_cmd_ind_handler(ke_msg_id_t const msgid,
         }
         else if (param->handle == (qpps_env.shdl + QPPS_IDX_RX_DATA_VAL))
         {
-			if (param->length <= QPP_DATA_MAX_LEN)
-			{
-				//inform APP of configuration change
-				struct qpps_data_val_ind * ind = KE_MSG_ALLOC_DYN(QPPS_DAVA_VAL_IND,
-																  qpps_env.appid,
-																  TASK_QPPS,
-																  qpps_data_val_ind, param->length);
+            if (param->length <= QPP_DATA_MAX_LEN)
+            {
+                //inform APP of configuration change
+                struct qpps_data_val_ind * ind = KE_MSG_ALLOC_DYN(QPPS_DAVA_VAL_IND,
+                                                                  qpps_env.appid,
+                                                                  TASK_QPPS,
+                                                                  qpps_data_val_ind, param->length);
 
-				memcpy(&ind->conhdl, &(qpps_env.conhdl), sizeof(uint16_t));
-				//Send received data to app value
-				ind->length = param->length;
-				memcpy(ind->data, param->value, param->length);
+                memcpy(&ind->conhdl, &(qpps_env.conhdl), sizeof(uint16_t));
+                //Send received data to app value
+                ind->length = param->length;
+                memcpy(ind->data, param->value, param->length);
 
-				ke_msg_send(ind);
-			}
-			else
-			{
-				status = QPPS_ERR_RX_DATA_EXCEED_MAX_LENGTH;
-			}
+                ke_msg_send(ind);
+            }
+            else
+            {
+                status = QPPS_ERR_RX_DATA_EXCEED_MAX_LENGTH;
+            }
         }
-		else
-		{
-			status = QPPS_ERR_INVALID_PARAM;
-		}
+        else
+        {
+            status = QPPS_ERR_INVALID_PARAM;
+        }
     }
 
     if (param->response)

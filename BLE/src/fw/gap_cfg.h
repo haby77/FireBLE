@@ -16,9 +16,10 @@
  *
  * @file gap_cfg.h
  *
- * @brief Quintic revised and cut.
+ * @brief NXP revised and cut.
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

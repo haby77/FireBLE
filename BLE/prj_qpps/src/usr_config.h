@@ -5,7 +5,8 @@
  *
  * @brief User configuration file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -17,8 +18,23 @@
 
 // User configuration
 
-/// Chip version: CFG_9020_B2, CFG_9020_B1, CFG_9020_B0
+/// Software verion: CFG_SW_DEBUG, CFG_SW_RELEASE
+// In the debug version the program will be in the infinite loop if the hardfault exception is triggered.
+// In the release version the program will execute a system reboot if the hardfault exception is triggered.
+#define CFG_SW_DEBUG
+
+/// Chip version: CFG_9020_B2
 #define CFG_9020_B2
+
+/// Evaluation board indication
+// The GPIOs used for QN9021 miniDK's LED and button are different from QN9020 miniDK.
+// If the QN9021 miniDK is used, the following macro shall be defined.
+// #define CFG_9021_MINIDK
+
+/// External flash
+// QN9022 uses external flash. BOND_EN should be set correctly in this case
+// to prevent extra power consumption in SLEEP mode.
+// #define CFG_EXT_FLASH
 
 /// Work mode: CFG_WM_SOC, CFG_WM_NP, CFG_WM_HCI
 #define CFG_WM_SOC
@@ -34,7 +50,7 @@
 #endif
 
 /// Local name
-#define CFG_LOCAL_NAME   "FireBLE QPPS"
+#define CFG_LOCAL_NAME   "NXP QPPS"
 
 /// Evaluation board indication
  // The GPIOs used for FireBLE's LED and button are different from FireBLE.
@@ -59,12 +75,14 @@
 /// Test mode controll pin
 //#define CFG_TEST_CTRL_PIN GPIO_P31
 
-/// ADV watchdog timer
-#if (defined(CFG_FW_V18))
-#define CFG_ADV_WDT
-#endif
-
 /// Memory retention
+// There are 8 banks of SRAM, and each bank is 8k bytes. Bank0 is always power on.
+// The power of bank 1~7 can be configured by developer. If the memory bank is not
+// used by application, it can be off to save power.
+// The BLE stack stores its data in the bank 6 & 7. If the BLE is used, bank 6 & 7
+// should be power on.
+// The develop can configure this macro based on memory usage to optimize power
+// consumption.
 #define CFG_MEM_RETENTION   (MEM_BLOCK1 | MEM_BLOCK2 | MEM_BLOCK3 | MEM_BLOCK4 | MEM_BLOCK6 | MEM_BLOCK7)
 
 /// Deep sleep support
@@ -130,6 +148,7 @@
 
 ///Quintic private profile Role
 #define CFG_PRF_QPPS
+#define QPPS_NOTIFY_NUM     5
 //#define CFG_TASK_QPPS     TASK_PRF1
 
 ///Health Thermometer Profile Collector Role
@@ -231,6 +250,10 @@
 ///Cycling Speed and Cadence Sensor Role
 // #define CFG_PRF_CSCPS
 // #define CFG_TASK_CSCPS   TASK_PRF1
+
+/// OTA Server Role
+//#define CFG_PRF_OTAS
+//#define CFG_TASK_OTAS   TASK_PRF7
 
 #endif
 

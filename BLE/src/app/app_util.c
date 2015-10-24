@@ -5,7 +5,8 @@
  *
  * @brief Application Utility API
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -71,7 +72,6 @@ uint8_t app_get_role(void)
  *
  ****************************************************************************************
  */
-#if (BLE_CENTRAL)
 uint8_t app_get_rec_idx_by_conhdl(uint16_t conhdl)
 {
     uint8_t idx;
@@ -85,7 +85,7 @@ uint8_t app_get_rec_idx_by_conhdl(uint16_t conhdl)
     idx = GAP_INVALID_CONIDX;
     return idx;
 }
-#endif
+
 
 /**
  ****************************************************************************************
@@ -154,7 +154,7 @@ uint8_t app_get_bd_addr_by_conhdl(uint16_t conhdl, struct bd_addr *addr)
  *
  ****************************************************************************************
  */
-#if (BLE_CENTRAL)
+
 bool app_get_bd_addr_by_idx(uint8_t idx, struct bd_addr *addr)
 {
     bool r = false;
@@ -167,7 +167,7 @@ bool app_get_bd_addr_by_idx(uint8_t idx, struct bd_addr *addr)
     
     return r;
 }        
-#endif
+
 
 /**
  ****************************************************************************************
@@ -909,10 +909,20 @@ void app_create_server_service_DB(void)
     app_pasps_create_db(PASP_RINGER_ACTIVE, PASP_RINGER_SILENT);
 #endif
 #if BLE_OTA_SERVER
+    
+    #ifdef  ENAB_OTAS_SET_UUID
+    app_env.app_otas_uuid_flag = app_otas_change_svc_uuid((uint8_t *)OTAS_SVC_UUID_128BIT);
+    #endif
+    
+    #ifdef  ENAB_OTAS_SEND_DATA
+    uint8_t res = app_otas_set_data_addr(FALSH_DAT_START_ADDR);
+    #endif
+    
     app_otas_create_db();
 #endif
 #if BLE_QPP_SERVER
-    app_qpps_env->tx_char_num = 7;
+    qpps_set_service_uuid((uint8_t *)QPP_SVC_PRIVATE_UUID);
+    app_qpps_env->tx_char_num = QPPS_NOTIFY_NUM;
     app_qpps_create_db(app_qpps_env->tx_char_num);
 #endif
 }
@@ -1177,7 +1187,7 @@ void app_enable_server_service(uint8_t enabled, uint16_t conhdl)
 uint8_t app_set_adv_data(uint16_t disc_mode)
 {
     uint8_t len;
-    /* "\x02\x01\x0?\x0C\x08Quintic BLE" */
+    /* "\x02\x01\x0?\x08\x08NXP BLE" */
     
     // Advertising data, BLE only, general discovery mode and short device name
     app_env.adv_data[0] = 0x02;
@@ -1506,9 +1516,21 @@ uint8_t app_set_scan_rsp_data(uint16_t srv_flag)
 #if BLE_OTA_SERVER
     if (len <= remain_len)
     {
+        #ifdef ENAB_OTAS_SET_UUID
+        if(app_env.app_otas_uuid_flag != 0)
+        {
+            app_env.scanrsp_data[0] = ATT_UUID_128_LEN + 1;
+            app_env.scanrsp_data[1] = GAP_AD_TYPE_MORE_128_BIT_UUID;
+            memcpy(app_env.scanrsp_data + 2, OTAS_SVC_UUID_128BIT, ATT_UUID_128_LEN);
+            return (ATT_UUID_128_LEN + 2);
+        }
+        else
+        #endif
+        {
         app_env.scanrsp_data[len+0] = (uint8_t)(OTAS_SVC_PRIVATE_UUID & 0x00FF);
         app_env.scanrsp_data[len+1] = (uint8_t)(OTAS_SVC_PRIVATE_UUID >> 8);
         len += 2;
+        }
     }
     else
     {

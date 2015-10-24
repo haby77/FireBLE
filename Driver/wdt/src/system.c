@@ -5,7 +5,8 @@
  *
  * @brief User system setup and initial configuration source file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -111,23 +112,43 @@ void SystemInit(void)
     rco_calibration();
 #endif
 
-    // Disable all peripheral clock, will be enabled in the driver initilization.
-    timer_clock_off(QN_TIMER0);
-    timer_clock_off(QN_TIMER1);
-    timer_clock_off(QN_TIMER2);
-    timer_clock_off(QN_TIMER3);
-    uart_clock_off(QN_UART0);
-    uart_clock_off(QN_UART1);
-    spi_clock_off(QN_SPI0);
-    usart_reset((uint32_t) QN_SPI1);
-    spi_clock_off(QN_SPI1);
-    flash_clock_off();
-    gpio_clock_off();
-    adc_clock_off();
-    dma_clock_off();
-    pwm_clock_off();
+    // Reset SPI1 module(since the default register value was changed in bootloader)
+    syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_USART1_RST);
+    syscon_SetCRSC(QN_SYSCON, SYSCON_MASK_USART1_RST);
     
-    // calibration will change system clock setting
+    /*
+        Disable all peripheral clock, will be enabled in the driver initilization.
+        The next function performs the equivalent effect of a collection of these functions.
+    
+        timer_clock_off(QN_TIMER0);
+        timer_clock_off(QN_TIMER1);
+        timer_clock_off(QN_TIMER2);
+        timer_clock_off(QN_TIMER3);
+        uart_clock_off(QN_UART0);
+        uart_clock_off(QN_UART1);
+        spi_clock_off(QN_SPI0);
+        spi_clock_off(QN_SPI1);
+        flash_clock_off();
+        gpio_clock_off();
+        adc_clock_off();
+        dma_clock_off();
+        pwm_clock_off();
+    */
+    syscon_SetCRSS(QN_SYSCON, SYSCON_MASK_GATING_TIMER0
+                            | SYSCON_MASK_GATING_TIMER1
+                            | SYSCON_MASK_GATING_TIMER2
+                            | SYSCON_MASK_GATING_TIMER3
+                            | SYSCON_MASK_GATING_UART0
+                            | SYSCON_MASK_GATING_UART1
+                            | SYSCON_MASK_GATING_SPI0
+                            | SYSCON_MASK_GATING_SPI1
+                            | SYSCON_MASK_GATING_SPI_AHB
+                            | SYSCON_MASK_GATING_GPIO
+                            | SYSCON_MASK_GATING_ADC
+                            | SYSCON_MASK_GATING_DMA
+                            | SYSCON_MASK_GATING_PWM);
+    
+    // calibration changed system clock setting
     // Configure sytem clock.  
     syscon_set_sysclk_src(CLK_XTAL, __XTAL);
     syscon_set_ahb_clk(__AHB_CLK);

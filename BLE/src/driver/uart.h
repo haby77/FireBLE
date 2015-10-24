@@ -5,7 +5,8 @@
  *
  * @brief Header file of UART for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -449,27 +450,6 @@ __STATIC_INLINE void usart_reset(uint32_t usart)
  * FUNCTION DECLARATIONS
  ****************************************************************************************
  */
-#if CONFIG_ENABLE_ROM_DRIVER_UART==TRUE
-
-typedef void (*p_uart_init)(QN_UART_TypeDef *UART, uint32_t uartclk, enum UART_BAUDRATE baudrate);
-typedef void (*p_uart_read)(QN_UART_TypeDef *UART, uint8_t *bufptr, uint32_t size, void (*rx_callback)(void));
-typedef void (*p_uart_write)(QN_UART_TypeDef *UART, uint8_t *bufptr, uint32_t size, void (*tx_callback)(void));
-typedef void (*p_uart_printf)(QN_UART_TypeDef *UART, uint8_t *bufptr);
-typedef void (*p_uart_finish_transfers)(QN_UART_TypeDef *UART);
-typedef void (*p_uart_flow_on)(QN_UART_TypeDef *UART);
-typedef bool (*p_uart_flow_off)(QN_UART_TypeDef *UART);
-
-
-#define uart_init                 ((p_uart_init)             _uart_init)
-#define uart_read                 ((p_uart_read)             _uart_read)
-#define uart_write                ((p_uart_write)            _uart_write)
-#define uart_printf               ((p_uart_printf)           _uart_printf)
-#define uart_finish_transfers     ((p_uart_finish_transfers) _uart_finish_transfers)
-#define uart_flow_on              ((p_uart_flow_on)          _uart_flow_on)
-#define uart_flow_off             ((p_uart_flow_off)         _uart_flow_off)
-
-#else
-
 
 #if (CONFIG_ENABLE_DRIVER_UART0==TRUE && CONFIG_UART0_TX_DEFAULT_IRQHANDLER==TRUE)
 void UART0_TX_IRQHandler(void);
@@ -499,7 +479,6 @@ extern unsigned char UartGetc(void);
 extern void uart_dump_register(uint32_t start, uint32_t end);
 #endif
 
-#endif
 
 /// @} UART
 #endif /* (CONFIG_ENABLE_DRIVER_UART0==TRUE || CONFIG_ENABLE_DRIVER_UART1==TRUE) */

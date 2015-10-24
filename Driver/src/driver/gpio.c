@@ -5,7 +5,8 @@
  *
  * @brief GPIO driver for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -24,7 +25,7 @@
  ****************************************************************************************
  */
 #include "gpio.h"
-#if CONFIG_ENABLE_DRIVER_GPIO==TRUE && CONFIG_ENABLE_ROM_DRIVER_GPIO==FALSE
+#if CONFIG_ENABLE_DRIVER_GPIO==TRUE
 #include "sleep.h"
 /*
  * STRUCT DEFINITIONS
@@ -82,9 +83,14 @@ __STATIC_INLINE int ctz (uint32_t x)
 #if CONFIG_GPIO_DEFAULT_IRQHANDLER==TRUE
 void GPIO_IRQHandler(void)
 {
-#if QN_LOW_POWER_MODE_EN==TRUE
+#if QN_32K_LOW_POWER_MODE_EN==TRUE
     exit_low_power_mode();
 #endif
+    if (ahb_clock_flag & 0x01) {
+        syscon_SetCMDCRWithMask(QN_SYSCON, SYSCON_MASK_AHB_DIV_BYPASS|SYSCON_MASK_AHB_DIVIDER, ahb_clock_flag);
+        ahb_clock_flag &= ~0x01;
+    }
+
     int pin;
     const uint32_t reg = gpio_gpio_IntStatus(QN_GPIO);
 
@@ -411,6 +417,18 @@ bool gpio_sleep_allowed(void)
     }
     
     return TRUE;
+}
+
+void gpio_open_drain_out(enum gpio_pin pin, enum gpio_level level)
+{
+    if (level == GPIO_LOW) {
+        gpio_set_direction(pin, GPIO_OUTPUT);
+        gpio_write_pin(pin, GPIO_LOW);
+    }
+    else { // pull-up by external resistor
+        gpio_set_direction(pin, GPIO_INPUT);
+        gpio_pull_set(pin, GPIO_HIGH_Z);
+    }
 }
 
 #endif /* CONFIG_ENABLE_DRIVER_GPIO */

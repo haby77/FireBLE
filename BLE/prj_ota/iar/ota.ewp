@@ -99,7 +99,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>QN9020	Quintic QN9020</state>
+          <state>QN9020	NXP QN9020</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -716,7 +716,7 @@
         </option>
         <option>
           <name>IlinkSuppressDiags</name>
-          <state></state>
+          <state>Lp005, Lp006</state>
         </option>
         <option>
           <name>IlinkTreatAsRem</name>

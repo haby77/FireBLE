@@ -5,7 +5,8 @@
  *
  * @brief DMA driver for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -24,7 +25,7 @@
  ****************************************************************************************
  */
 #include "dma.h"
-#if CONFIG_ENABLE_DRIVER_DMA==TRUE && CONFIG_ENABLE_ROM_DRIVER_DMA==FALSE
+#if CONFIG_ENABLE_DRIVER_DMA==TRUE
 #include "uart.h"
 
 ///DMA environment parameters

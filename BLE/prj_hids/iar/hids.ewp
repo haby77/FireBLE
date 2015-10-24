@@ -29,7 +29,7 @@
         </option>
         <option>
           <name>Variant</name>
-          <version>19</version>
+          <version>20</version>
           <state>34</state>
         </option>
         <option>
@@ -99,7 +99,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>QN9020	Quintic QN9020</state>
+          <state>QN9020	NXP QN9020</state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -208,7 +208,7 @@
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa050</state>
+          <state>Pa050, Pa089</state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -297,25 +297,25 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-            <state>$PROJ_DIR$\..\..\src\fw</state>
-            <state>$PROJ_DIR$\..\..\src\profiles</state>
-            <state>$PROJ_DIR$\..\..\src\profiles\bas\bass</state>
-            <state>$PROJ_DIR$\..\..\src\app</state>
-            <state>$PROJ_DIR$\..\..\src\app\gap</state>
-            <state>$PROJ_DIR$\..\..\src\app\gatt</state>
-            <state>$PROJ_DIR$\..\..\src\app\smp</state>
-            <state>$PROJ_DIR$\..\..\src\app\bass</state>
-            <state>$PROJ_DIR$\..\..\src\cmsis</state>
-            <state>$PROJ_DIR$\..\..\src\driver</state>
-            <state>$PROJ_DIR$\..\..\src\lib</state>
-            <state>$PROJ_DIR$\..\..\src\qnevb</state>
-            <state>$PROJ_DIR$\..\src</state>
-            <state>$PROJ_DIR$\..\..\src\app\diss</state>
-            <state>$PROJ_DIR$\..\..\src\profiles\dis</state>
-            <state>$PROJ_DIR$\..\..\src\profiles\hogp</state>
-            <state>$PROJ_DIR$\..\..\src\profiles\hogp\hogpd</state>
-            <state>$PROJ_DIR$\..\..\src\app\hogpd</state>
-            <state>$PROJ_DIR$\..\..\src\profiles\dis\diss</state>
+          <state>$PROJ_DIR$\..\..\src\fw</state>
+          <state>$PROJ_DIR$\..\..\src\profiles</state>
+          <state>$PROJ_DIR$\..\..\src\profiles\bas\bass</state>
+          <state>$PROJ_DIR$\..\..\src\app</state>
+          <state>$PROJ_DIR$\..\..\src\app\gap</state>
+          <state>$PROJ_DIR$\..\..\src\app\gatt</state>
+          <state>$PROJ_DIR$\..\..\src\app\smp</state>
+          <state>$PROJ_DIR$\..\..\src\app\bass</state>
+          <state>$PROJ_DIR$\..\..\src\cmsis</state>
+          <state>$PROJ_DIR$\..\..\src\driver</state>
+          <state>$PROJ_DIR$\..\..\src\lib</state>
+          <state>$PROJ_DIR$\..\..\src\qnevb</state>
+          <state>$PROJ_DIR$\..\src</state>
+          <state>$PROJ_DIR$\..\..\src\app\diss</state>
+          <state>$PROJ_DIR$\..\..\src\profiles\dis</state>
+          <state>$PROJ_DIR$\..\..\src\profiles\hogp</state>
+          <state>$PROJ_DIR$\..\..\src\profiles\hogp\hogpd</state>
+          <state>$PROJ_DIR$\..\..\src\app\hogpd</state>
+          <state>$PROJ_DIR$\..\..\src\profiles\dis\diss</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -720,7 +720,7 @@
         </option>
         <option>
           <name>IlinkSuppressDiags</name>
-          <state></state>
+          <state>Lp005, Lp006</state>
         </option>
         <option>
           <name>IlinkTreatAsRem</name>
@@ -1852,156 +1852,159 @@
       <data/>
     </settings>
   </configuration>
-          <group>
-          <name>startup</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\startup\iar\startup.s</name>
-            </file>
-        </group>
-        <group>
-          <name>main</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\main\app_main.c</name>
-            </file>
-        </group>
-        <group>
-          <name>usr</name>
-            <file>
-              <name>$PROJ_DIR$\..\src\system.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\src\usr_design.c</name>
-            </file>
-        </group>
-        <group>
-          <name>app</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\app_util.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\app_env.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\app_printf.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\app_sys.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\app_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\gap\app_gap.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\gap\app_gap_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\gatt\app_gatt.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\gatt\app_gatt_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\smp\app_smp.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\smp\app_smp_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\bass\app_bass_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\bass\app_bass.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\diss\app_diss.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\diss\app_diss_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\hogpd\app_hogpd.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\app\hogpd\app_hogpd_task.c</name>
-            </file>
-        </group>
-        <group>
-          <name>profiles</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\prf_utils.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\bas\bass\bass_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\bas\bass\bass.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\dis\diss\diss.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\dis\diss\diss_task.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\hogp\hogpd\hogpd.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\profiles\hogp\hogpd\hogpd_task.c</name>
-            </file>
-        </group>
-        <group>
-          <name>drivers</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\uart.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\gpio.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\sleep.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\syscon.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\adc.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\analog.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\wdt.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\timer.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\driver\rtc.c</name>
-            </file>
-        </group>
-        <group>
-          <name>lib</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\lib\iar\qn9020b2_lib_peripheral.a</name>
-            </file>
-        </group>
-        <group>
-          <name>qnevb</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\qnevb\led.c</name>
-            </file>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\qnevb\button.c</name>
-            </file>
-        </group>
-        <group>
-          <name>retarget</name>
-            <file>
-              <name>$PROJ_DIR$\..\..\src\retarget\retarget.c</name>
-            </file>
-        </group>
-
+  <group>
+    <name>app</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\bass\app_bass.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\bass\app_bass_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\diss\app_diss.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\diss\app_diss_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\app_env.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\gap\app_gap.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\gap\app_gap_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\gatt\app_gatt.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\gatt\app_gatt_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\hogpd\app_hogpd.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\hogpd\app_hogpd_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\app_printf.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\smp\app_smp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\smp\app_smp_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\app_sys.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\app_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\app\app_util.c</name>
+    </file>
+  </group>
+  <group>
+    <name>drivers</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\adc.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\analog.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\gpio.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\rtc.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\serialflash.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\sleep.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\syscon.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\timer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\uart.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\driver\wdt.c</name>
+    </file>
+  </group>
+  <group>
+    <name>lib</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\lib\iar\qn9020b2_lib_peripheral.a</name>
+    </file>
+  </group>
+  <group>
+    <name>main</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\main\app_main.c</name>
+    </file>
+  </group>
+  <group>
+    <name>profiles</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\bas\bass\bass.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\bas\bass\bass_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\dis\diss\diss.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\dis\diss\diss_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\hogp\hogpd\hogpd.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\hogp\hogpd\hogpd_task.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\profiles\prf_utils.c</name>
+    </file>
+  </group>
+  <group>
+    <name>qnevb</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\qnevb\button.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\qnevb\led.c</name>
+    </file>
+  </group>
+  <group>
+    <name>retarget</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\retarget\retarget.c</name>
+    </file>
+  </group>
+  <group>
+    <name>startup</name>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\startup\iar\startup.s</name>
+    </file>
+  </group>
+  <group>
+    <name>usr</name>
+    <file>
+      <name>$PROJ_DIR$\..\src\system.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\src\usr_design.c</name>
+    </file>
+  </group>
 </project>
+
 

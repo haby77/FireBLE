@@ -5,7 +5,8 @@
  *
  * @brief watchdog timer driver for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -23,7 +24,7 @@
  ****************************************************************************************
  */
 #include "wdt.h"
-#if CONFIG_ENABLE_DRIVER_WDT==TRUE && CONFIG_ENABLE_ROM_DRIVER_WDT==FALSE
+#if CONFIG_ENABLE_DRIVER_WDT==TRUE
 #ifdef BLE_PRJ
 #include "usr_design.h"
 #endif
@@ -36,28 +37,6 @@ volatile int reset_test = 0;  /*!< Set to 1 during watchdog timer reset test so 
 
 /**
  ****************************************************************************************
- * @brief Unlock watchdog timer access
- *
- ****************************************************************************************
- */
-void wdt_unlock(void)
-{
-    QN_WDT->LOCK = 0x1ACCE551;
-}
-
-/**
- ****************************************************************************************
- * @brief Lock watchdog timer access
- *
- ****************************************************************************************
- */
-void wdt_lock(void)
-{
-    QN_WDT->LOCK = 0;
-}
-
-/**
- ****************************************************************************************
  * @brief Clear watchdog timer interrupt request
  *
  ****************************************************************************************
@@ -65,10 +44,9 @@ void wdt_lock(void)
 void wdt_irq_clear(void)
 {
     wdt_unlock();
-    QN_WDT->INTCLR = WDT_MASK_INTCLR;
+    wdt_wdt_ClrIntStatus(QN_WDT, WDT_MASK_INTCLR);
     wdt_lock();
 }
-
 
 /**
  ****************************************************************************************
@@ -83,13 +61,8 @@ void WDT_IRQHandler(void)
         // wait for reset...
         }
     }
-#ifdef BLE_PRJ
-#if (defined(QN_ADV_WDT))
-    usr_env.adv_wdt_to();
-#endif
-#endif
-    wdt_irq_clear(); /* Deassert Watchdog interrupt */
 
+    wdt_irq_clear(); /* Deassert Watchdog interrupt */
 }
 #endif /* CONFIG_WDT_DEFAULT_IRQHANDLER==TRUE */
 
@@ -110,16 +83,16 @@ void wdt_init(unsigned int cycle, enum WDT_MODE mode)
 
     wdt_unlock();
 
-    QN_WDT->LOAD = cycle;
-
+    wdt_wdt_SetLDR(QN_WDT, cycle);
+    
     if (mode == WDT_NO_ACTION_MOD) {  /* Set watchdog to no action */
-        QN_WDT->CTRL = 0;
+        wdt_wdt_SetCR(QN_WDT, 0);
     }
     else if (mode ==  WDT_INT_MOD) { /* Generate irq */
-        QN_WDT->CTRL = WDT_MASK_CTRL_INTEN;
+        wdt_wdt_SetCR(QN_WDT, WDT_MASK_CTRL_INTEN);
     }
     else if (mode ==  WDT_RESET_MOD) { /* Generate Reset */
-        QN_WDT->CTRL = WDT_MASK_CTRL_RESEN | WDT_MASK_CTRL_INTEN;
+        wdt_wdt_SetCR(QN_WDT, WDT_MASK_CTRL_RESEN | WDT_MASK_CTRL_INTEN);
         reset_test = 1;
     }
 
@@ -142,7 +115,7 @@ void wdt_init(unsigned int cycle, enum WDT_MODE mode)
 void wdt_set(unsigned int cycle)
 {
     wdt_unlock();
-    QN_WDT->LOAD = cycle;
+    wdt_wdt_SetLDR(QN_WDT, cycle);
     wdt_lock();
 }
 

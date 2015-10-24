@@ -5,7 +5,8 @@
  *
  * @brief Application QPPS implementation
  *
- * Copyright (C) Quintic 2013-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *
@@ -165,9 +166,9 @@ int app_qpps_data_send_cfm_handler(ke_msg_id_t const msgid,
         app_qpps_env->char_status |= (1 << param->char_index);
 
         // Send next group data until current data have been sent
-        if (get_bit_num(app_qpps_env->char_status) == (app_qpps_env->tx_char_num - 1))
+        if (get_bit_num(app_qpps_env->char_status) >= 1)
         {
-            app_test_send_data(app_qpps_env->tx_char_num - 1);
+            app_test_send_data(get_bit_num(app_qpps_env->char_status));
         }
     }
     else

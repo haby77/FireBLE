@@ -1,6 +1,6 @@
 /****************************************************************************
  *   $Id:: pwm_example.c                                                   $
- *   Project: QUINTIC QN9020 PWM example
+ *   Project: NXP QN9020 PWM example
  *
  *   Description:
  *     This file contains PWM driver usage.
@@ -25,14 +25,23 @@
 
 void pwm_io_config(void)
 {
-    // pin mux
-    syscon_SetPMCR0(QN_SYSCON, P07_SW_CLK_PIN_CTRL
-                             | P06_SW_DAT_PIN_CTRL
-                             );
-    syscon_SetPMCR1(QN_SYSCON, P27_PWM0_PIN_CTRL         //P2.7 pwm0
-                             | P26_PWM1_PIN_CTRL         //P2.6 pwm1
-                             );
-
+    uint32_t reg;
+    uint32_t reg_mask;
+    
+    /**
+     * PMCR0 register pin configure
+     */
+    reg = P07_SW_CLK_PIN_CTRL | P06_SW_DAT_PIN_CTRL;
+    reg_mask = P07_MASK_PIN_CTRL | P06_MASK_PIN_CTRL;
+    syscon_SetPMCR0WithMask(QN_SYSCON, reg_mask, reg);
+    
+    /**
+     * PMCR1 register pin configure
+     */
+    reg = P27_PWM0_PIN_CTRL | P26_PWM1_PIN_CTRL;
+    reg_mask = P27_MASK_PIN_CTRL | P26_MASK_PIN_CTRL;
+    syscon_SetPMCR1WithMask(QN_SYSCON, reg_mask, reg);
+    
     // pin pull ( 00 : High-Z,  01 : Pull-down,  10 : Pull-up,  11 : Reserved )
     syscon_SetPPCR0(QN_SYSCON, 0xAAAA5AAA);
     syscon_SetPPCR1(QN_SYSCON, 0x2AAAAAAA);
@@ -57,6 +66,7 @@ int main (void)
     //P2.7 will output pwm wave with period for 1000us and pulse for 400us
     pwm_config(PWM_CH0, PWM_PSCAL_DIV, PWM_COUNT_US(1000, PWM_PSCAL_DIV), PWM_COUNT_US(400, PWM_PSCAL_DIV));
     pwm_enable(PWM_CH0, MASK_ENABLE);
+    
     pwm_config(PWM_CH0, PWM_PSCAL_DIV, PWM_COUNT_US(1000, PWM_PSCAL_DIV), PWM_COUNT_US(800, PWM_PSCAL_DIV));
     pwm_config(PWM_CH0, PWM_PSCAL_DIV, PWM_COUNT_US(1000, PWM_PSCAL_DIV), PWM_COUNT_US(1000, PWM_PSCAL_DIV));
     pwm_config(PWM_CH0, PWM_PSCAL_DIV, PWM_COUNT_US(1000, PWM_PSCAL_DIV), PWM_COUNT_US(0, PWM_PSCAL_DIV));

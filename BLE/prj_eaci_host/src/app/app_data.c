@@ -5,7 +5,8 @@
  *
  * @brief Application Data request and Data indication functions file
  *
- * Copyright (C) Quintic 2009-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *
@@ -19,7 +20,7 @@
 #include "app_env.h"
 
 // Manufacturing name
-#define DIS_MANU_NAME_VAL               "QUINTIC"
+#define DIS_MANU_NAME_VAL               "NXP"
 //Model number
 #define DIS_MODEL_NB_VAL                "QN-BLE-B2"
 //Serial number

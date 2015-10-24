@@ -5,7 +5,8 @@
  *
  * @brief Header file of led driver for qn evb.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

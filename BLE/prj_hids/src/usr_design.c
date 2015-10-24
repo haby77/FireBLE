@@ -5,7 +5,8 @@
  *
  * @brief Product related design.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -35,10 +36,6 @@
 #include "analog.h"
 #include "button.h"
 #include "nvds.h"
-
-#if (defined(QN_ADV_WDT))
-#include "wdt.h"
-#endif
 #include "sleep.h"
 
 #if	 (FB_JOYSTICKS)
@@ -76,21 +73,9 @@
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
-#if (defined(QN_ADV_WDT))
-static void adv_wdt_to_handler(void)
-{
-    ke_state_set(TASK_APP, APP_IDLE);
 
-    // start adv
-    app_gap_adv_start_req(GAP_GEN_DISCOVERABLE|GAP_UND_CONNECTABLE,
-                          app_env.adv_data, app_set_adv_data(GAP_GEN_DISCOVERABLE),
-                          app_env.scanrsp_data, app_set_scan_rsp_data(app_get_local_service_flag()),
-                          GAP_ADV_FAST_INTV1, GAP_ADV_FAST_INTV2);
-}
-struct usr_env_tag usr_env = {LED_ON_DUR_IDLE, LED_OFF_DUR_IDLE, false, adv_wdt_to_handler};
-#else
 struct usr_env_tag usr_env = {LED_ON_DUR_IDLE, LED_OFF_DUR_IDLE};
-#endif
+
 
 /*
  * FUNCTION DEFINITIONS
@@ -144,7 +129,7 @@ static void usr_led1_process(void)
         ke_timer_set(APP_SYS_LED_1_TIMER, TASK_APP, usr_env.led1_on_dur);
     }
 }
-#if	(BLE_BATT_SERVER)
+
 /**
  ****************************************************************************************
  * @brief ADC sample complete handler
@@ -205,7 +190,6 @@ void adc_sample_complete_callback(void)
 {
     ke_evt_set(1UL << EVENT_ADC_SAMPLE_CMP_ID);
 }
-#endif
 
 /**
  ****************************************************************************************
@@ -221,16 +205,10 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
             {
                 usr_led1_set(LED_ON_DUR_ADV_FAST, LED_OFF_DUR_ADV_FAST);
                 ke_timer_set(APP_ADV_INTV_UPDATE_TIMER, TASK_APP, 30 * 100);
-#if (defined(QN_ADV_WDT))
-                usr_env.adv_wdt_enable = true;
-#endif
             }
             else if(APP_ADV == ke_state_get(TASK_APP))
             {
                 usr_led1_set(LED_ON_DUR_ADV_SLOW, LED_OFF_DUR_ADV_SLOW);
-#if (defined(QN_ADV_WDT))
-                usr_env.adv_wdt_enable = true;
-#endif
             }
             break;
 
@@ -257,9 +235,6 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
                 {
                     ke_timer_clear(APP_ADV_INTV_UPDATE_TIMER, TASK_APP);
                     usr_led1_set(LED_ON_DUR_CON, LED_OFF_DUR_CON);
-#if (defined(QN_ADV_WDT))
-                    usr_env.adv_wdt_enable = false;
-#endif
 
                     // Update cnx parameters
                     if (((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.con_interval < GAP_PPCP_CONN_INTV_MIN)
@@ -277,14 +252,12 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
                         app_gap_param_update_req(((struct gap_le_create_conn_req_cmp_evt *)param)->conn_info.conhdl, &conn_par);
                     }
                 }
-#if	(BLE_BATT_SERVER)
+
                 //Force immediately update the battery voltage
                 app_bass_batt_level_timer_handler(APP_BASS_BATT_LEVEL_TIMER, NULL, TASK_APP, TASK_APP);
-#endif
             }
             break;
 
-#if	(BLE_BATT_SERVER)						
         case BASS_DISABLE_IND:
             ke_timer_clear(APP_BASS_BATT_LEVEL_TIMER, TASK_APP);
             break;
@@ -301,8 +274,7 @@ void app_task_msg_hdl(ke_msg_id_t const msgid, void const *param)
                 ke_timer_clear(APP_BASS_BATT_LEVEL_TIMER, TASK_APP);
             }
             break;
-#endif
-						
+
         default:
             break;
     }
@@ -363,7 +335,6 @@ int app_gap_adv_intv_update_timer_handler(ke_msg_id_t const msgid, void const *p
     return (KE_MSG_CONSUMED);
 }
 
-#if	(BLE_BATT_SERVER)
 /**
  ****************************************************************************************
  * @brief Handles the battery level timer.
@@ -405,7 +376,6 @@ int app_bass_batt_level_timer_handler(ke_msg_id_t const msgid,
 
     return (KE_MSG_CONSUMED);
 }
-#endif
 
 /**
  ****************************************************************************************
@@ -418,13 +388,6 @@ void usr_sleep_restore(void)
     uart_init(QN_DEBUG_UART, USARTx_CLK(0), UART_9600);
     uart_tx_enable(QN_DEBUG_UART, MASK_ENABLE);
     uart_rx_enable(QN_DEBUG_UART, MASK_ENABLE);
-#endif
-
-#if (defined(QN_ADV_WDT))
-    if(usr_env.adv_wdt_enable)
-    {
-        wdt_init(1007616, WDT_INT_MOD); // 30.75s
-    }
 #endif
 }
 
@@ -451,7 +414,7 @@ int app_button_timer_handler(ke_msg_id_t const msgid, void const *param,
             {
                 if(APP_IDLE == ke_state_get(TASK_APP))
                 {
-                    if(!app_hogpd_env->enabled)
+                    if(!app_bass_env->enabled)
                     {
                         // start adv
                         app_gap_adv_start_req(GAP_GEN_DISCOVERABLE|GAP_UND_CONNECTABLE,
@@ -593,14 +556,13 @@ void usr_init(void)
     {
         ASSERT_ERR(0);
     }
-#if	(BLE_BATT_SERVER)
+
     // Register button ADC sample event callback
     if(KE_EVENT_OK != ke_evt_callback_set(EVENT_ADC_SAMPLE_CMP_ID,
                                             app_event_adc_sample_cmp_handler))
     {
         ASSERT_ERR(0);
     }
-#endif
 #if		(FB_JOYSTICKS)
 		 if(KE_EVENT_OK != ke_evt_callback_set(EVENT_ADC_KEY_SAMPLE_CMP_ID,
                                            app_event_adc_key_sample_cmp_handler))

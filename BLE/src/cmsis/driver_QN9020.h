@@ -5,7 +5,8 @@
  *
  * @brief QN9020 Device Driver Header File.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -124,6 +125,10 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
 
 //=================================== driver =========================================//
+extern uint32_t __rd_reg(uint32_t addr);
+extern void __wr_reg(uint32_t addr, uint32_t val);
+extern void __wr_reg_with_msk(uint32_t addr, uint32_t msk, uint32_t val);
+
 
 /*SYSCON driver functions*/
 
@@ -169,7 +174,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetCRSS(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->CRSS = value;
+     __wr_reg((uint32_t)&SYSCON->CRSS, value);
  }
 
 /**
@@ -181,7 +186,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetCRSS(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->CRSS;
+     return __rd_reg((uint32_t)&SYSCON->CRSS);
  }
 
 /**
@@ -226,7 +231,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetCRSC(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->CRSC = value;
+     __wr_reg((uint32_t)&SYSCON->CRSC, value);
  }
 
 /**
@@ -238,7 +243,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetCRSC(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->CRSC;
+     return __rd_reg((uint32_t)&SYSCON->CRSC);
  }
 
 
@@ -268,17 +273,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetCMDCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->CMDCR = value;
+     __wr_reg((uint32_t)&SYSCON->CMDCR, value);
  }
 
  __STATIC_INLINE void syscon_SetCMDCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->CMDCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->CMDCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->CMDCR, mask, value);
  }
 
 /**
@@ -290,7 +290,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetCMDCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->CMDCR;
+     return __rd_reg((uint32_t)&SYSCON->CMDCR);
  }
 
 /**
@@ -306,17 +306,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetSTCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->STCR = value;
+     __wr_reg((uint32_t)&SYSCON->STCR, value);
  }
 
  __STATIC_INLINE void syscon_SetSTCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->STCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->STCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->STCR, mask, value);
  }
 
 /**
@@ -328,7 +323,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetSTCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->STCR;
+     return __rd_reg((uint32_t)&SYSCON->STCR);
  }
 
 /**
@@ -343,17 +338,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetSOCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->SOCR = value;
+     __wr_reg((uint32_t)&SYSCON->SOCR, value);
  }
 
  __STATIC_INLINE void syscon_SetSOCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->SOCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->SOCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->SOCR, mask, value);
  }
 
 /**
@@ -365,9 +355,8 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetSOCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->SOCR;
+     return __rd_reg((uint32_t)&SYSCON->SOCR);
  }
-
 
 
 /**
@@ -397,17 +386,12 @@ __STATIC_INLINE void delay(uint32_t dly)
 */
  __STATIC_INLINE void syscon_SetPMCR0(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PMCR0 = value;
+     __wr_reg((uint32_t)&SYSCON->PMCR0, value);
  }
 
  __STATIC_INLINE void syscon_SetPMCR0WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PMCR0;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PMCR0 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PMCR0, mask, value);
  }
 
 /**
@@ -419,7 +403,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPMCR0(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PMCR0;
+     return __rd_reg((uint32_t)&SYSCON->PMCR0);
  }
 
 /**
@@ -451,17 +435,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPMCR1(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PMCR1 = value;
+     __wr_reg((uint32_t)&SYSCON->PMCR1, value);
  }
 
  __STATIC_INLINE void syscon_SetPMCR1WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PMCR1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PMCR1 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PMCR1, mask, value);
  }
 
 /**
@@ -473,7 +452,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPMCR1(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PMCR1;
+     return __rd_reg((uint32_t)&SYSCON->PMCR1);
  }
 
 /**
@@ -496,17 +475,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPMCR2(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PMCR2 = value;
+     __wr_reg((uint32_t)&SYSCON->PMCR2, value);
  }
 
  __STATIC_INLINE void syscon_SetPMCR2WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PMCR2;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PMCR2 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PMCR2, mask, value);
  }
 
 /**
@@ -518,7 +492,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPMCR2(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PMCR2;
+     return __rd_reg((uint32_t)&SYSCON->PMCR2);
  }
 
 
@@ -534,17 +508,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPDCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PDCR = value;
+     __wr_reg((uint32_t)&SYSCON->PDCR, value);
  }
 
  __STATIC_INLINE void syscon_SetPDCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PDCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PDCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PDCR, mask, value);
  }
 
 /**
@@ -556,7 +525,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPDCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PDCR;
+     return __rd_reg((uint32_t)&SYSCON->PDCR);
  }
 
 /**
@@ -570,17 +539,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPPCR0(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PPCR0 = value;
+     __wr_reg((uint32_t)&SYSCON->PPCR0, value);
  }
 
  __STATIC_INLINE void syscon_SetPPCR0WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PPCR0;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PPCR0 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PPCR0, mask, value);
  }
 
 /**
@@ -592,7 +556,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPPCR0(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PPCR0;
+     return __rd_reg((uint32_t)&SYSCON->PPCR0);
  }
 
 
@@ -608,17 +572,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPPCR1(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PPCR1 = value;
+     __wr_reg((uint32_t)&SYSCON->PPCR1, value);
  }
 
  __STATIC_INLINE void syscon_SetPPCR1WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PPCR1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PPCR1 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PPCR1, mask, value);
  }
 
 /**
@@ -630,7 +589,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPPCR1(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PPCR1;
+     return __rd_reg((uint32_t)&SYSCON->PPCR1);
  }
 
 /**
@@ -646,17 +605,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetRCS(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->RCS = value;
+     __wr_reg((uint32_t)&SYSCON->RCS, value);
  }
 
  __STATIC_INLINE void syscon_SetRCSWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->RCS;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->RCS = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->RCS, mask, value);
  }
 
 /**
@@ -668,7 +622,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetRCS(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->RCS;
+     return __rd_reg((uint32_t)&SYSCON->RCS);
  }
 
 /**
@@ -683,17 +637,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetIOWCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->IOWCR = value;
+     __wr_reg((uint32_t)&SYSCON->IOWCR, value);
  }
 
  __STATIC_INLINE void syscon_SetIOWCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->IOWCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->IOWCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->IOWCR, mask, value);
  }
 
 /**
@@ -705,7 +654,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetIOWCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->IOWCR;
+     return __rd_reg((uint32_t)&SYSCON->IOWCR);
  }
 
 /**
@@ -730,7 +679,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetBLESR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->BLESR;
+     return __rd_reg((uint32_t)&SYSCON->BLESR);
  }
 
 /**
@@ -752,21 +701,16 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetSMR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->SMR = value;
+     __wr_reg((uint32_t)&SYSCON->SMR, value);
  }
  __STATIC_INLINE void syscon_SetSMRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->SMR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->SMR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->SMR, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetSMR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->SMR;
+     return __rd_reg((uint32_t)&SYSCON->SMR);
  }
 
 /**
@@ -781,7 +725,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetChipID(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->CHIP_ID;
+     return __rd_reg((uint32_t)&SYSCON->CHIP_ID);
  }
 
 
@@ -828,17 +772,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPGCR0(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PGCR0 = value;
+     __wr_reg((uint32_t)&SYSCON->PGCR0, value);
  }
 
  __STATIC_INLINE void syscon_SetPGCR0WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PGCR0;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PGCR0 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PGCR0, mask, value);
  }
 
 /**
@@ -850,7 +789,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPGCR0(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PGCR0;
+     return __rd_reg((uint32_t)&SYSCON->PGCR0);
  }
 
 /**
@@ -895,17 +834,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPGCR1(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PGCR1 = value;
+     __wr_reg((uint32_t)&SYSCON->PGCR1, value);
  }
 
  __STATIC_INLINE void syscon_SetPGCR1WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PGCR1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PGCR1 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PGCR1, mask, value);
  }
 
 /**
@@ -917,7 +851,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetPGCR1(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PGCR1;
+     return __rd_reg((uint32_t)&SYSCON->PGCR1);
  }
 
 /**
@@ -942,22 +876,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetPGCR2(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->PGCR2 = value;
+     __wr_reg((uint32_t)&SYSCON->PGCR2, value);
  }
 
  __STATIC_INLINE void syscon_SetPGCR2WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->PGCR2;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->PGCR2 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->PGCR2, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetPGCR2(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->PGCR2;
+     return __rd_reg((uint32_t)&SYSCON->PGCR2);
  }
 
 /**
@@ -986,22 +915,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetGCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->GCR = value;
+     __wr_reg((uint32_t)&SYSCON->GCR, value);
  }
 
  __STATIC_INLINE void syscon_SetGCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->GCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->GCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->GCR, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetGCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->GCR;
+     return __rd_reg((uint32_t)&SYSCON->GCR);
  }
 
 /**
@@ -1030,22 +954,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetIvrefX32(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->IVREF_X32 = value;
+     __wr_reg((uint32_t)&SYSCON->IVREF_X32, value);
  }
 
  __STATIC_INLINE void syscon_SetIvrefX32WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->IVREF_X32;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->IVREF_X32 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->IVREF_X32, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetIvrefX32(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->IVREF_X32;
+     return __rd_reg((uint32_t)&SYSCON->IVREF_X32);
  }
 
 /**
@@ -1071,22 +990,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetXtalBuck(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->XTAL_BUCK = value;
+     __wr_reg((uint32_t)&SYSCON->XTAL_BUCK, value);
  }
 
  __STATIC_INLINE void syscon_SetXtalBuckWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->XTAL_BUCK;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->XTAL_BUCK = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->XTAL_BUCK, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetXtalBuck(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->XTAL_BUCK;
+     return __rd_reg((uint32_t)&SYSCON->XTAL_BUCK);
  }
 
 /**
@@ -1113,22 +1027,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetLO1(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->LO1 = value;
+     __wr_reg((uint32_t)&SYSCON->LO1, value);
  }
 
  __STATIC_INLINE void syscon_SetLO1WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->LO1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->LO1 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->LO1, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetLO1(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->LO1;
+     return __rd_reg((uint32_t)&SYSCON->LO1);
  }
 
 
@@ -1149,22 +1058,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetLO2(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->LO2 = value;
+     __wr_reg((uint32_t)&SYSCON->LO2, value);
  }
 
  __STATIC_INLINE void syscon_SetLO2WithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->LO2;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->LO2 = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->LO2, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetLO2(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->LO2;
+     return __rd_reg((uint32_t)&SYSCON->LO2);
  }
 
 /**
@@ -1195,22 +1099,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetRXCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->RXCR = value;
+     __wr_reg((uint32_t)&SYSCON->RXCR, value);
  }
 
  __STATIC_INLINE void syscon_SetRXCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->RXCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->RXCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->RXCR, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetRXCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->RXCR;
+     return __rd_reg((uint32_t)&SYSCON->RXCR);
  }
 
 /**
@@ -1234,17 +1133,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetADCCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->ADCCR = value;
+     __wr_reg((uint32_t)&SYSCON->ADCCR, value);
  }
 
  __STATIC_INLINE void syscon_SetADCCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->ADCCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->ADCCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->ADCCR, mask, value);
  }
 
 /**
@@ -1256,7 +1150,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t syscon_GetADCCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->ADCCR;
+     return __rd_reg((uint32_t)&SYSCON->ADCCR);
  }
 
 /**
@@ -1287,22 +1181,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetAnalogCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->ANALOGCR = value;
+     __wr_reg((uint32_t)&SYSCON->ANALOGCR, value);
  }
 
  __STATIC_INLINE void syscon_SetAnalogCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->ANALOGCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->ANALOGCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->ANALOGCR, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetAnalogCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->ANALOGCR;
+     return __rd_reg((uint32_t)&SYSCON->ANALOGCR);
  }
 
 /**
@@ -1328,22 +1217,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void syscon_SetAdditionCR(QN_SYSCON_TypeDef *SYSCON, uint32_t value)
  {
-       SYSCON->ADDITIONCR = value;
+     __wr_reg((uint32_t)&SYSCON->ADDITIONCR, value);
  }
 
  __STATIC_INLINE void syscon_SetAdditionCRWithMask(QN_SYSCON_TypeDef *SYSCON, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SYSCON->ADDITIONCR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SYSCON->ADDITIONCR = reg;
+     __wr_reg_with_msk((uint32_t)&SYSCON->ADDITIONCR, mask, value);
  }
 
  __STATIC_INLINE uint32_t syscon_GetAdditionCR(QN_SYSCON_TypeDef *SYSCON)
  {
-       return SYSCON->ADDITIONCR;
+     return __rd_reg((uint32_t)&SYSCON->ADDITIONCR);
  }
 
 
@@ -1354,7 +1238,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  * @param outenableset pattern to be used to set output enable register
  * @return none
  *
- * @brief  Sets pins on a port as an output. Set the bit corresponding to the pin number to 1 for output i.e. Set bit 1 of outenable to 1 to set pin 1 as an output. This function is thread safe.
+ * @brief  Sets pins on a port as an output. Set the bit corresponding to the pin number to 1 for output i.e. Set bit 1 of outenable to 1 to set pin 1 as an output.
  */
 
  __STATIC_INLINE void gpio_gpio_SetOutEnable(QN_GPIO_TypeDef *GPIO, uint32_t outenableset)
@@ -1368,7 +1252,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  * @param outenableclr Bit pattern to be used to set output enable register
  * @return none
  *
- * @brief  Sets pins on a port as an input. Set the bit corresponding to the pin number to 1 for input i.e. Set bit 1 of outenable to 1 to set pin 1 as an input. This function is thread safe.
+ * @brief  Sets pins on a port as an input. Set the bit corresponding to the pin number to 1 for input i.e. Set bit 1 of outenable to 1 to set pin 1 as an input.
  */
 
  __STATIC_INLINE void gpio_gpio_ClrOutEnable(QN_GPIO_TypeDef *GPIO, uint32_t outenableclr)
@@ -1395,7 +1279,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  * @param AltFuncset To specify whether the alternate function for the pins on the port is enabled
  * @return none
  *
- * @brief  enables the alternative function for pins. Set the bit corresponding to the pin number to 1 for alternate function i.e. Set bit 1 of ALtFunc to 1 to set pin 1 to its alternative function. This function is thread safe.
+ * @brief  enables the alternative function for pins. Set the bit corresponding to the pin number to 1 for alternate function i.e. Set bit 1 of ALtFunc to 1 to set pin 1 to its alternative function.
  */
 
  __STATIC_INLINE void gpio_gpio_SetAltFunc(QN_GPIO_TypeDef *GPIO, uint32_t AltFuncset)
@@ -1409,7 +1293,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  * @param AltFuncclr To specify whether the alternate function for the pins on the port is enabled
  * @return none
  *
- * @brief  disables the alternative function for pins. Set the bit corresponding to the pin number to 1 to disable alternate function i.e. Set bit 1 of ALtFunc to 1 to set pin 1 to the orignal output function. This function is thread safe.
+ * @brief  disables the alternative function for pins. Set the bit corresponding to the pin number to 1 to disable alternate function i.e. Set bit 1 of ALtFunc to 1 to set pin 1 to the orignal output function.
  */
 
  __STATIC_INLINE void gpio_gpio_ClrAltFunc(QN_GPIO_TypeDef *GPIO, uint32_t AltFuncclr)
@@ -1436,7 +1320,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  * @param *GPIO GPIO Pointer
  * @return NewIntStatus
  *
- * @brief  Clears the interrupt flag for the specified pin and then returns the new interrupt status of the pin. This function is thread safe.
+ * @brief  Clears the interrupt flag for the specified pin and then returns the new interrupt status of the pin.
  */
 
  __STATIC_INLINE uint32_t gpio_gpio_IntStatus(QN_GPIO_TypeDef *GPIO)
@@ -1447,58 +1331,49 @@ __STATIC_INLINE void delay(uint32_t dly)
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to clear the Interrupt
- * @return NewIntStatus
+ * @param Mask The pin mask for which to clear the interrupt
  *
- * @brief  Clears the interrupt flag for the specified pin and then returns the new interrupt status of the pin. This function is thread safe.
+ * @brief  Clears the interrupt flag for the specified pin and then returns the new interrupt status of the pin.
  */
 
- __STATIC_INLINE uint32_t gpio_gpio_IntClear(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
+ __STATIC_INLINE void gpio_gpio_IntClear(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
  {
        GPIO->INTCLEAR = Mask;
-
-       return GPIO->INTSTATUS;
  }
 
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to enable the Interrupt
- * @return NewIntEnStatus
+ * @param Mask The pin mask for which to enable the interrupt
  *
- * @brief  Enables interrupts for the specified pin and then returns the new interrupt enable status of the pin. This function is thread safe.
+ * @brief  Enables interrupts for the specified pin and then returns the new interrupt enable status of the pin.
  */
 
- __STATIC_INLINE uint32_t gpio_gpio_SetIntEnable(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
+ __STATIC_INLINE void gpio_gpio_SetIntEnable(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
  {
        GPIO->INTENSET = Mask;
-
-       return GPIO->INTENSET;
  }
 
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to disable the Interrupt
- * @return NewIntEnStatus
+ * @param Mask The pin mask for which to disable the interrupt
  *
- * @brief  Disables interrupts for the specified pin and then returns the new interrupt enable status of the pin. This function is thread safe.
+ * @brief  Disables interrupts for the specified pin and then returns the new interrupt enable status of the pin.
  */
 
- __STATIC_INLINE  uint32_t gpio_gpio_ClrIntEnable(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
+ __STATIC_INLINE  void gpio_gpio_ClrIntEnable(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
  {
        GPIO->INTENCLR = Mask;
-
-       return GPIO->INTENCLR;
  }
 
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to set the Interrupt type
+ * @param Mask The pin mask for which to set the interrupt type
  * @return none
  *
- * @brief  Changes the interrupt type for the specified pin to a high level interrupt. This function is thread safe.
+ * @brief  Changes the interrupt type for the specified pin to high level interrupt.
  */
 
  __STATIC_INLINE void gpio_gpio_SetIntHighLevel(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
@@ -1510,10 +1385,10 @@ __STATIC_INLINE void delay(uint32_t dly)
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to set the Interrupt type
+ * @param Mask The pin mask for which to set the interrupt type
  * @return none
  *
- * @brief  Changes the interrupt type for the specified pin to a rising edge interrupt. This function is thread safe.
+ * @brief  Changes the interrupt type for the specified pin to rising edge interrupt.
  */
 
  __STATIC_INLINE void gpio_gpio_SetIntRisingEdge(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
@@ -1525,10 +1400,10 @@ __STATIC_INLINE void delay(uint32_t dly)
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to set the Interrupt type
+ * @param Mask The pin mask for which to set the interrupt type
  * @return none
  *
- * @brief  Changes the interrupt type for the specified pin to a low level interrupt. This function is thread safe.
+ * @brief  Changes the interrupt type for the specified pin to low level interrupt.
  */
 
  __STATIC_INLINE void gpio_gpio_SetIntLowLevel(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
@@ -1540,10 +1415,10 @@ __STATIC_INLINE void delay(uint32_t dly)
 /**
  *
  * @param *GPIO GPIO Pointer
- * @param Mask The pin mask for which to set the Interrupt type
+ * @param Mask The pin mask for which to set the interrupt type
  * @return none
  *
- * @brief  Changes the interrupt type for the specified pin to a falling edge interrupt. This function is thread safe.
+ * @brief  Changes the interrupt type for the specified pin to falling edge interrupt.
  */
 
  __STATIC_INLINE void gpio_gpio_SetIntFallingEdge(QN_GPIO_TypeDef *GPIO, uint32_t Mask)
@@ -1598,14 +1473,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  *
  * @param *GPIO GPIO Pointer
  * @param data The data to output to the specified port
- * @return DATAOUT
  *
  * @brief  returns a uint32_t which read from output register
  */
- __STATIC_INLINE uint32_t gpio_gpio_SetOutputData(QN_GPIO_TypeDef *GPIO, uint32_t data)
+ __STATIC_INLINE void gpio_gpio_SetOutputData(QN_GPIO_TypeDef *GPIO, uint32_t data)
  {
-       GPIO->DATAOUT = data;
-       return GPIO->DATAOUT;
+       __wr_reg((uint32_t)&GPIO->DATAOUT, data);
  }
 
 
@@ -1636,17 +1509,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void spi_spi_SetCR0(QN_SPI_TypeDef *SPI, uint32_t value)
  {
-       SPI->CR0 = value;
+       __wr_reg((uint32_t)&SPI->CR0, value);
  }
 
  __STATIC_INLINE void spi_spi_SetCR0WithMask(QN_SPI_TypeDef *SPI, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SPI->CR0;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SPI->CR0 = reg;
+       __wr_reg_with_msk((uint32_t)&SPI->CR0, mask, value);
  }
 
 /**
@@ -1658,7 +1526,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t spi_spi_GetCR0(QN_SPI_TypeDef *SPI)
  {
-       return SPI->CR0;
+       return __rd_reg((uint32_t)&SPI->CR0);
  }
 
 /**
@@ -1678,17 +1546,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void spi_spi_SetCR1(QN_SPI_TypeDef *SPI, uint32_t value)
  {
-       SPI->CR1 = value;
+       __wr_reg((uint32_t)&SPI->CR1, value);
  }
 
  __STATIC_INLINE void spi_spi_SetCR1WithMask(QN_SPI_TypeDef *SPI, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SPI->CR1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SPI->CR1 = reg;
+       __wr_reg_with_msk((uint32_t)&SPI->CR1, mask, value);
  }
 
 /**
@@ -1700,7 +1563,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t spi_spi_GetCR1(QN_SPI_TypeDef *SPI)
  {
-       return SPI->CR1;
+       return __rd_reg((uint32_t)&SPI->CR1);
  }
 
 /**
@@ -1721,7 +1584,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t spi_spi_GetFPR(QN_SPI_TypeDef *SPI)
  {
-       return SPI->FPR;
+       return __rd_reg((uint32_t)&SPI->FPR);
  }
 
 /**
@@ -1742,7 +1605,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t spi_spi_GetFSR(QN_SPI_TypeDef *SPI)
  {
-       return SPI->FSR;
+       return __rd_reg((uint32_t)&SPI->FSR);
  }
 
 /**
@@ -1754,7 +1617,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void spi_spi_SetTXD(QN_SPI_TypeDef *SPI, uint32_t data)
  {
-       SPI->TXD = data;
+       __wr_reg((uint32_t)&SPI->TXD, data);
  }
 
 /**
@@ -1766,7 +1629,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t spi_spi_GetRXD(QN_SPI_TypeDef *SPI)
  {
-       return SPI->RXD;
+       return __rd_reg((uint32_t)&SPI->RXD);
  }
 
 
@@ -1790,7 +1653,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void spi_spi_ClrSR(QN_SPI_TypeDef *SPI, uint32_t value)
  {
-       SPI->SR = value;
+       __wr_reg((uint32_t)&SPI->SR, value);
  }
 
 /**
@@ -1803,7 +1666,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t spi_spi_GetSR(QN_SPI_TypeDef *SPI)
  {
-       return SPI->SR;
+       return __rd_reg((uint32_t)&SPI->SR);
  }
 
 
@@ -1818,7 +1681,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void uart_uart_SetTXD(QN_UART_TypeDef *UART, char txchar)
  {
-       UART->TXD = (uint32_t)txchar;
+       __wr_reg((uint32_t)&UART->TXD, (uint32_t)txchar);
  }
 
 /**
@@ -1830,7 +1693,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint8_t uart_uart_GetRXD(QN_UART_TypeDef *UART)
  {
-       return (uint8_t)(UART->RXD);
+       return (uint8_t)__rd_reg((uint32_t)&UART->RXD);
  }
 
 /**
@@ -1840,10 +1703,9 @@ __STATIC_INLINE void delay(uint32_t dly)
  *
  * @brief Set UART Baud rate divider. Note that the Baud rate divider is the difference between the clock frequency and the Baud frequency.
  */
- __STATIC_INLINE uint32_t uart_uart_SetBaudDivider(QN_UART_TypeDef *UART, uint32_t divider)
+ __STATIC_INLINE void uart_uart_SetBaudDivider(QN_UART_TypeDef *UART, uint32_t divider)
  {
-       UART->BAUD = divider;
-       return UART->BAUD;
+       __wr_reg((uint32_t)&UART->BAUD, divider);
  }
 
 /**
@@ -1855,7 +1717,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t uart_uart_GetBaudDivider(QN_UART_TypeDef *UART)
  {
-       return UART->BAUD;
+       return __rd_reg((uint32_t)&UART->BAUD);
  }
 
 /**
@@ -1889,17 +1751,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void uart_uart_SetCR(QN_UART_TypeDef *UART, uint32_t value)
  {
-       UART->CR = value;
+       __wr_reg((uint32_t)&UART->CR, value);
  }
 
  __STATIC_INLINE void uart_uart_SetCRWithMask(QN_UART_TypeDef *UART, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = UART->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       UART->CR = reg;
+       __wr_reg_with_msk((uint32_t)&UART->CR, mask, value);
  }
 
 /**
@@ -1911,7 +1768,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t uart_uart_GetCR(QN_UART_TypeDef *UART)
  {
-       return UART->CR;
+       return __rd_reg((uint32_t)&UART->CR);
  }
 
 /**
@@ -1934,17 +1791,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void uart_uart_ClrIntFlag(QN_UART_TypeDef *UART, uint32_t value)
  {
-       UART->FLAG = value;
+       __wr_reg((uint32_t)&UART->FLAG, value);
  }
 
  __STATIC_INLINE void uart_uart_ClrIntFlagWithMask(QN_UART_TypeDef *UART, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = UART->FLAG;
-       reg &= ~mask;
-       reg |= (mask&value);
-       UART->FLAG = reg;
+       __wr_reg_with_msk((uint32_t)&UART->FLAG, mask, value);
  }
 
  /**
@@ -1956,7 +1808,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t uart_uart_GetIntFlag(QN_UART_TypeDef *UART)
  {
-       return UART->FLAG;
+       return __rd_reg((uint32_t)&UART->FLAG);
  }
 
 
@@ -1985,17 +1837,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void i2c_i2c_SetCR(QN_I2C_TypeDef *I2C, uint32_t value)
  {
-       I2C->CR = value;
+       __wr_reg((uint32_t)&I2C->CR, value);
  }
 
  __STATIC_INLINE void i2c_i2c_SetCRWithMask(QN_I2C_TypeDef *I2C, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = I2C->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       I2C->CR = reg;
+       __wr_reg_with_msk((uint32_t)&I2C->CR, mask, value);
  }
 
 /**
@@ -2007,7 +1854,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t i2c_i2c_GetCR(QN_I2C_TypeDef *I2C)
  {
-       return I2C->CR;
+       return __rd_reg((uint32_t)&I2C->CR);
  }
 
 /**
@@ -2023,7 +1870,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t i2c_i2c_GetSR(QN_I2C_TypeDef *I2C)
  {
-       return I2C->SR;
+       return __rd_reg((uint32_t)&I2C->SR);
  }
 
 /**
@@ -2044,7 +1891,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void i2c_i2c_SetTXD(QN_I2C_TypeDef *I2C, uint32_t data)
  {
-       I2C->TXD = data;
+       __wr_reg((uint32_t)&I2C->TXD, data);
  }
 
 /**
@@ -2056,7 +1903,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint8_t i2c_i2c_GetRXD(QN_I2C_TypeDef *I2C)
  {
-       return (uint8_t)(I2C->RXD);
+       return (uint8_t)__rd_reg((uint32_t)&I2C->RXD);
  }
 
 /**
@@ -2076,7 +1923,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void i2c_i2c_ClrIntStatus(QN_I2C_TypeDef *I2C, uint32_t value)
  {
-       I2C->INT = value;
+       __wr_reg((uint32_t)&I2C->INT, value);
  }
 
  /**
@@ -2088,7 +1935,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t i2c_i2c_GetIntStatus(QN_I2C_TypeDef *I2C)
  {
-       return I2C->INT;
+       return __rd_reg((uint32_t)&I2C->INT);
  }
 
 
@@ -2120,18 +1967,13 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void timer_timer_SetCR(QN_TIMER_TypeDef *TIMER, uint32_t value)
  {
-       TIMER->CR = value;
+       __wr_reg((uint32_t)&TIMER->CR, value);
  }
 
  __STATIC_INLINE void timer_timer_SetCRWithMask(QN_TIMER_TypeDef *TIMER, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = TIMER->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       TIMER->CR = reg;
- }
+       __wr_reg_with_msk((uint32_t)&TIMER->CR, mask, value);
+ } 
 
 /**
  *
@@ -2142,7 +1984,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t timer_timer_GetCR(QN_TIMER_TypeDef *TIMER)
  {
-       return TIMER->CR;
+       return __rd_reg((uint32_t)&TIMER->CR);
  }
 
 /**
@@ -2159,7 +2001,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void timer_timer_ClrIntFlag(QN_TIMER_TypeDef *TIMER, uint32_t value)
  {
-       TIMER->IFR = value;
+       __wr_reg((uint32_t)&TIMER->IFR,value);
  }
 
  /**
@@ -2171,7 +2013,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t timer_timer_GetIntFlag(QN_TIMER_TypeDef *TIMER)
  {
-       return TIMER->IFR;
+       return __rd_reg((uint32_t)&TIMER->IFR);
  }
 
 /**
@@ -2185,7 +2027,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void timer_timer_SetTOPR(QN_TIMER_TypeDef *TIMER, uint32_t value)
  {
-       TIMER->TOPR = value;
+       __wr_reg((uint32_t)&TIMER->TOPR,value);
  }
 
 /**
@@ -2197,8 +2039,8 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t timer_timer_GetTOPR(QN_TIMER_TypeDef *TIMER)
  {
-       return TIMER->TOPR;
- }
+       return __rd_reg((uint32_t)&TIMER->TOPR);
+ } 
 
 /**
  *
@@ -2209,7 +2051,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t timer_timer_GetICER(QN_TIMER_TypeDef *TIMER)
  {
-       return TIMER->ICER;
+      return __rd_reg((uint32_t)&TIMER->ICER);
  }
 
 /**
@@ -2223,7 +2065,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void timer_timer_SetCCR(QN_TIMER_TypeDef *TIMER, uint32_t value)
  {
-       TIMER->CCR = value;
+      __wr_reg((uint32_t)&TIMER->CCR,value);
  }
 
 /**
@@ -2235,7 +2077,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t timer_timer_GetCCR(QN_TIMER_TypeDef *TIMER)
  {
-       return TIMER->CCR;
+      return __rd_reg((uint32_t)&TIMER->CCR);
  }
 
 /**
@@ -2249,7 +2091,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t timer_timer_GetCNT(QN_TIMER_TypeDef *TIMER)
  {
-       return TIMER->CNT;
+      return __rd_reg((uint32_t)&TIMER->CNT);
  }
 
 /*PWM driver functions*/
@@ -2271,17 +2113,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void pwm_pwm_SetCR(QN_PWM_TypeDef *PWM, uint32_t value)
  {
-       PWM->CR = value;
+       __wr_reg((uint32_t)&PWM->CR,value);
  }
 
  __STATIC_INLINE void pwm_pwm_SetCRWithMask(QN_PWM_TypeDef *PWM, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = PWM->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       PWM->CR = reg;
+       __wr_reg_with_msk((uint32_t)&PWM->CR,mask,value);
  }
 
 /**
@@ -2293,7 +2130,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t pwm_pwm_GetCR(QN_PWM_TypeDef *PWM)
  {
-       return PWM->CR;
+       return __rd_reg((uint32_t)&PWM->CR);
  }
 
 /**
@@ -2310,17 +2147,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void pwm_pwm_SetPSCL(QN_PWM_TypeDef *PWM, uint32_t value)
  {
-       PWM->PSCL = value;
+       __wr_reg((uint32_t)&PWM->PSCL,value);
  }
 
  __STATIC_INLINE void pwm_pwm_SetPSCLWithMask(QN_PWM_TypeDef *PWM, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = PWM->PSCL;
-       reg &= ~mask;
-       reg |= (mask&value);
-       PWM->PSCL = reg;
+       __wr_reg_with_msk((uint32_t)&PWM->PSCL,mask,value);
  }
 
 /**
@@ -2332,7 +2164,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t pwm_pwm_GetPSCL(QN_PWM_TypeDef *PWM)
  {
-       return PWM->PSCL;
+       return __rd_reg((uint32_t)&PWM->PSCL);
  }
 
 /**
@@ -2348,18 +2180,13 @@ __STATIC_INLINE void delay(uint32_t dly)
  *  |  7 -  0 : CH0_PERIOD
  */
  __STATIC_INLINE void pwm_pwm_SetPCP(QN_PWM_TypeDef *PWM, uint32_t value)
- {
-       PWM->PCP = value;
+ {       
+       __wr_reg((uint32_t)&PWM->PCP,value);
  }
 
  __STATIC_INLINE void pwm_pwm_SetPCPWithMask(QN_PWM_TypeDef *PWM, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = PWM->PCP;
-       reg &= ~mask;
-       reg |= (mask&value);
-       PWM->PCP = reg;
+       __wr_reg_with_msk((uint32_t)&PWM->PCP,mask,value);
  }
 
 /**
@@ -2371,7 +2198,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t pwm_pwm_GetPCP(QN_PWM_TypeDef *PWM)
  {
-       return PWM->PCP;
+       return __rd_reg((uint32_t)&PWM->PCP);
  }
 
 /**
@@ -2388,7 +2215,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void pwm_pwm_ClrIntStatus(QN_PWM_TypeDef *PWM, uint32_t value)
  {
-       PWM->SR = value;
+       __wr_reg((uint32_t)&PWM->SR,value);
  }
 
 /**
@@ -2401,7 +2228,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t pwm_pwm_GetIntStatus(QN_PWM_TypeDef *PWM)
  {
-       return PWM->SR;
+       return __rd_reg((uint32_t)&PWM->SR);
  }
 
 /*RTC driver functions*/
@@ -2425,17 +2252,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void rtc_rtc_SetCR(QN_RTC_TypeDef *RTC, uint32_t value)
  {
-       RTC->CR = value;
+       __wr_reg((uint32_t)&RTC->CR,value);
  }
 
  __STATIC_INLINE void rtc_rtc_SetCRWithMask(QN_RTC_TypeDef *RTC, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = RTC->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       RTC->CR = reg;
+       __wr_reg_with_msk((uint32_t)&RTC->CR,mask,value);
  }
 
 /**
@@ -2447,7 +2269,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t rtc_rtc_GetCR(QN_RTC_TypeDef *RTC)
  {
-       return RTC->CR;
+       return __rd_reg((uint32_t)&RTC->CR);
  }
 
 /**
@@ -2470,7 +2292,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void rtc_rtc_ClrSR(QN_RTC_TypeDef *RTC, uint32_t value)
  {
-       RTC->SR = value;
+       __wr_reg((uint32_t)&RTC->SR,value);
  }
 
 /**
@@ -2483,7 +2305,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t rtc_rtc_GetSR(QN_RTC_TypeDef *RTC)
  {
-       return RTC->SR;
+       return __rd_reg((uint32_t)&RTC->SR);
  }
 
 
@@ -2498,12 +2320,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void rtc_rtc_SetSecVal(QN_RTC_TypeDef *RTC, uint32_t value)
  {
-       RTC->SEC = value;
+       __wr_reg((uint32_t)&RTC->SEC,value);
  }
 
  __STATIC_INLINE uint32_t rtc_rtc_GetSecVal(QN_RTC_TypeDef *RTC)
  {
-       return RTC->SEC;
+       return __rd_reg((uint32_t)&RTC->SEC);
  }
 /**
  *
@@ -2518,7 +2340,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void rtc_rtc_SetCORR(QN_RTC_TypeDef *RTC, uint32_t value)
  {
-       RTC->CORR = value;
+       __wr_reg((uint32_t)&RTC->CORR,value);
  }
 
 /**
@@ -2535,7 +2357,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void rtc_rtc_SetCalVal(QN_RTC_TypeDef *RTC, uint32_t value)
  {
-       RTC->CALIB = value;
+       __wr_reg((uint32_t)&RTC->CALIB,value);
  }
 
 /**
@@ -2550,9 +2372,162 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t rtc_rtc_GetCNT(QN_RTC_TypeDef *RTC)
  {
-       return RTC->CNT;
+       return __rd_reg((uint32_t)&RTC->CNT);
  }
 
+/*WDT driver functions*/
+/**
+ *
+ * @param *WDT WDT Pointer
+ * @param value The value to set to CTRL register
+ *
+ * @brief  outputs specified value to CTRL register
+ *
+ *  | 31 -  2 : RSVD
+ *  |       1 : RESET_EN
+ *  |       0 : INT_EN
+ */
+ __STATIC_INLINE void wdt_wdt_SetCR(QN_WDT_TypeDef *WDT, uint32_t value)
+ {
+     __wr_reg((uint32_t)&WDT->CTRL, value);
+ }
+ 
+ __STATIC_INLINE void wdt_wdt_SetCRWithMask(QN_WDT_TypeDef *WDT, uint32_t mask, uint32_t value)
+ {
+     __wr_reg_with_msk((uint32_t)&WDT->CTRL,mask,value);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @return CTRL register value
+ *
+ * @brief  returns a uint32_t which read from CTRL register
+ *
+ *  | 31 -  0 : VAL
+ *  |       1 : RESET_EN
+ *  |       0 : INT_EN
+ */
+ __STATIC_INLINE uint32_t wdt_wdt_GetCR(QN_WDT_TypeDef *WDT)
+ {
+     return __rd_reg((uint32_t)&WDT->CTRL);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @param value The value to set to LOAD register
+ *
+ * @brief  outputs specified value to LOAD register
+ *
+ *  | 31 -  0 : VAL
+ */
+ __STATIC_INLINE void wdt_wdt_SetLDR(QN_WDT_TypeDef *WDT, uint32_t value)
+ {
+     __wr_reg((uint32_t)&WDT->LOAD, value);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @return LOAD register value
+ *
+ * @brief  returns a uint32_t which read from LOAD register
+ *
+ *  | 31 -  0 : VAL
+ */
+ __STATIC_INLINE uint32_t wdt_wdt_GetLDR(QN_WDT_TypeDef *WDT)
+ {
+     return __rd_reg((uint32_t)&WDT->LOAD);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @param value The value to set to VALUE register
+ *
+ * @brief  outputs specified value to VALUE register
+ * 
+ *  | 31 -  0 : VAL
+ */
+ __STATIC_INLINE void wdt_wdt_SetVALR(QN_WDT_TypeDef *WDT, uint32_t value)
+ {
+     __wr_reg((uint32_t)&WDT->VALUE, value);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @return VALUE register value
+ *
+ * @brief  returns a uint32_t which read from VALUE register
+ *
+ *  | 31 -  0 : VAL
+ */
+ __STATIC_INLINE uint32_t wdt_wdt_GetVALR(QN_WDT_TypeDef *WDT)
+ {
+     return __rd_reg((uint32_t)&WDT->VALUE);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @param value The value to set to LOCK register
+ *
+ * @brief  outputs specified value to LOCK register
+ *
+ *  | 31 -  0 : VAL
+ */
+  __STATIC_INLINE void wdt_wdt_SetLKR(QN_WDT_TypeDef *WDT, uint32_t value)
+ {
+     __wr_reg((uint32_t)&WDT->LOCK, value);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @return LOCK register value
+ *
+ * @brief  returns a uint32_t which read from LOCK register
+ *
+ *  | 31 -  0 : VAL
+ */
+ __STATIC_INLINE uint32_t wdt_wdt_GetLKR(QN_WDT_TypeDef *WDT)
+ {
+     return __rd_reg((uint32_t)&WDT->LOCK);
+ }
+ 
+ /**
+ *
+ * @param *WDT WDT Pointer
+ * @param value The value to set to INTCLR register
+ *
+ * @brief  outputs specified value to INTCLR register
+ *
+ *  | 31 -  1 : RSVD
+ *  |       0 : INT_CLR
+ */
+ __STATIC_INLINE void wdt_wdt_ClrIntStatus(QN_WDT_TypeDef *WDT, uint32_t value)
+ {
+     __wr_reg((uint32_t)&WDT->INTCLR, value);
+ }
+ 
+  /**
+ *
+ * @param *WDT WDT Pointer
+ * @return INTCLR register value
+ *
+ * @brief  returns a uint32_t which read from INTCLR register
+ *
+ *  | 31 -  1 : RSVD
+ *  |       0 : INT_CLR
+ */
+ __STATIC_INLINE uint32_t wdt_wdt_GetIntStatus(QN_WDT_TypeDef *WDT)
+ {
+     return __rd_reg((uint32_t)&WDT->INTCLR);
+ } 
+ 
+ 
 /*DMA driver functions*/
 /**
  *
@@ -2565,7 +2540,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void dma_dma_SetSRC(QN_DMA_TypeDef *DMA, uint32_t value)
  {
-       DMA->SRC = value;
+       __wr_reg((uint32_t)&DMA->SRC, value);
  }
 
  /**
@@ -2579,7 +2554,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void dma_dma_SetDST(QN_DMA_TypeDef *DMA, uint32_t value)
  {
-       DMA->DST = value;
+       __wr_reg((uint32_t)&DMA->DST, value);
  }
 
 /**
@@ -2605,17 +2580,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void dma_dma_SetCR(QN_DMA_TypeDef *DMA, uint32_t value)
  {
-       DMA->CR = value;
+       __wr_reg((uint32_t)&DMA->CR, value);
  }
 
  __STATIC_INLINE void dma_dma_SetCRWithMask(QN_DMA_TypeDef *DMA, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = DMA->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       DMA->CR = reg;
+       __wr_reg_with_msk((uint32_t)&DMA->CR, mask, value);
  }
 
 /**
@@ -2627,7 +2597,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t dma_dma_GetCR(QN_DMA_TypeDef *DMA)
  {
-       return DMA->CR;
+       return __rd_reg((uint32_t)&DMA->CR);
  }
 
 /**
@@ -2642,7 +2612,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void dma_dma_SetAbort(QN_DMA_TypeDef *DMA)
  {
-       DMA->ABORT = 0x01;
+       __wr_reg((uint32_t)&DMA->ABORT, (uint32_t)0x01);
  }
 
 /**
@@ -2659,7 +2629,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void dma_dma_ClrIntStatus(QN_DMA_TypeDef *DMA, uint32_t value)
  {
-       DMA->SR = value;
+       __wr_reg((uint32_t)&DMA->SR, value);
  }
 
 /**
@@ -2676,7 +2646,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t dma_dma_GetIntStatus(QN_DMA_TypeDef *DMA)
  {
-       return DMA->SR;
+       return __rd_reg((uint32_t)&DMA->SR);
  }
 
 
@@ -2697,22 +2667,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void sf_ctrl_SetCR(QN_SF_CTRL_TypeDef *SF_CTRL, uint32_t value)
  {
-       SF_CTRL->CTRL_STAT = value;
+     __wr_reg((uint32_t)&SF_CTRL->CTRL_STAT, value);
  }
 
  __STATIC_INLINE void sf_ctrl_SetCRWithMask(QN_SF_CTRL_TypeDef *SF_CTRL, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = SF_CTRL->CTRL_STAT;
-       reg &= ~mask;
-       reg |= (mask&value);
-       SF_CTRL->CTRL_STAT = reg;
+     __wr_reg_with_msk((uint32_t)&SF_CTRL->CTRL_STAT, mask, value);
  }
 
  __STATIC_INLINE uint32_t sf_ctrl_GetSR(QN_SF_CTRL_TypeDef *SF_CTRL)
  {
-       return SF_CTRL->CTRL_STAT;
+     return __rd_reg((uint32_t)&SF_CTRL->CTRL_STAT);
  }
 
 /**
@@ -2727,12 +2692,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void sf_ctrl_SetDataLen(QN_SF_CTRL_TypeDef *SF_CTRL, uint32_t value)
  {
-       SF_CTRL->DATA_LEN = value;
+     __wr_reg((uint32_t)&SF_CTRL->DATA_LEN, value);
  }
 
  __STATIC_INLINE uint32_t sf_ctrl_GetDataLen(QN_SF_CTRL_TypeDef *SF_CTRL)
  {
-       return SF_CTRL->DATA_LEN;
+     return __rd_reg((uint32_t)&SF_CTRL->DATA_LEN);
  }
 
 
@@ -2748,7 +2713,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void sf_ctrl_SetCMD(QN_SF_CTRL_TypeDef *SF_CTRL, uint32_t value)
  {
-       SF_CTRL->CMD1 = value;
+     __wr_reg((uint32_t)&SF_CTRL->CMD1, value);
  }
 
 /**
@@ -2765,7 +2730,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void sf_ctrl_SetCmdAddr(QN_SF_CTRL_TypeDef *SF_CTRL, uint32_t value)
  {
-       SF_CTRL->CMD1ADDR3 = value;
+     __wr_reg((uint32_t)&SF_CTRL->CMD1ADDR3, value);
  }
 
  /**
@@ -2780,7 +2745,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t sf_ctrl_GetFlashSR(QN_SF_CTRL_TypeDef *SF_CTRL)
  {
-       return SF_CTRL->FLASH_SR;
+     return __rd_reg((uint32_t)&SF_CTRL->FLASH_SR);
  }
 
  /**
@@ -2794,7 +2759,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t sf_ctrl_GetFlashID(QN_SF_CTRL_TypeDef *SF_CTRL)
  {
-       return SF_CTRL->FLASH_ID;
+     return __rd_reg((uint32_t)&SF_CTRL->FLASH_ID);
  }
 
 /*DP driver functions*/
@@ -2808,22 +2773,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void dp_dp_SetReg(uint32_t offset, uint32_t value)
  {
-       outp32(QN_DP_BASE + offset, value);
+     __wr_reg(QN_DP_BASE + offset, value);
  }
 
  __STATIC_INLINE void dp_dp_SetRegWithMask(uint32_t offset, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = inp32(QN_DP_BASE + offset);
-       reg &= ~mask;
-       reg |= (mask&value);
-       outp32(QN_DP_BASE + offset, reg);
+     __wr_reg_with_msk(QN_DP_BASE + offset, mask, value);
  }
 
  __STATIC_INLINE uint32_t dp_dp_GetReg(uint32_t offset)
  {
-       return inp32(QN_DP_BASE + offset);
+     return __rd_reg(QN_DP_BASE + offset);
  }
 
 
@@ -2851,17 +2811,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void adc_adc_SetADC0(QN_ADC_TypeDef *ADC, uint32_t value)
  {
-       ADC->ADC0 = value;
+     __wr_reg((uint32_t)&ADC->ADC0, value);
  }
 
  __STATIC_INLINE void adc_adc_SetADC0WithMask(QN_ADC_TypeDef *ADC, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = ADC->ADC0;
-       reg &= ~mask;
-       reg |= (mask&value);
-       ADC->ADC0 = reg;
+     __wr_reg_with_msk((uint32_t)&ADC->ADC0, mask, value);
  }
 
  __STATIC_INLINE uint32_t adc_adc_GetADC0(QN_ADC_TypeDef *ADC)
@@ -2901,17 +2856,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void adc_adc_SetADC1(QN_ADC_TypeDef *ADC, uint32_t value)
  {
-       ADC->ADC1 = value;
+     __wr_reg((uint32_t)&ADC->ADC1, value);
  }
 
  __STATIC_INLINE void adc_adc_SetADC1WithMask(QN_ADC_TypeDef *ADC, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = ADC->ADC1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       ADC->ADC1 = reg;
+     __wr_reg_with_msk((uint32_t)&ADC->ADC1, mask, value);
  }
 
  __STATIC_INLINE uint32_t adc_adc_GetADC1(QN_ADC_TypeDef *ADC)
@@ -2932,17 +2882,12 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void adc_adc_SetADC2(QN_ADC_TypeDef *ADC, uint32_t value)
  {
-       ADC->ADC2 = value;
+     __wr_reg((uint32_t)&ADC->ADC2, value);
  }
 
  __STATIC_INLINE void adc_adc_SetADC2WithMask(QN_ADC_TypeDef *ADC, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = ADC->ADC2;
-       reg &= ~mask;
-       reg |= (mask&value);
-       ADC->ADC2 = reg;
+     __wr_reg_with_msk((uint32_t)&ADC->ADC2, mask, value);
  }
 
  __STATIC_INLINE uint32_t adc_adc_GetADC2(QN_ADC_TypeDef *ADC)
@@ -2992,7 +2937,7 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE uint32_t adc_adc_GetDATA(QN_ADC_TypeDef *ADC)
  {
-       return ADC->DATA;
+     return __rd_reg((uint32_t)&ADC->DATA);
  }
 
 /*Calibration driver functions*/
@@ -3023,22 +2968,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_SetCAL0(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->CAL0 = value;
+     __wr_reg((uint32_t)&CALIB->CAL0, value);
  }
 
  __STATIC_INLINE void cal_cal_SetCAL0WithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->CAL0;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->CAL0 = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->CAL0, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetCAL0(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->CAL0;
+     return __rd_reg((uint32_t)&CALIB->CAL0);
  }
 
 
@@ -3066,22 +3006,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_SetCAL1(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->CAL1 = value;
+     __wr_reg((uint32_t)&CALIB->CAL1, value);
  }
 
  __STATIC_INLINE void cal_cal_SetCAL1WithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->CAL1;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->CAL1 = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->CAL1, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetCAL1(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->CAL1;
+     return __rd_reg((uint32_t)&CALIB->CAL1);
  }
 
 
@@ -3103,22 +3038,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_SetCAL2(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->CAL2 = value;
+     __wr_reg((uint32_t)&CALIB->CAL2, value);
  }
 
  __STATIC_INLINE void cal_cal_SetCAL2WithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->CAL2;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->CAL2 = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->CAL2, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetCAL2(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->CAL2;
+     return __rd_reg((uint32_t)&CALIB->CAL2);
  }
 
 
@@ -3146,22 +3076,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_SetCAL3(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->CAL3 = value;
+     __wr_reg((uint32_t)&CALIB->CAL3, value);
  }
 
  __STATIC_INLINE void cal_cal_SetCAL3WithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->CAL3;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->CAL3 = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->CAL3, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetCAL3(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->CAL3;
+     return __rd_reg((uint32_t)&CALIB->CAL3);
  }
 
 /**
@@ -3185,22 +3110,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_SetCAL4(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->CAL4 = value;
+     __wr_reg((uint32_t)&CALIB->CAL4, value);
  }
 
  __STATIC_INLINE void cal_cal_SetCAL4WithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->CAL4;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->CAL4 = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->CAL4, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetCAL4(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->CAL4;
+     return __rd_reg((uint32_t)&CALIB->CAL4);
  }
 
 /**
@@ -3225,22 +3145,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_SetCR(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->CR = value;
+     __wr_reg((uint32_t)&CALIB->CR, value);
  }
 
  __STATIC_INLINE void cal_cal_SetCRWithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->CR = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->CR, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetCR(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->CR;
+     return __rd_reg((uint32_t)&CALIB->CR);
  }
 
 /**
@@ -3262,22 +3177,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void cal_cal_ClrSR(QN_CALIB_TypeDef *CALIB, uint32_t value)
  {
-       CALIB->SR = value;
+     __wr_reg((uint32_t)&CALIB->SR, value);
  }
 
  __STATIC_INLINE void cal_cal_ClrSRWithMask(QN_CALIB_TypeDef *CALIB, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = CALIB->SR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       CALIB->SR = reg;
+     __wr_reg_with_msk((uint32_t)&CALIB->SR, mask, value);
  }
 
  __STATIC_INLINE uint32_t cal_cal_GetSR(QN_CALIB_TypeDef *CALIB)
  {
-       return CALIB->SR;
+     return __rd_reg((uint32_t)&CALIB->SR);
  }
 
 /*PROP driver functions*/
@@ -3299,22 +3209,17 @@ __STATIC_INLINE void delay(uint32_t dly)
  */
  __STATIC_INLINE void prop_prop_SetCr(QN_PROP_TypeDef *PROP, uint32_t value)
  {
-       PROP->CR = value;
+     __wr_reg((uint32_t)&PROP->CR, value);
  }
 
  __STATIC_INLINE void prop_prop_SetCrWithMask(QN_PROP_TypeDef *PROP, uint32_t mask, uint32_t value)
  {
-       uint32_t reg;
-
-       reg = PROP->CR;
-       reg &= ~mask;
-       reg |= (mask&value);
-       PROP->CR = reg;
+     __wr_reg_with_msk((uint32_t)&PROP->CR, mask, value);
  }
 
  __STATIC_INLINE uint32_t prop_prop_GetCr(QN_PROP_TypeDef *PROP)
  {
-       return PROP->CR;
+     return __rd_reg((uint32_t)&PROP->CR);
  }
 /*@}*/ /* end of group QN_Driver QN9020 Inline Driver Definitions */
 

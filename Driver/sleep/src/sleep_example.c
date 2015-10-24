@@ -1,6 +1,6 @@
 /****************************************************************************
  *   $Id:: analog_example.c                                                   $
- *   Project: QUINTIC QN9020 Analog modules example
+ *   Project: NXP QN9020 Analog modules example
  *
  *   Description:
  *     This file contains Analog driver usage.
@@ -17,7 +17,7 @@
 #define TEST_SLEEP_NORMAL               TRUE
 #define TEST_SLEEP_DEEP                 FALSE
 
-static int wakeup_form_sleeptimer = 1;
+static int wakeup_from_sleeptimer = 1;
 
 void sleep_timer_set(uint32_t time)
 {
@@ -70,8 +70,11 @@ void cb_gpio(enum gpio_pin pin)
  */
 void OSC_EN_IRQHandler(void)
 {
+#if QN_32K_LOW_POWER_MODE_EN==TRUE
+    exit_low_power_mode();
+#endif
     NVIC->ICER[0] = 0x00000020;
-    wakeup_form_sleeptimer = 1;
+    wakeup_from_sleeptimer = 1;
 }
 
 int main (void) 
@@ -128,9 +131,9 @@ int main (void)
     do {
         gpio_set_direction(GPIO_P01, GPIO_INPUT);
         //enter_sleep(SLEEP_NORMAL, WAKEUP_BY_GPIO, Led_flash);
-        if (wakeup_form_sleeptimer) {
+        if (wakeup_from_sleeptimer) {
             sleep_timer_set(32000);
-            wakeup_form_sleeptimer = 0;
+            wakeup_from_sleeptimer = 0;
 #if QN_32K_RCO == TRUE
             clock_32k_correction_enable(clock_32k_correction_cb);
 #endif

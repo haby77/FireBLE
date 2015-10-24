@@ -5,9 +5,10 @@
  *
  * @brief Header file of RF for QN9020.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
- * $Rev: 1.0 $
+ * $Rev: 1.1 $
  *
  ****************************************************************************************
  */
@@ -15,6 +16,7 @@
 #define _QNRF_H_
 #include "driver_config.h"
 #if CONFIG_ENABLE_DRIVER_QNRF==TRUE
+#include "fw_func_addr.h"
 
 /**
  ****************************************************************************************
@@ -89,6 +91,14 @@ enum TX_POWER
  */
 extern void rf_tx_power_level_set(enum TX_POWER txpwr);
 extern uint32_t rf_tx_power_level_get(void);
+
+typedef  void (*p_rf_enable_sw_set_freq)(uint32_t able);
+typedef  void (*p_rf_set_freq)(enum RF_MODE rf_mode, uint32_t ble_ch_idx);
+typedef  void (*p_rf_enable)(enum RF_MODE rf_mode, uint32_t able, uint32_t repet, uint32_t pd_time);
+
+#define rf_enable_sw_set_freq  ((p_rf_enable_sw_set_freq)  _rf_enable_sw_set_freq)
+#define rf_set_freq            ((p_rf_set_freq)            _rf_set_freq)
+#define rf_enable              ((p_rf_enable)              _rf_enable)
 
 
 #ifdef __cplusplus

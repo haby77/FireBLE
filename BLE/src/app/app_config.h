@@ -5,7 +5,8 @@
  *
  * @brief Application Configuration File
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -34,15 +35,16 @@
 #include "usr_config.h"
 
 /// Application Version Number
-#define QN_APP_VER                  "1.3.3"
+#define QN_APP_VER                  "1.3.6"
+
+/// Software Version
+#if (defined(CFG_SW_RELEASE))
+    #define QN_SW_RELEASE
+#endif
 
 /// QN9020 Chip Version Number
 #if (defined(CFG_9020_B2))
     #define QN_9020_B2
-#elif (defined(CFG_9020_B1))
-    #define QN_9020_B1
-#elif (defined(CFG_9020_B0))
-    #define QN_9020_B0
 #else
     #error "No correct chip version is defined!"
 #endif
@@ -52,39 +54,43 @@
     #define QN_9021_MINIDK
 #endif
 
-/// FireBLE Board Indication
-#if	(defined(CFG_FireBLE))
-		#define	FireBLE_platform
-#if	(defined(CFG_SWD))		
-		#define	FB_SWD									1
-#else
-		#define	FB_SWD									0
+/// External flash
+#if (defined(CFG_EXT_FLASH))
+    #define QN_EXT_FLASH
 #endif
-#if	(defined(CFG_JOYSTICKS))
-		#define	FB_JOYSTICKS						1
-#else
-		#define	FB_JOYSTICKS						0
-#endif
-#if	(defined(CFG_IIC_OLED) || defined(CFG_SPI_OLED))
-		#define	FB_OLED									1
 
-#if	defined(CFG_IIC_OLED)
-		#define	FB_IIC_OLED							1
+/// FireBLE Board Indication
+#if (defined(CFG_FireBLE))
+    #define	FireBLE_platform
+#if (defined(CFG_SWD))		
+    #define	FB_SWD									1
 #else
-		#define	FB_IIC_OLED							0
+    #define	FB_SWD									0
+#endif
+#if (defined(CFG_JOYSTICKS))
+    #define	FB_JOYSTICKS						1
+#else
+    #define	FB_JOYSTICKS						0
+#endif
+#if (defined(CFG_IIC_OLED) || defined(CFG_SPI_OLED))
+    #define	FB_OLED									1
+
+#if defined(CFG_IIC_OLED)
+    #define	FB_IIC_OLED							1
+#else
+    #define	FB_IIC_OLED							0
 #endif
 
 #if defined(CFG_SPI_OLED)
-		#define	FB_SPI_OLED							1
+    #define	FB_SPI_OLED							1
 #else
-		#define	FB_SPI_OLED							0
+    #define	FB_SPI_OLED							0
 #endif
 
 #else
-		#define	FB_OLED									0
+    #define	FB_OLED									0
 #endif
 #endif
-
 
 /// Work Mode
 #define WORK_MODE_SOC               0
@@ -117,7 +123,7 @@
 #if (defined(CFG_LOCAL_NAME))
     #define QN_LOCAL_NAME           CFG_LOCAL_NAME
 #else
-    #define QN_LOCAL_NAME           "FireBLE"
+    #define QN_LOCAL_NAME           "NXP BLE"
 #endif
 
 /// DC-DC enable
@@ -155,11 +161,6 @@
     #define QN_TEST_CTRL_PIN CFG_TEST_CTRL_PIN
 #endif
 
-/// ADV watchdog timer
-#if (defined(CFG_ADV_WDT))
-#define QN_ADV_WDT
-#endif
-
 /// Memory retention
 #if (defined(CFG_MEM_RETENTION))
     #define QN_MEM_RETENTION        CFG_MEM_RETENTION
@@ -192,15 +193,7 @@
     #define QN_BLE_MAX_SLEEP_DUR    0x320 // 625us * 0x320 = 0.5s
 #endif
 
-#if (defined(CFG_9020_B2))
 #define QN_PMU_VOLTAGE              0
-#elif (defined(CFG_9020_B0))
-/// PMU voltage (temp for qn9020 b0)
-#define QN_PMU_VOLTAGE              1
-#elif (defined(CFG_9020_B1))
-/// Patch
-#define QN_PMU_VOLTAGE              1
-#endif
 
 /// EACI external wakeup source
 #if QN_EACI
@@ -382,20 +375,20 @@
 
     ///Quintic private profile Client Role
     #if defined(CFG_PRF_QPPC)
-        #define BLE_QPP_CLIENT    1
-		#define TASK_QPPC     		CFG_TASK_QPPC
+        #define BLE_QPP_CLIENT      1
+        #define TASK_QPPC           CFG_TASK_QPPC
     #else
-        #define BLE_QPP_CLIENT    0
+        #define BLE_QPP_CLIENT      0
     #endif // defined(CFG_PRF_QPPC)
 
     ///Quintic private profile Server Role
     #if defined(CFG_PRF_QPPS)
         #define BLE_QPP_SERVER      1
-		#define TASK_QPPS     		CFG_TASK_QPPS
+        #define TASK_QPPS           CFG_TASK_QPPS
         #define QPPS_DB_SIZE        1400
     #else
-        #define BLE_QPP_SERVER     0
-        #define QPPS_DB_SIZE       0
+        #define BLE_QPP_SERVER      0
+        #define QPPS_DB_SIZE        0
     #endif // defined(CFG_PRF_QPPS)
     
     ///Health Thermometer Profile Collector Role
@@ -681,6 +674,9 @@
         #define BLE_OTA_SERVER      1
         #define TASK_OTAS           CFG_TASK_OTAS
         #define OTAS_DB_SIZE        1200
+        //#define ENAB_OTAS_APP_CTRL
+        //#define ENAB_OTAS_SEND_DATA
+        //#define ENAB_OTAS_SET_UUID
     #else
         #define BLE_OTA_SERVER      0
         #define OTAS_DB_SIZE        0

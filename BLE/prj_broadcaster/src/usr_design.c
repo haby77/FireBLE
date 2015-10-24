@@ -5,7 +5,8 @@
  *
  * @brief Product related design.
  *
- * Copyright (C) Quintic 2014-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -55,8 +56,8 @@
 
 struct app_env_tag app_env;
 struct usr_env_tag usr_env = {LED_ON_DUR_IDLE, LED_OFF_DUR_IDLE};
-uint8_t adv_data[] = {0x02,GAP_AD_TYPE_FLAGS,GAP_BR_EDR_NOT_SUPPORTED,0x08,GAP_AD_TYPE_SHORTENED_NAME,
-                        0x51,0x55,0x49,0x4E,0x54,0x49,0x43}; // "QUINTIC"
+uint8_t adv_data[] = {0x02,GAP_AD_TYPE_FLAGS,GAP_BR_EDR_NOT_SUPPORTED,0x04,GAP_AD_TYPE_SHORTENED_NAME,
+                        'N', 'X' , 'P'}; // "NXP"
 uint8_t scan_data[] = {0x05,0x12,0x06,0x00,0x80,0x0c}; //Slave Connection Interval Range
 
 /*
@@ -126,13 +127,6 @@ void usr_sleep_restore(void)
     uart_init(QN_DEBUG_UART, USARTx_CLK(0), UART_9600);
     uart_tx_enable(QN_DEBUG_UART, MASK_ENABLE);
     uart_rx_enable(QN_DEBUG_UART, MASK_ENABLE);
-#endif
-
-#if (defined(QN_ADV_WDT))
-    if (usr_env.adv_wdt_enable)
-    {
-        wdt_init(1007616, WDT_INT_MOD); // 30.75s
-    }
 #endif
 }
 

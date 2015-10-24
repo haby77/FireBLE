@@ -17,9 +17,10 @@
  *
  * @file co_bt.h
  *
- * @brief Quintic revised and cut.
+ * @brief NXP revised and cut.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -206,6 +207,29 @@ enum
     INIT_FILT_END
 };
 
+///Transmitter test Packet Payload Type
+enum
+{
+    ///Pseudo-random 9 TX test payload type
+    PAYL_PSEUDO_RAND_9            = 0x00,
+    ///11110000 TX test payload type
+    PAYL_11110000,
+    ///10101010 TX test payload type
+    PAYL_10101010,
+    ///Pseudo-random 15 TX test payload type
+    PAYL_PSEUDO_RAND_15,
+    ///All 1s TX test payload type
+    PAYL_ALL_1,
+    ///All 0s TX test payload type
+    PAYL_ALL_0,
+    ///00001111 TX test payload type
+    PAYL_00001111,
+    ///01010101 TX test payload type
+    PAYL_01010101,
+    ///Enumeration end value for TX test payload type value check
+    PAYL_END
+};
+
 /// Constant defining the role
 enum
 {
@@ -269,7 +293,7 @@ struct rand_nb
 ///Advertising report structure
 struct adv_report
 {
-    ///Event type
+    ///Event type: Ref bluetooth core spec 4.0 Volume 6 Part B Chapter 2.3 Table 2.1
     uint8_t        evt_type;
     ///Advertising address type: public/random
     uint8_t        adv_addr_type;

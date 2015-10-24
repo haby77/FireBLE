@@ -5,7 +5,8 @@
  *
  * @brief Application ANCSC API
  *
- * Copyright (C) Quintic 2014-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *

@@ -5,9 +5,10 @@
  *
  * @brief Product related design.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
- * $Rev: 5465 $
+ * $Rev: 5976 $
  *
  ****************************************************************************************
  */
@@ -154,9 +155,9 @@ int app_button_timer_handler(ke_msg_id_t const msgid, void const *param,
                 const uint32_t freq_tab[] = {2402, 2440, 2480};
                 
                 #if defined(CFG_FCC_CE_TX_TEST)
-                fcc_ce_tx_test(freq_tab[freq_idx++ % (sizeof(freq_tab) / sizeof(uint32_t))], 1, CFG_FCC_CE_TX_POWER);
+                fcc_ce_tx_test(freq_tab[freq_idx++ % (sizeof(freq_tab) / sizeof(uint32_t))], 1, CFG_FCC_CE_TX_POWER, 30, PAYL_PSEUDO_RAND_9);
                 #elif defined(CFG_FCC_CE_TX_TEST_WITHOUT_MODULATION)
-                fcc_ce_tx_test(freq_tab[freq_idx++ % (sizeof(freq_tab) / sizeof(uint32_t))], 0, CFG_FCC_CE_TX_POWER);
+                fcc_ce_tx_test(freq_tab[freq_idx++ % (sizeof(freq_tab) / sizeof(uint32_t))], 0, CFG_FCC_CE_TX_POWER, 30, PAYL_PSEUDO_RAND_9);
                 #elif defined(CFG_FCC_CE_RX_TEST)
                 fcc_ce_rx_test(freq_tab[freq_idx++ % (sizeof(freq_tab) / sizeof(uint32_t))]);
                 #endif

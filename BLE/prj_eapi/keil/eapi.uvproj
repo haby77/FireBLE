@@ -13,10 +13,10 @@
       <TargetOption>
         <TargetCommonOption>
           <Device>QN9020</Device>
-          <Vendor>Quintic</Vendor>
+          <Vendor>NXP</Vendor>
           <Cpu>IRAM(0x00008000-0x0000FFFF) IROM(0x00000000-0x00007FFF) CLOCK(16000000) CPUTYPE("Cortex-M0") </Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile>"STARTUP\Quintic\QN9020\startup_QN9020.s" ("Quintic QN9020 Startup Code")</StartupFile>
+          <StartupFile>"STARTUP\NXP\QN9020\startup_QN9020.s" ("NXP QN9020 Startup Code")</StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -FO7 -FD10000000 -FC8000 -FN1 -FF0QN9020_DEVICE -FS000000000 -FL010000)</FlashDriverDll>
           <DeviceId>0</DeviceId>
           <RegisterFile>QN9020.h</RegisterFile>
@@ -35,8 +35,8 @@
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath>Quintic\QN9020\</RegisterFilePath>
-          <DBRegisterFilePath>Quintic\QN9020\</DBRegisterFilePath>
+          <RegisterFilePath>NXP\QN9020\</RegisterFilePath>
+          <DBRegisterFilePath>NXP\QN9020\</DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -72,8 +72,6 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
-            <nStopB1X>0</nStopB1X>
-            <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
@@ -130,7 +128,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -142,7 +139,8 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>

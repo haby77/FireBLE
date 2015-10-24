@@ -5,7 +5,8 @@
  *
  * @brief Quintic Private Profile Server implementation.
  *
- * Copyright (C) Quintic 2013-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: $
  *

@@ -5,7 +5,8 @@
  *
  * @brief QN9020 library API header file.
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -331,9 +332,12 @@ extern void set_dbg_info(uint32_t dbg_info_bit);
  * @brief FCC/CE Tx Test
  * @param[in]  freq         frequency
  * @param[in]  enable_mod   0-disable modulation 1-enable modulation
+ * @param[in]  txpwr		TX power
+ * @param[in]  data_len		TX test data length
+ * @param[in]  payload_type TX test payload type
  ****************************************************************************************
  */
-extern void fcc_ce_tx_test(uint32_t freq, uint32_t enable_mod, enum TX_POWER txpwr);
+extern void fcc_ce_tx_test(uint32_t freq, uint32_t enable_mod, enum TX_POWER txpwr, uint8_t data_len, uint8_t payload_type);
 
 /**
  ****************************************************************************************

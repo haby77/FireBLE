@@ -5,7 +5,8 @@
  *
  * @brief Product related design header file.
  *
- * Copyright (C) Quintic 2012-2013
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -55,5 +56,7 @@ extern void usr_button1_cb(void);
 extern int app_button_timer_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id);
 extern void usr_init(void);
 extern void gpio_interrupt_callback(enum gpio_pin pin);
+extern int app_ancsc_enable_reset_timer_handler(ke_msg_id_t const msgid, void const *param,
+                                                ke_task_id_t const dest_id, ke_task_id_t const src_id);
 
 #endif

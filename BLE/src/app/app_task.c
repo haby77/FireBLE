@@ -5,7 +5,8 @@
  *
  * @brief APP Task implementation
  *
- * Copyright (C) Quintic 2012-2014
+ * Copyright(C) 2015 NXP Semiconductors N.V.
+ * All rights reserved.
  *
  * $Rev: 1.0 $
  *
@@ -618,6 +619,9 @@ const struct ke_msg_handler app_default_state[] =
     {ANCSC_DATA_SOURCE_IND,                 (ke_msg_func_t) app_ancsc_data_source_ind_handler},
     {ANCSC_CMP_EVT,                         (ke_msg_func_t) app_ancsc_cmp_evt_handler},
     {ANCSC_DISABLE_IND,                     (ke_msg_func_t) app_ancsc_disable_ind_handler},
+    {ANCS_ENABLE_SUVPER_TIMER0,             (ke_msg_func_t) app_ancsc_enable_reset_timer_handler},
+    {ANCS_ENABLE_SUVPER_TIMER1,             (ke_msg_func_t) app_ancsc_enable_reset_timer_handler},
+ 
 #endif
 };
 
@@ -651,4 +655,3 @@ void task_app_desc_register(void)
     task_desc_register(TASK_APP, task_app_desc);
 }
 #endif
-
